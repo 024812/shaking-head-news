@@ -45,29 +45,46 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   overflow: hidden;
   display: grid;
   grid-template-areas:
-    'w1  w1'
-    'w2  w2';
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 2fr;
+    'w1'
+    'w2';
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 1rem;
 
-  width: 60vh;
-  height: 60vh;
+  box-sizing: border-box;
+  width: 70vh;
+  height: 70vh;
   margin: auto;
+  padding: 1rem;
 }
 
 #w1 {
+  display: flex;
   grid-area: w1;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 0; /* Prevent grid item from growing */
 }
 
 #w2 {
+  overflow: hidden;
+  display: flex;
   grid-area: w2;
+  align-items: stretch;
+  justify-content: center;
+
+  min-height: 0; /* Allow content to shrink */
 }
 
 @media (max-width: 820px) {
   #content {
     transform: none;
-    min-width: 600px;
-    min-height: 600px;
+
+    width: 90vw;
+    min-width: 90vw;
+    height: 90vh;
+    min-height: 90vh;
   }
 }
 

@@ -29,25 +29,27 @@ const { name, rest } = useNextHolidayApi(props.date)
 
 <style scoped>
 p {
-  margin: 4px;
-  font-size: 1.2rem;
-  line-height: 1.4;
+  margin: 2px 0;
+  font-size: 1rem;
+  line-height: 1.3;
 }
 
 .hightlight {
-  margin: 6px;
-  font-size: 1.5rem;
+  margin: 0 3px;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
 #datetime {
-  margin-bottom: 24px;
+  margin-bottom: 8px;
+  padding: 0.5rem;
   text-align: center;
 }
 
 #moment {
-  font-size: 5rem;
+  margin: 0 0 8px 0;
+  font-size: 3rem;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 1;
 }
 </style>

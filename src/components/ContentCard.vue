@@ -37,27 +37,54 @@ defineExpose<IContentCardApis>({ containerRef, titleRef, contentRef })
 @import '../variables';
 
 .card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
   width: 100%;
   height: 100%;
 
   p {
-    margin: 0 0 4px 0;
-    font-size: 1.2rem;
-    line-height: 1.4;
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    line-height: 1.3;
   }
 
   .title {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 8px solid black;
+    flex-shrink: 0;
 
-    font-size: 1.5rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 4px solid black;
+
+    font-size: 1.3rem;
     line-height: 1.2;
     color: $color-danger;
   }
 
+  .items {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
+
+    /* Custom scrollbar for better UX */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 2px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+
   .items span {
     font-weight: bold;
+    color: $color-danger;
   }
 
   &.reversed {
