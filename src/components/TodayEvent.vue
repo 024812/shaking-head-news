@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useGetTodayEventData } from '../composables/useGetTodayEventData'
+import { onMounted, ref, computed } from 'vue'
+import { useEverydayNews } from '../composables/useEverydayNews'
 import ContentCard from './ContentCard.vue'
 
-interface IToadyEventProps {
+interface ITodayEventProps {
   date: Date
   isReversed: boolean
 }
 
-const props = defineProps<IToadyEventProps>()
+const props = defineProps<ITodayEventProps>()
 const cardRef = ref<InstanceType<typeof ContentCard>>()
-const { events } = useGetTodayEventData(props.date, cardRef)
+const { newsItems, loading, error, hasNews, fetchTodayNews } = useEverydayNews()
 
-onMounted(() => {
+const displayItems = computed(() => {
+  if (hasNews.value) {
+    return newsItems.value.map((item) => item.text)
+  }
+  if (loading.value) {
+    return ['加载中...']
+  }
+  if (error.value) {
+    return [error.value]
+  }
+  return ['暂无新闻']
+})
+
+onMounted(async () => {
   const container = cardRef.value?.containerRef
 
   if (!container) return
@@ -20,9 +33,12 @@ onMounted(() => {
   container.style.display = 'flex'
   container.style.flexDirection = 'column'
   container.style.justifyContent = 'center'
+
+  // Fetch today's news on component mount
+  await fetchTodayNews()
 })
 </script>
 
 <template>
-  <ContentCard ref="cardRef" title="历史上的今天" :items="events" :is-reversed="props.isReversed"></ContentCard>
+  <ContentCard ref="cardRef" title="每日新闻" :items="displayItems" :is-reversed="props.isReversed" />
 </template>

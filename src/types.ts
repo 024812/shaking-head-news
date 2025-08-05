@@ -33,6 +33,13 @@ export type Day =
   | '30'
   | '31'
 
+// EverydayNews data types
+export interface IEverydayNews {
+  date: string // format: "YYYY/MM/DD"
+  content: string[]
+}
+
+// Legacy history types (kept for compatibility)
 type MonthInHistory = Partial<Record<Day, string[]>>
 
 export type YearInHistory = Record<Month, MonthInHistory>
@@ -47,6 +54,7 @@ export type SeasonFood = Record<
 
 export interface IContentBaseProps {
   date: Date
+  isReversed?: boolean
 }
 
 export enum Mode {
