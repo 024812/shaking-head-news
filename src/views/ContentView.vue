@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue'
 import DateTime from '../components/DateTime.vue'
 import SettingsMenu from '../components/SettingsMenu.vue'
-import SeasonFood from '../components/SeasonFood.vue'
 import TodayEvent from '../components/TodayEvent.vue'
 import { useMode } from '../composables/useMode'
 import { useMoment } from '../composables/useMoment'
@@ -22,9 +21,6 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
       </section>
       <section id="w2">
         <TodayEvent :date="moment" :is-reversed="config.isReversed" />
-      </section>
-      <section id="w3">
-        <SeasonFood :date="moment" :is-reversed="config.isReversed" />
       </section>
     </section>
     <section id="setting">
@@ -49,11 +45,10 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   overflow: hidden;
   display: grid;
   grid-template-areas:
-    'w1  w1  w1  w3'
-    'w2  w2  w2  w3'
-    'w2  w2  w2  w3';
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+    'w1  w1'
+    'w2  w2';
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 2fr;
 
   width: 60vh;
   height: 60vh;
@@ -66,16 +61,6 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 
 #w2 {
   grid-area: w2;
-}
-
-#w3 {
-  transform: rotate(-180deg);
-
-  grid-area: w3;
-  justify-self: center;
-
-  writing-mode: vertical-rl;
-  text-orientation: sideways;
 }
 
 @media (max-width: 820px) {
