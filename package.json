@@ -1,10 +1,10 @@
 {
-  "name": "wai-news",
-  "description": "A new tab web extension with daily news that can prevent cervical spondylosis",
+  "name": "shaking-head-news",
+  "description": "Shake your head while watching the news - A neck health browser extension with daily news",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/024812/wai-news.git"
+    "url": "git+https://github.com/024812/shaking-head-news.git"
   },
   "keywords": [
     "web extension",
@@ -29,9 +29,9 @@
   ],
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/024812/wai-news/issues"
+    "url": "https://github.com/024812/shaking-head-news/issues"
   },
-  "homepage": "https://github.com/024812/wai-news",
+  "homepage": "https://github.com/024812/shaking-head-news",
   "type": "module",
   "scripts": {
     "prepare": "husky install",

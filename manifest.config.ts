@@ -1,10 +1,10 @@
 export default {
   manifest_version: 3,
-  name: '歪脖子新闻标签页',
-  description: '一款集成每日新闻且可以预防颈椎病的新标签页扩展',
+  name: '摇头看新闻',
+  description: '一边摇头一边看新闻，颈椎健康新标签页扩展',
   version: process.env.npm_package_version,
   author: '024812 <024812@users.noreply.github.com>',
-  homepage_url: 'https://github.com/024812/wai-news',
+  homepage_url: 'https://github.com/024812/shaking-head-news',
   chrome_url_overrides: {
     newtab: 'index.html',
   },
