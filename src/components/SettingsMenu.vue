@@ -43,15 +43,15 @@ const toggleMenu = () => {
               <div class="about-content">
                 <p class="about-description">感谢使用歪脖子，这是一个有趣好玩的新标签页扩展，希望它对你能有所帮助。</p>
                 <div class="links-section">
-                  <a href="https://github.com/dukeluo/wai" target="_blank" class="link-item">
+                  <a href="https://github.com/024812/shaking-head-news" target="_blank" class="link-item">
                     <img src="/icons/code.svg" alt="Source Code" />
                     <span>查看源码</span>
                   </a>
-                  <a href="https://x.com/ihuanluo" target="_blank" class="link-item">
+                  <a href="https://x.com/024812" target="_blank" class="link-item">
                     <img src="/icons/x.svg" alt="X" />
                     <span>在 X 上关注作者</span>
                   </a>
-                  <a href="https://shaiwang.life" target="_blank" class="link-item">
+                  <a href="https://www.024812.xyz" target="_blank" class="link-item">
                     <img src="/icons/blog.svg" alt="Blog" />
                     <span>访问作者博客</span>
                   </a>
@@ -62,19 +62,10 @@ const toggleMenu = () => {
               <label>支持作者</label>
               <div class="about-content">
                 <p class="about-description">如果你喜欢这个项目，可以通过以下方式支持作者继续创作。</p>
-                <div class="qr-section">
-                  <div class="qr-item">
-                    <img src="/images/wechat.webp" alt="Donation QR Code" />
-                  </div>
-                </div>
                 <div class="support-options">
-                  <a href="https://github.com/sponsors/dukeluo" target="_blank" class="link-item">
+                  <a href="https://github.com/sponsors/024812" target="_blank" class="link-item">
                     <img src="/icons/github.svg" alt="GitHub Sponsors" />
                     <span>GitHub Sponsors</span>
-                  </a>
-                  <a href="https://ko-fi.com/huanluo" target="_blank" class="link-item">
-                    <img src="/icons/kofi.svg" alt="Ko-fi" />
-                    <span>Ko-fi</span>
                   </a>
                 </div>
               </div>
