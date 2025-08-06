@@ -1,10 +1,12 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { EverydayNewsService } from '../services/EverydayNewsService'
 import type { IEverydayNews } from '../types'
+import { storage } from '../helpers/storage'
 
-const everydayNewsService = new EverydayNewsService()
+const DATA_SOURCE_KEY = 'setting.dataSource'
 
 export const useEverydayNews = () => {
+  const everydayNewsService = ref<EverydayNewsService>(new EverydayNewsService())
   const newsData = ref<IEverydayNews | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -13,7 +15,7 @@ export const useEverydayNews = () => {
 
   const formattedDate = computed(() => {
     if (!newsData.value?.date) return ''
-    return everydayNewsService.formatDateString(newsData.value.date)
+    return everydayNewsService.value.formatDateString(newsData.value.date)
   })
 
   const newsItems = computed(() => {
@@ -29,7 +31,7 @@ export const useEverydayNews = () => {
     error.value = null
 
     try {
-      const data = await everydayNewsService.getTodayNewsWithFallback()
+      const data = await everydayNewsService.value.getTodayNewsWithFallback()
       newsData.value = data
 
       if (!data) {
@@ -48,7 +50,7 @@ export const useEverydayNews = () => {
     error.value = null
 
     try {
-      const data = await everydayNewsService.getNewsForDate(date)
+      const data = await everydayNewsService.value.getNewsForDate(date)
       newsData.value = data
 
       if (!data) {
@@ -61,6 +63,13 @@ export const useEverydayNews = () => {
       loading.value = false
     }
   }
+
+  onMounted(async () => {
+    const customDataSource = await storage.getItem(DATA_SOURCE_KEY)
+    if (customDataSource) {
+      everydayNewsService.value = new EverydayNewsService(customDataSource)
+    }
+  })
 
   return {
     newsData,

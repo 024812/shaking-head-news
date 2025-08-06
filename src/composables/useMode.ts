@@ -13,7 +13,7 @@ const getConfigValue = ({ turn, isReversed, interval }: IModeConfig): IModeConfi
 })
 
 export const useMode = () => {
-  const mode = ref<Mode>(Mode.Full)
+  const mode = ref<Mode>(Mode.Soft)
   const config = computed(() => MODE_CONFIG[mode.value])
   const value = reactive(getConfigValue(config.value))
   let timer: NodeJS.Timeout
@@ -44,7 +44,7 @@ export const useMode = () => {
   onBeforeMount(async () => {
     const settingMode = (await storage.getItem(MODE_KEY)) as Mode | null
 
-    mode.value = settingMode ?? Mode.Full
+    mode.value = settingMode ?? Mode.Soft
   })
 
   onBeforeUnmount(clear)

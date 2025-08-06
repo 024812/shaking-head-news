@@ -14,7 +14,6 @@ interface IModeSelector {
 const MODE_OPTIONS: IOption[] = [
   { label: '柔和模式', value: Mode.Soft },
   { label: '连续模式', value: Mode.Continuous },
-  { label: '全面模式', value: Mode.Full },
 ]
 
 const props = defineProps<IModeSelector>()
@@ -56,7 +55,7 @@ $transition-duration: 0.8s;
 #mode-selector {
   position: relative;
 
-  width: $element-width * 3;
+  width: $element-width * 2;
   border: 1px solid #{$color-accent};
   border-radius: 2px;
 

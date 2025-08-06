@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
+import { storage } from '../helpers/storage'
+
+const DATA_SOURCE_KEY = 'setting.dataSource'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
+const dataSourceUrl = ref('')
 const { latestUpdate } = useLatestUpdate()
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
+
+const onSaveDataSource = () => {
+  storage.setItem(DATA_SOURCE_KEY, dataSourceUrl.value)
+}
+
+onMounted(async () => {
+  dataSourceUrl.value = (await storage.getItem(DATA_SOURCE_KEY)) ?? ''
+})
 </script>
 
 <template>
@@ -39,9 +51,24 @@ const toggleMenu = () => {
               </div>
             </template>
             <div class="setting-item">
+              <label>数据源</label>
+              <div class="data-source-content">
+                <p class="data-source-description">
+                  请输入新的数据源 URL。数据源需要提供一个返回 JSON 格式的 API，其中包含 `date` (YYYY/MM/DD) 和
+                  `content` (string[]) 字段。
+                </p>
+                <div class="data-source-input">
+                  <input v-model="dataSourceUrl" type="text" placeholder="https://example.com/news" />
+                  <button @click="onSaveDataSource">保存</button>
+                </div>
+              </div>
+            </div>
+            <div class="setting-item">
               <label>关于</label>
               <div class="about-content">
-                <p class="about-description">感谢使用歪脖子，这是一个有趣好玩的新标签页扩展，希望它对你能有所帮助。</p>
+                <p class="about-description">
+                  Shaking Head News is a browser extension that helps you exercise your neck while you read the news.
+                </p>
                 <div class="links-section">
                   <a href="https://github.com/024812/shaking-head-news" target="_blank" class="link-item">
                     <img src="/icons/code.svg" alt="Source Code" />
@@ -54,18 +81,6 @@ const toggleMenu = () => {
                   <a href="https://www.024812.xyz" target="_blank" class="link-item">
                     <img src="/icons/blog.svg" alt="Blog" />
                     <span>访问作者博客</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="setting-item">
-              <label>支持作者</label>
-              <div class="about-content">
-                <p class="about-description">如果你喜欢这个项目，可以通过以下方式支持作者继续创作。</p>
-                <div class="support-options">
-                  <a href="https://github.com/sponsors/024812" target="_blank" class="link-item">
-                    <img src="/icons/github.svg" alt="GitHub Sponsors" />
-                    <span>GitHub Sponsors</span>
                   </a>
                 </div>
               </div>
@@ -157,6 +172,42 @@ const toggleMenu = () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.data-source-content {
+  .data-source-description {
+    margin: 0 0 24px;
+    line-height: 1.5;
+    color: $color-text-dark;
+  }
+
+  .data-source-input {
+    display: flex;
+    gap: 12px;
+
+    input {
+      flex-grow: 1;
+      padding: 8px 12px;
+      border: 1px solid #{$color-accent};
+      border-radius: 2px;
+    }
+
+    button {
+      cursor: pointer;
+
+      padding: 8px 12px;
+      border: 1px solid #{$color-accent};
+      border-radius: 2px;
+
+      color: $color-text-light;
+
+      background: $color-accent;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
 }
 
 .link-item {

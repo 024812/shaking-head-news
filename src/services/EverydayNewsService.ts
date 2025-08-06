@@ -2,8 +2,8 @@ import { ApiService } from './ApiService'
 import type { IEverydayNews } from '../types'
 
 export class EverydayNewsService extends ApiService {
-  constructor() {
-    super('https://ravelloh.github.io/EverydayNews')
+  constructor(baseUrl?: string) {
+    super(baseUrl || 'https://ravelloh.github.io/EverydayNews')
   }
 
   /**
