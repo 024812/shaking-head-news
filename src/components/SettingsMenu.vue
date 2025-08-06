@@ -74,10 +74,6 @@ onMounted(async () => {
                     <img src="/icons/code.svg" alt="Source Code" />
                     <span>查看源码</span>
                   </a>
-                  <a href="https://x.com/024812" target="_blank" class="link-item">
-                    <img src="/icons/x.svg" alt="X" />
-                    <span>在 X 上关注作者</span>
-                  </a>
                   <a href="https://www.024812.xyz" target="_blank" class="link-item">
                     <img src="/icons/blog.svg" alt="Blog" />
                     <span>访问作者博客</span>
