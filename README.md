@@ -3,7 +3,7 @@
 > **"Shake your head while watching the news"** - 一边摇头一边看新闻的颈椎健康浏览器扩展
 
 <p align="center">
-  <img width="128" height="128" src="./public/icons/logo128.png" />
+  <img width="128" height="128" src="ytkxw.png" />
 </p>
 
 ## 🚀 **在线演示**
