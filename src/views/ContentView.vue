@@ -43,9 +43,10 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   display: grid;
   grid-template-areas:
     'w1'
+    'divider'
     'w2';
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto min-content 1fr;
   gap: 1rem;
 
   box-sizing: border-box;
@@ -56,6 +57,7 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 }
 
 hr {
+  grid-area: divider;
   border: none;
   border-top: 2px solid orange;
   margin: 0;
