@@ -15,10 +15,10 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 <template>
   <main id="container">
     <section id="content">
-      <hr />
       <section id="w1">
         <DateTime :date="moment" />
       </section>
+      <hr />
       <section id="w2">
         <EverydayNews />
       </section>
@@ -41,6 +41,9 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 
   overflow: hidden;
   display: grid;
+  grid-template-areas:
+    'w1'
+    'w2';
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
   gap: 1rem;
@@ -60,6 +63,7 @@ hr {
 
 #w1 {
   display: flex;
+  grid-area: w1;
   align-items: center;
   justify-content: center;
 
@@ -69,6 +73,7 @@ hr {
 #w2 {
   overflow: hidden;
   display: flex;
+  grid-area: w2;
   align-items: stretch;
   justify-content: center;
 
