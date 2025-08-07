@@ -63,8 +63,8 @@ hr {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  min-height: 0; /* Prevent grid item from growing */
+  flex: 0 0 auto; /* Do not grow or shrink */
+  min-height: 0;
 }
 
 #w2 {
@@ -72,8 +72,8 @@ hr {
   display: flex;
   align-items: stretch;
   justify-content: center;
-
-  min-height: 0; /* Allow content to shrink */
+  flex: 1 1 auto; /* Grow to fill space */
+  min-height: 0;
 }
 
 @media (max-width: 820px) {
