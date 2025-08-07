@@ -18,6 +18,7 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
       <section id="w1">
         <DateTime :date="moment" />
       </section>
+      <hr />
       <section id="w2">
         <EverydayNews />
       </section>
@@ -44,7 +45,7 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
     'w1'
     'w2';
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   gap: 1rem;
 
   box-sizing: border-box;
@@ -52,6 +53,12 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   height: 70vh;
   margin: auto;
   padding: 1rem;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid black;
+  margin: 0;
 }
 
 #w1 {
