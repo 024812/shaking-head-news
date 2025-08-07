@@ -17,11 +17,14 @@ export const useMode = () => {
   const config = computed(() => MODE_CONFIG[mode.value])
   const value = reactive(getConfigValue(config.value))
   let timer: NodeJS.Timeout
+  let lastTurnPositive = false
 
   const update = () => {
     const newValue = getConfigValue(config.value)
 
-    value.turn = newValue.turn
+    const newTurn = newValue.turn
+    value.turn = lastTurnPositive ? -newTurn : newTurn
+    lastTurnPositive = !lastTurnPositive
     value.isReversed = newValue.isReversed
     value.interval = newValue.interval
 
