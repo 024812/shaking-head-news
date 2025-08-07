@@ -18,7 +18,6 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
       <section id="w1">
         <DateTime :date="moment" />
       </section>
-      <hr />
       <section id="w2">
         <EverydayNews />
       </section>
@@ -51,20 +50,14 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   padding: 1rem;
 }
 
-hr {
-  flex-shrink: 0;
-  width: 100%;
-  border: none;
-  border-top: 2px solid orange;
-  margin: 0;
-}
-
 #w1 {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto; /* Do not grow or shrink */
   min-height: 0;
+  border-bottom: 2px solid orange;
+  padding-bottom: 1rem;
 }
 
 #w2 {
