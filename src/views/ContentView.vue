@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import DateTime from '../components/DateTime.vue'
-import SettingsMenu from '../components/SettingsMenu.vue'
 import EverydayNews from '../components/EverydayNews.vue'
 import { useMode } from '../composables/useMode'
 import { useMoment } from '../composables/useMoment'
@@ -22,9 +21,6 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
       <section id="w2">
         <EverydayNews />
       </section>
-    </section>
-    <section id="setting">
-      <SettingsMenu v-model="mode" />
     </section>
   </main>
 </template>
@@ -88,9 +84,4 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   }
 }
 
-#setting {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-}
 </style>
