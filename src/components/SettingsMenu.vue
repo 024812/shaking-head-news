@@ -54,8 +54,9 @@ onMounted(async () => {
               <label>数据源</label>
               <div class="data-source-content">
                 <p class="data-source-description">
-                  请输入新的数据源 URL。数据源需要提供一个返回 JSON 格式的 API，其中包含 `date` (YYYY/MM/DD) 和
-                  `content` (string[]) 字段。
+                  请输入新的数据源 URL，可以是 JSON API 或 RSS feed。JSON API
+                  需要返回包含 `date` (YYYY/MM/DD) 和 `content` (string[])
+                  字段的数据。RSS feed 将被自动解析，并截取前 16 条项目。
                 </p>
                 <div class="data-source-input">
                   <input v-model="dataSourceUrl" type="text" placeholder="https://example.com/news" />

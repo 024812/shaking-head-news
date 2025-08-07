@@ -15,7 +15,10 @@ export default {
     '64': 'icons/logo64.png',
     '128': 'icons/logo128.png',
   },
-  permissions: ['storage'],
+  permissions: ['storage', 'https://api.allorigins.win/'],
+  content_security_policy: {
+    extension_pages: "script-src 'self'; object-src 'self';",
+  },
   browser_specific_settings: {
     gecko: {
       id: '{a1b2c3d4-e5f6-7890-abcd-ef1234567890}',

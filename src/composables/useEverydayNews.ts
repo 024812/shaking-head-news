@@ -1,10 +1,11 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { EverydayNewsService } from '../services/EverydayNewsService'
 import type { IEverydayNews } from '../types'
 import { storage } from '../helpers/storage'
 
 const DATA_SOURCE_KEY = 'setting.dataSource'
 
+// Standard composable function. A new state will be created for each component instance.
 export const useEverydayNews = () => {
   const everydayNewsService = ref<EverydayNewsService>(new EverydayNewsService())
   const newsData = ref<IEverydayNews | null>(null)
@@ -22,18 +23,16 @@ export const useEverydayNews = () => {
     if (!newsData.value) return []
     return newsData.value.content.map((item: string, index: number) => ({
       id: index,
-      text: item.replace(/^\d+[.、]\s*/, ''), // Remove leading numbers like "1. " or "1、 "
+      text: item.replace(/^\d+[.、]\s*/, ''), // Remove leading numbers
     }))
   })
 
   const fetchTodayNews = async () => {
     loading.value = true
     error.value = null
-
     try {
       const data = await everydayNewsService.value.getTodayNewsWithFallback()
       newsData.value = data
-
       if (!data) {
         error.value = '无法获取今日新闻'
       }
@@ -48,11 +47,9 @@ export const useEverydayNews = () => {
   const fetchNewsForDate = async (date: Date) => {
     loading.value = true
     error.value = null
-
     try {
       const data = await everydayNewsService.value.getNewsForDate(date)
       newsData.value = data
-
       if (!data) {
         error.value = '该日期暂无新闻数据'
       }
@@ -64,12 +61,15 @@ export const useEverydayNews = () => {
     }
   }
 
-  onMounted(async () => {
+  // The init logic is now part of the composable's setup.
+  // It will run when a component using this composable is mounted.
+  const init = async () => {
     const customDataSource = await storage.getItem(DATA_SOURCE_KEY)
     if (customDataSource) {
       everydayNewsService.value = new EverydayNewsService(customDataSource)
     }
-  })
+    await fetchTodayNews()
+  }
 
   return {
     newsData,
@@ -78,7 +78,8 @@ export const useEverydayNews = () => {
     hasNews,
     formattedDate,
     newsItems,
-    fetchTodayNews,
+    init, // Expose init to be called from the component
     fetchNewsForDate,
+    fetchTodayNews,
   }
 }
