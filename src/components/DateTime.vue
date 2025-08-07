@@ -27,9 +27,16 @@ const { name, rest } = useNextHolidayApi(props.date)
       </span>
     </p>
   </section>
+  <hr />
 </template>
 
 <style scoped>
+hr {
+  border: none;
+  border-top: 2px solid orange;
+  margin: 0;
+}
+
 p {
   margin: 2px 0;
   font-size: 1rem;
