@@ -40,13 +40,8 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   transform: v-bind('transform');
 
   overflow: hidden;
-  display: grid;
-  grid-template-areas:
-    'w1'
-    'divider'
-    'w2';
-  grid-template-columns: 1fr;
-  grid-template-rows: auto min-content 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 
   box-sizing: border-box;
@@ -57,7 +52,8 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 }
 
 hr {
-  grid-area: divider;
+  flex-shrink: 0;
+  width: 100%;
   border: none;
   border-top: 2px solid orange;
   margin: 0;
@@ -65,7 +61,6 @@ hr {
 
 #w1 {
   display: flex;
-  grid-area: w1;
   align-items: center;
   justify-content: center;
 
@@ -75,7 +70,6 @@ hr {
 #w2 {
   overflow: hidden;
   display: flex;
-  grid-area: w2;
   align-items: stretch;
   justify-content: center;
 
