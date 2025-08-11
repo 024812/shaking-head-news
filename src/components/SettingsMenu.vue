@@ -6,6 +6,7 @@ import { useLatestUpdate } from '../composables/useLatestUpdateApi'
 import { useMode } from '../composables/useMode'
 import { useMotionPreferences } from '../composables/useMotionPreferences'
 import { useRssFeeds } from '../composables/useRssFeeds'
+import { useNewsCache } from '../composables/useNewsCache'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
@@ -13,12 +14,17 @@ const { latestUpdate } = useLatestUpdate()
 const { continuousModeInterval, isPaused, shouldDisableMotion, shouldRotate, togglePause } = useMode()
 const { motionPreferences, prefersReducedMotion, setMotionPreference } = useMotionPreferences()
 const { feeds, activeFeedId, isLoading, addFeed, removeFeed, toggleFeed, setActiveFeed, testFeed } = useRssFeeds()
+const { clearCache, clearExpiredEntries, getCacheStats, config: cacheConfig, updateConfig } = useNewsCache()
 
 // RSS Feed Management State
 const showRssManagement = ref(false)
 const newFeedName = ref('')
 const newFeedUrl = ref('')
 const feedError = ref<string | null>(null)
+
+// Cache Management State
+const showCacheManagement = ref(false)
+const cacheStats = ref(getCacheStats())
 
 // Preset interval options (in seconds)
 const intervalPresets = [
@@ -87,6 +93,42 @@ const handleRemoveFeed = (feedId: string) => {
 
 const handleTestFeed = async (feedId: string) => {
   await testFeed(feedId)
+}
+
+// Cache Management Functions
+const toggleCacheManagement = () => {
+  showCacheManagement.value = !showCacheManagement.value
+  if (showCacheManagement.value) {
+    refreshCacheStats()
+  }
+}
+
+const refreshCacheStats = () => {
+  cacheStats.value = getCacheStats()
+}
+
+const handleClearCache = () => {
+  if (confirm('确定要清空所有缓存吗？这将需要重新加载所有新闻。')) {
+    clearCache()
+    refreshCacheStats()
+  }
+}
+
+const handleClearExpiredCache = () => {
+  clearExpiredEntries()
+  refreshCacheStats()
+}
+
+const updateCacheMaxAge = (minutes: number) => {
+  updateConfig({ maxAge: minutes * 60 * 1000 })
+}
+
+const formatBytes = (bytes: number): string => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 </script>
 
@@ -240,6 +282,86 @@ const handleTestFeed = async (feedId: string) => {
                         <button :disabled="isLoading" class="test-button" @click="handleTestFeed(feed.id)">测试</button>
                         <button class="remove-button" @click="handleRemoveFeed(feed.id)">删除</button>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Cache Management -->
+            <div class="setting-item">
+              <label>缓存管理</label>
+              <div class="cache-management">
+                <div class="cache-summary">
+                  <p>缓存提供更快的加载速度，减少网络请求</p>
+                  <div class="cache-stats-summary">
+                    <span>缓存条目: {{ cacheStats.validEntries }}/{{ cacheStats.maxEntries }}</span>
+                    <span>占用空间: {{ formatBytes(cacheStats.totalSize) }}</span>
+                  </div>
+                </div>
+                
+                <div class="cache-controls">
+                  <button @click="toggleCacheManagement" class="manage-button">
+                    {{ showCacheManagement ? '关闭管理' : '管理缓存' }}
+                  </button>
+                </div>
+                
+                <!-- Cache Management Panel -->
+                <div v-if="showCacheManagement" class="cache-panel">
+                  <!-- Cache Statistics -->
+                  <div class="cache-stats">
+                    <h4>缓存统计</h4>
+                    <div class="stats-grid">
+                      <div class="stat-item">
+                        <span class="stat-label">总条目:</span>
+                        <span class="stat-value">{{ cacheStats.totalEntries }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">有效条目:</span>
+                        <span class="stat-value">{{ cacheStats.validEntries }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">过期条目:</span>
+                        <span class="stat-value">{{ cacheStats.expiredEntries }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">占用空间:</span>
+                        <span class="stat-value">{{ formatBytes(cacheStats.totalSize) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Cache Settings -->
+                  <div class="cache-settings">
+                    <h4>缓存设置</h4>
+                    <div class="setting-group">
+                      <label>缓存有效期 (分钟):</label>
+                      <div class="cache-duration-controls">
+                        <button 
+                          v-for="duration in [15, 30, 60, 120]" 
+                          :key="duration"
+                          :class="{ active: Math.round(cacheConfig.maxAge / 60000) === duration }"
+                          @click="updateCacheMaxAge(duration)"
+                        >
+                          {{ duration }}分钟
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Cache Actions -->
+                  <div class="cache-actions">
+                    <h4>缓存操作</h4>
+                    <div class="action-buttons">
+                      <button @click="refreshCacheStats" class="refresh-button">
+                        刷新统计
+                      </button>
+                      <button @click="handleClearExpiredCache" class="clear-expired-button">
+                        清除过期
+                      </button>
+                      <button @click="handleClearCache" class="clear-all-button">
+                        清空所有
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -660,6 +782,183 @@ const handleTestFeed = async (feedId: string) => {
   }
 }
 /* stylelint-enable */
+
+.cache-management {
+  .cache-summary {
+    margin-bottom: 16px;
+
+    p {
+      margin: 0 0 8px;
+      font-size: 0.9em;
+      color: $color-text-dark;
+    }
+
+    .cache-stats-summary {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85em;
+      color: color.adjust($color-text-dark, $alpha: -0.3);
+
+      span {
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: color.adjust($color-primary, $lightness: -2%);
+      }
+    }
+  }
+
+  .cache-controls {
+    margin-bottom: 16px;
+
+    .manage-button {
+      cursor: pointer;
+
+      padding: 8px 16px;
+      border: 1px solid #{$color-accent};
+      border-radius: 20px;
+
+      font-size: 0.9em;
+      color: $color-accent;
+
+      background: transparent;
+
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: $color-text-light;
+        background: $color-accent;
+      }
+    }
+  }
+
+  .cache-panel {
+    padding: 16px;
+    border: 1px solid color.adjust($color-accent, $alpha: -0.7);
+    border-radius: 8px;
+    background: color.adjust($color-primary, $lightness: -1%);
+
+    .cache-stats,
+    .cache-settings,
+    .cache-actions {
+      margin-bottom: 20px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      h4 {
+        margin: 0 0 12px;
+        color: $color-accent;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(2, 1fr);
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-radius: 4px;
+        background: $color-text-light;
+
+        .stat-label {
+          font-size: 0.85em;
+          color: color.adjust($color-text-dark, $alpha: -0.3);
+        }
+
+        .stat-value {
+          font-size: 0.85em;
+          font-weight: 600;
+          color: $color-text-dark;
+        }
+      }
+    }
+
+    .cache-duration-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      button {
+        cursor: pointer;
+
+        padding: 6px 12px;
+        border: 1px solid #{$color-accent};
+        border-radius: 16px;
+
+        font-size: 0.85em;
+        color: $color-accent;
+
+        background: transparent;
+
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: color.adjust($color-accent, $alpha: -0.9);
+        }
+
+        &.active {
+          color: $color-text-light;
+          background: $color-accent;
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      button {
+        cursor: pointer;
+
+        padding: 6px 12px;
+        border: 1px solid;
+        border-radius: 4px;
+
+        font-size: 0.85em;
+
+        transition: all 0.2s ease;
+
+        &.refresh-button {
+          border-color: #{$color-accent};
+          color: $color-accent;
+          background: transparent;
+
+          &:hover {
+            color: $color-text-light;
+            background: $color-accent;
+          }
+        }
+
+        &.clear-expired-button {
+          border-color: #666;
+          color: #666;
+          background: transparent;
+
+          &:hover {
+            color: $color-text-light;
+            background: #666;
+          }
+        }
+
+        &.clear-all-button {
+          border-color: #{$color-danger};
+          color: $color-danger;
+          background: transparent;
+
+          &:hover {
+            color: $color-text-light;
+            background: $color-danger;
+          }
+        }
+      }
+    }
+  }
+}
 
 .interval-section {
   /* stylelint-disable-next-line no-descending-specificity */
