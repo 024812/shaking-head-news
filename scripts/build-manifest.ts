@@ -16,6 +16,5 @@ const buildManifest = async () => {
 export const viteBuildManifest: () => Plugin = () => ({
   name: 'vite-build-manifest',
   apply: 'build',
-  enforce: 'pre',
   closeBundle: buildManifest,
 })
