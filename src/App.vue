@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ContentView from './views/ContentView.vue'
 import SettingsMenu from './components/SettingsMenu.vue'
+import NotificationCenter from './components/NotificationCenter.vue'
 import { useMode } from './composables/useMode'
 
 const { mode } = useMode()
@@ -9,6 +10,7 @@ const { mode } = useMode()
 <template>
   <ContentView />
   <SettingsMenu v-model="mode" />
+  <NotificationCenter />
   <a href="https://github.com/024812/shaking-head-news" target="_blank" class="github-link">
     <img src="/icons/github.svg" alt="GitHub" />
   </a>
