@@ -44,13 +44,13 @@ const toggleMenu = () => {
               <label>模式</label>
               <ModeSelector v-model="modelValue" />
             </div>
-           <div v-if="modelValue === Mode.Continuous" class="setting-item">
-             <label>连续模式中页面多久变动一次</label>
-             <div class="interval-input">
-               <input v-model.number="continuousModeInterval" type="number" min="1" />
-               <span>秒</span>
-             </div>
-           </div>
+            <div v-if="modelValue === Mode.Continuous" class="setting-item">
+              <label>连续模式中页面多久变动一次</label>
+              <div class="interval-input">
+                <input v-model.number="continuousModeInterval" type="number" min="1" />
+                <span>秒</span>
+              </div>
+            </div>
             <template v-if="latestUpdate?.message">
               <div class="setting-item">
                 <label>最新动态</label>
@@ -89,9 +89,9 @@ const toggleMenu = () => {
 
 .settings-container {
   position: fixed;
-  bottom: 16px;
-  right: 56px; /* 16px for its own margin + 32px for github icon + 8px spacing */
   z-index: 10;
+  right: 56px; /* 16px for its own margin + 32px for github icon + 8px spacing */
+  bottom: 16px;
 }
 
 .icon-button {
@@ -152,21 +152,22 @@ const toggleMenu = () => {
   }
 }
 .interval-input {
- display: flex;
- align-items: center;
- gap: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 
- input {
-   width: 80px;
-   padding: 8px 12px;
-   border: 1px solid #{$color-accent};
-   border-radius: 2px;
-   text-align: center;
- }
+  input {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #{$color-accent};
+    border-radius: 2px;
 
- span {
-   color: $color-text-dark;
- }
+    text-align: center;
+  }
+
+  span {
+    color: $color-text-dark;
+  }
 }
 
 .about-content {

@@ -6,7 +6,7 @@ import { useMode } from '../composables/useMode'
 import { useMoment } from '../composables/useMoment'
 
 const { moment } = useMoment()
-const { mode, config } = useMode()
+const { config } = useMode()
 const transform = ref(`rotate(${config.turn}turn)`)
 
 watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
@@ -52,20 +52,22 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 
 #w1 {
   display: flex;
+  flex: 0 0 auto; /* Do not grow or shrink */
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto; /* Do not grow or shrink */
+
   min-height: 0;
-  border-bottom: 2px solid orange;
   padding-bottom: 1rem;
+  border-bottom: 2px solid orange;
 }
 
 #w2 {
   overflow: hidden;
   display: flex;
+  flex: 1 1 auto; /* Grow to fill space */
   align-items: stretch;
   justify-content: center;
-  flex: 1 1 auto; /* Grow to fill space */
+
   min-height: 0;
 }
 
@@ -79,5 +81,4 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
     min-height: 90vh;
   }
 }
-
 </style>

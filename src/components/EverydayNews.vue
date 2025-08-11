@@ -31,19 +31,21 @@ onMounted(() => {
 
   li {
     position: relative;
-    padding-left: 1.2rem;
     margin-bottom: 0.75rem;
+    padding-left: 1.2rem;
     font-size: 1rem;
   }
 
   li::before {
     content: '•';
+
     position: absolute;
-    left: 0;
     top: 0;
-    color: red;
+    left: 0;
+
     font-size: 1.2rem;
     line-height: 1;
+    color: red;
   }
 }
 </style>

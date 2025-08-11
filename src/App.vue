@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import ContentView from './views/ContentView.vue'
 import SettingsMenu from './components/SettingsMenu.vue'
 import { useMode } from './composables/useMode'
@@ -10,21 +9,21 @@ const { mode } = useMode()
 <template>
   <ContentView />
   <SettingsMenu v-model="mode" />
-  <a
-    href="https://github.com/024812/shaking-head-news"
-    target="_blank"
-    class="github-link"
-  >
+  <a href="https://github.com/024812/shaking-head-news" target="_blank" class="github-link">
     <img src="/icons/github.svg" alt="GitHub" />
   </a>
 </template>
 
 <style lang="scss">
+@import './variables';
+
 .github-link {
   position: fixed;
-  bottom: 16px;
   right: 16px;
+  bottom: 16px;
+
   opacity: 0.5;
+
   transition: opacity 0.2s ease;
 
   &:hover {
@@ -36,7 +35,6 @@ const { mode } = useMode()
     height: 32px;
   }
 }
-@import './variables';
 
 h1,
 h2,
