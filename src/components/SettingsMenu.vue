@@ -69,7 +69,10 @@ const toggleMenu = () => {
 @import '../variables';
 
 .settings-container {
-  position: relative;
+  position: fixed;
+  bottom: 16px;
+  right: 56px; /* 16px for its own margin + 32px for github icon + 8px spacing */
+  z-index: 10;
 }
 
 .icon-button {
