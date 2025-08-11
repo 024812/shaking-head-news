@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git add:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx stylelint:*)"
     ],
     "deny": []
   }

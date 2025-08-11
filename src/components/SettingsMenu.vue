@@ -4,11 +4,13 @@ import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
 import { useMode } from '../composables/useMode'
+import { useMotionPreferences } from '../composables/useMotionPreferences'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
 const { latestUpdate } = useLatestUpdate()
-const { continuousModeInterval } = useMode()
+const { continuousModeInterval, isPaused, shouldDisableMotion, shouldRotate, togglePause } = useMode()
+const { motionPreferences, prefersReducedMotion, setMotionPreference } = useMotionPreferences()
 
 // Preset interval options (in seconds)
 const intervalPresets = [
@@ -44,6 +46,56 @@ const setPresetInterval = (value: number) => {
             <div class="setting-item">
               <label>模式</label>
               <ModeSelector v-model="modelValue" />
+            </div>
+
+            <!-- Motion Accessibility Settings -->
+            <div class="setting-item">
+              <label>动效与无障碍</label>
+              <div class="motion-controls">
+                <!-- System Motion Preference Warning -->
+                <div v-if="prefersReducedMotion" class="motion-warning">
+                  <p>⚠️ 检测到您的系统偏好减少动效。页面旋转已自动禁用以保护您的健康。</p>
+                </div>
+
+                <!-- Motion Controls -->
+                <div class="motion-options">
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      :checked="motionPreferences.respectSystemPreferences"
+                      @change="
+                        setMotionPreference('respectSystemPreferences', ($event.target as HTMLInputElement).checked)
+                      "
+                    />
+                    <span>遵循系统动效偏好设置</span>
+                  </label>
+
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      :checked="motionPreferences.allowMotion"
+                      @change="setMotionPreference('allowMotion', ($event.target as HTMLInputElement).checked)"
+                    />
+                    <span>允许页面旋转动效</span>
+                  </label>
+
+                  <!-- Pause/Play for Continuous Mode -->
+                  <div v-if="modelValue === Mode.Continuous" class="playback-controls">
+                    <button :disabled="shouldDisableMotion" @click="togglePause">
+                      {{ isPaused ? '▶️ 继续旋转' : '⏸️ 暂停旋转' }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Motion Status -->
+                <div class="motion-status">
+                  <p v-if="shouldDisableMotion" class="status-disabled">🛡️ 页面旋转已禁用 - 保护您免受动效影响</p>
+                  <p v-else-if="modelValue === Mode.Continuous && shouldRotate" class="status-active">
+                    🔄 页面旋转活跃中
+                  </p>
+                  <p v-else-if="modelValue === Mode.Continuous && isPaused" class="status-paused">⏸️ 页面旋转已暂停</p>
+                </div>
+              </div>
             </div>
             <div v-if="modelValue === Mode.Continuous" class="setting-item">
               <label>连续模式间隔时间</label>
@@ -168,13 +220,115 @@ const setPresetInterval = (value: number) => {
     }
   }
 }
+
+.motion-controls {
+  .motion-warning {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-left: 4px solid #{$color-danger};
+    border-radius: 6px;
+
+    background: color.adjust($color-danger, $alpha: -0.9);
+
+    p {
+      margin: 0;
+      font-size: 0.9em;
+      line-height: 1.4;
+      color: color.adjust($color-danger, $lightness: -10%);
+    }
+  }
+
+  .motion-options {
+    margin-bottom: 16px;
+
+    .checkbox-item {
+      cursor: pointer;
+
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      margin-bottom: 12px;
+
+      font-size: 0.95em;
+      color: $color-text-dark;
+
+      input[type='checkbox'] {
+        margin: 0;
+      }
+
+      span {
+        line-height: 1.3;
+      }
+    }
+
+    .playback-controls {
+      margin-top: 16px;
+
+      button {
+        cursor: pointer;
+
+        padding: 8px 16px;
+        border: 1px solid #{$color-accent};
+        border-radius: 20px;
+
+        font-size: 0.9em;
+        color: $color-accent;
+
+        background: transparent;
+
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          color: $color-text-light;
+          background: $color-accent;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  .motion-status {
+    p {
+      margin: 0;
+      padding: 8px 12px;
+      border-radius: 4px;
+
+      font-size: 0.85em;
+      line-height: 1.4;
+
+      &.status-disabled {
+        color: color.adjust($color-danger, $lightness: -5%);
+        background: color.adjust($color-danger, $alpha: -0.95);
+      }
+
+      &.status-active {
+        color: color.adjust($color-accent, $lightness: -5%);
+        background: color.adjust($color-accent, $alpha: -0.95);
+      }
+
+      &.status-paused {
+        color: $color-text-dark;
+        background: color.adjust($color-primary, $lightness: -2%);
+      }
+    }
+  }
+}
+
 .interval-section {
+  /* stylelint-disable-next-line no-descending-specificity */
   .preset-buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     button {
       cursor: pointer;
 
@@ -189,6 +343,7 @@ const setPresetInterval = (value: number) => {
 
       transition: all 0.2s ease;
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &:hover {
         background: color.adjust($color-accent, $alpha: -0.9);
       }
@@ -235,6 +390,7 @@ const setPresetInterval = (value: number) => {
     text-align: center;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   span {
     color: $color-text-dark;
   }
