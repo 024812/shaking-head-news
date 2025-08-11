@@ -40,6 +40,7 @@ export const useMode = () => {
 
     clear()
     storage.setItem(MODE_KEY, mode.value)
+    storage.setItem(CONTINUOUS_MODE_INTERVAL_KEY, continuousModeInterval.value.toString())
 
     if (newValue.interval > 0) {
       timer = setInterval(update, newValue.interval * 1000)
@@ -58,5 +59,5 @@ export const useMode = () => {
 
   onBeforeUnmount(clear)
 
-  return { mode, config: value }
+  return { mode, continuousModeInterval, config: value }
 }

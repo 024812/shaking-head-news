@@ -1,30 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
-import { storage } from '../helpers/storage'
-
-const CONTINUOUS_MODE_INTERVAL_KEY = 'setting.continuousModeInterval'
+import { useMode } from '../composables/useMode'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
 const { latestUpdate } = useLatestUpdate()
-const continuousModeInterval = ref(30)
+const { continuousModeInterval } = useMode()
 
-watch(continuousModeInterval, (value) => {
-  storage.setItem(CONTINUOUS_MODE_INTERVAL_KEY, value.toString())
-})
-
-onMounted(async () => {
-  const storedInterval = await storage.getItem(CONTINUOUS_MODE_INTERVAL_KEY)
-  if (storedInterval && !isNaN(Number(storedInterval))) {
-    continuousModeInterval.value = parseInt(storedInterval, 10)
-  }
-})
+// Preset interval options (in seconds)
+const intervalPresets = [
+  { value: 10, label: '10秒' },
+  { value: 20, label: '20秒' },
+  { value: 30, label: '30秒' },
+  { value: 45, label: '45秒' },
+  { value: 60, label: '1分钟' },
+  { value: 120, label: '2分钟' },
+]
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
+}
+
+const setPresetInterval = (value: number) => {
+  continuousModeInterval.value = value
 }
 </script>
 
@@ -45,10 +46,26 @@ const toggleMenu = () => {
               <ModeSelector v-model="modelValue" />
             </div>
             <div v-if="modelValue === Mode.Continuous" class="setting-item">
-              <label>连续模式中页面多久变动一次</label>
-              <div class="interval-input">
-                <input v-model.number="continuousModeInterval" type="number" min="1" />
-                <span>秒</span>
+              <label>连续模式间隔时间</label>
+              <div class="interval-section">
+                <div class="preset-buttons">
+                  <button
+                    v-for="preset in intervalPresets"
+                    :key="preset.value"
+                    :class="{ active: continuousModeInterval === preset.value }"
+                    @click="setPresetInterval(preset.value)"
+                  >
+                    {{ preset.label }}
+                  </button>
+                </div>
+                <div class="custom-interval">
+                  <label class="custom-label">自定义:</label>
+                  <div class="interval-input">
+                    <input v-model.number="continuousModeInterval" type="number" min="5" max="300" step="1" />
+                    <span>秒</span>
+                  </div>
+                </div>
+                <p class="interval-hint">推荐：30-60秒适合大多数用户</p>
               </div>
             </div>
             <template v-if="latestUpdate?.message">
@@ -151,6 +168,59 @@ const toggleMenu = () => {
     }
   }
 }
+.interval-section {
+  .preset-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    button {
+      cursor: pointer;
+
+      padding: 6px 12px;
+      border: 1px solid #{$color-accent};
+      border-radius: 16px;
+
+      font-size: 0.9em;
+      color: $color-accent;
+
+      background: transparent;
+
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: color.adjust($color-accent, $alpha: -0.9);
+      }
+
+      &.active {
+        color: $color-text-light;
+        background: $color-accent;
+      }
+    }
+  }
+
+  .custom-interval {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .custom-label {
+      margin: 0;
+      font-size: 0.9em;
+      color: $color-text-dark;
+    }
+  }
+
+  .interval-hint {
+    margin: 0;
+    font-size: 0.8em;
+    line-height: 1.4;
+    color: color.adjust($color-text-dark, $alpha: -0.3);
+  }
+}
+
 .interval-input {
   display: flex;
   gap: 8px;
@@ -200,22 +270,6 @@ const toggleMenu = () => {
       padding: 8px 12px;
       border: 1px solid #{$color-accent};
       border-radius: 2px;
-    }
-
-    button {
-      cursor: pointer;
-
-      padding: 8px 12px;
-      border: 1px solid #{$color-accent};
-      border-radius: 2px;
-
-      color: $color-text-light;
-
-      background: $color-accent;
-
-      &:hover {
-        opacity: 0.9;
-      }
     }
   }
 }
