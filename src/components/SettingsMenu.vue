@@ -3,26 +3,13 @@ import { onMounted, ref } from 'vue'
 import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
-import { storage } from '../helpers/storage'
-
-const DATA_SOURCE_KEY = 'setting.dataSource'
-
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
-const dataSourceUrl = ref('')
 const { latestUpdate } = useLatestUpdate()
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
-
-const onSaveDataSource = () => {
-  storage.setItem(DATA_SOURCE_KEY, dataSourceUrl.value)
-}
-
-onMounted(async () => {
-  dataSourceUrl.value = (await storage.getItem(DATA_SOURCE_KEY)) ?? ''
-})
 </script>
 
 <template>
@@ -50,20 +37,6 @@ onMounted(async () => {
                 </div>
               </div>
             </template>
-            <div class="setting-item">
-              <label>数据源</label>
-              <div class="data-source-content">
-                <p class="data-source-description">
-                  请输入新的数据源 URL，可以是 JSON API 或 RSS feed。JSON API
-                  需要返回包含 `date` (YYYY/MM/DD) 和 `content` (string[])
-                  字段的数据。RSS feed 将被自动解析，并截取前 16 条项目。
-                </p>
-                <div class="data-source-input">
-                  <input v-model="dataSourceUrl" type="text" placeholder="https://example.com/news" />
-                  <button @click="onSaveDataSource">保存</button>
-                </div>
-              </div>
-            </div>
             <div class="setting-item">
               <label>关于</label>
               <div class="about-content">

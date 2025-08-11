@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import ContentView from './views/ContentView.vue'
+import SettingsMenu from './components/SettingsMenu.vue'
+import { useMode } from './composables/useMode'
+
+const { mode } = useMode()
 </script>
 
 <template>
   <ContentView />
+  <SettingsMenu v-model="mode" />
   <a
     href="https://github.com/024812/shaking-head-news"
     target="_blank"
