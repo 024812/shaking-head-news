@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import DateTime from '../components/DateTime.vue'
-import SettingsMenu from '../components/SettingsMenu.vue'
 import EverydayNews from '../components/EverydayNews.vue'
 import { useMode } from '../composables/useMode'
 import { useMoment } from '../composables/useMoment'
@@ -23,9 +22,6 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
         <EverydayNews />
       </section>
     </section>
-    <section id="setting">
-      <SettingsMenu v-model="mode" />
-    </section>
   </main>
 </template>
 
@@ -43,12 +39,8 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   transform: v-bind('transform');
 
   overflow: hidden;
-  display: grid;
-  grid-template-areas:
-    'w1'
-    'w2';
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 
   box-sizing: border-box;
@@ -60,21 +52,21 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
 
 #w1 {
   display: flex;
-  grid-area: w1;
   align-items: center;
   justify-content: center;
-
-  min-height: 0; /* Prevent grid item from growing */
+  flex: 0 0 auto; /* Do not grow or shrink */
+  min-height: 0;
+  border-bottom: 2px solid orange;
+  padding-bottom: 1rem;
 }
 
 #w2 {
   overflow: hidden;
   display: flex;
-  grid-area: w2;
   align-items: stretch;
   justify-content: center;
-
-  min-height: 0; /* Allow content to shrink */
+  flex: 1 1 auto; /* Grow to fill space */
+  min-height: 0;
 }
 
 @media (max-width: 820px) {
@@ -88,9 +80,4 @@ watch(config, (n) => (transform.value = `rotate(${n.turn}turn)`))
   }
 }
 
-#setting {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-}
 </style>

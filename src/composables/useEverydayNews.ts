@@ -1,9 +1,6 @@
 import { ref, computed } from 'vue'
 import { EverydayNewsService } from '../services/EverydayNewsService'
 import type { IEverydayNews } from '../types'
-import { storage } from '../helpers/storage'
-
-const DATA_SOURCE_KEY = 'setting.dataSource'
 
 // Standard composable function. A new state will be created for each component instance.
 export const useEverydayNews = () => {
@@ -64,10 +61,6 @@ export const useEverydayNews = () => {
   // The init logic is now part of the composable's setup.
   // It will run when a component using this composable is mounted.
   const init = async () => {
-    const customDataSource = await storage.getItem(DATA_SOURCE_KEY)
-    if (customDataSource) {
-      everydayNewsService.value = new EverydayNewsService(customDataSource)
-    }
     await fetchTodayNews()
   }
 

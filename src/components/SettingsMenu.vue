@@ -1,28 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
 import { storage } from '../helpers/storage'
 
-const DATA_SOURCE_KEY = 'setting.dataSource'
+const CONTINUOUS_MODE_INTERVAL_KEY = 'setting.continuousModeInterval'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
-const dataSourceUrl = ref('')
 const { latestUpdate } = useLatestUpdate()
+const continuousModeInterval = ref(30)
+
+watch(continuousModeInterval, (value) => {
+  storage.setItem(CONTINUOUS_MODE_INTERVAL_KEY, value.toString())
+})
+
+onMounted(async () => {
+  const storedInterval = await storage.getItem(CONTINUOUS_MODE_INTERVAL_KEY)
+  if (storedInterval && !isNaN(Number(storedInterval))) {
+    continuousModeInterval.value = parseInt(storedInterval, 10)
+  }
+})
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
-
-const onSaveDataSource = () => {
-  storage.setItem(DATA_SOURCE_KEY, dataSourceUrl.value)
-}
-
-onMounted(async () => {
-  dataSourceUrl.value = (await storage.getItem(DATA_SOURCE_KEY)) ?? ''
-})
 </script>
 
 <template>
@@ -41,6 +44,13 @@ onMounted(async () => {
               <label>模式</label>
               <ModeSelector v-model="modelValue" />
             </div>
+           <div v-if="modelValue === Mode.Continuous" class="setting-item">
+             <label>连续模式中页面多久变动一次</label>
+             <div class="interval-input">
+               <input v-model.number="continuousModeInterval" type="number" min="1" />
+               <span>秒</span>
+             </div>
+           </div>
             <template v-if="latestUpdate?.message">
               <div class="setting-item">
                 <label>最新动态</label>
@@ -51,31 +61,13 @@ onMounted(async () => {
               </div>
             </template>
             <div class="setting-item">
-              <label>数据源</label>
-              <div class="data-source-content">
-                <p class="data-source-description">
-                  请输入新的数据源 URL，可以是 JSON API 或 RSS feed。JSON API
-                  需要返回包含 `date` (YYYY/MM/DD) 和 `content` (string[])
-                  字段的数据。RSS feed 将被自动解析，并截取前 16 条项目。
-                </p>
-                <div class="data-source-input">
-                  <input v-model="dataSourceUrl" type="text" placeholder="https://example.com/news" />
-                  <button @click="onSaveDataSource">保存</button>
-                </div>
-              </div>
-            </div>
-            <div class="setting-item">
               <label>关于</label>
               <div class="about-content">
                 <p class="about-description">
                   Shaking Head News is a browser extension that helps you exercise your neck while you read the news.
                 </p>
                 <div class="links-section">
-                  <a href="https://github.com/024812/shaking-head-news" target="_blank" class="link-item">
-                    <img src="/icons/code.svg" alt="Source Code" />
-                    <span>查看源码</span>
-                  </a>
-                  <a href="https://www.024812.xyz" target="_blank" class="link-item">
+                  <a href="https://oheng.com" target="_blank" class="link-item">
                     <img src="/icons/blog.svg" alt="Blog" />
                     <span>访问作者博客</span>
                   </a>
@@ -96,7 +88,10 @@ onMounted(async () => {
 @import '../variables';
 
 .settings-container {
-  position: relative;
+  position: fixed;
+  bottom: 16px;
+  right: 56px; /* 16px for its own margin + 32px for github icon + 8px spacing */
+  z-index: 10;
 }
 
 .icon-button {
@@ -155,6 +150,23 @@ onMounted(async () => {
       color: $color-accent;
     }
   }
+}
+.interval-input {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+
+ input {
+   width: 80px;
+   padding: 8px 12px;
+   border: 1px solid #{$color-accent};
+   border-radius: 2px;
+   text-align: center;
+ }
+
+ span {
+   color: $color-text-dark;
+ }
 }
 
 .about-content {
