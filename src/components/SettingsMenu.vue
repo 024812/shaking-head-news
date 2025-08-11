@@ -67,11 +67,7 @@ const toggleMenu = () => {
                   Shaking Head News is a browser extension that helps you exercise your neck while you read the news.
                 </p>
                 <div class="links-section">
-                  <a href="https://github.com/024812/shaking-head-news" target="_blank" class="link-item">
-                    <img src="/icons/code.svg" alt="Source Code" />
-                    <span>查看源码</span>
-                  </a>
-                  <a href="https://www.024812.xyz" target="_blank" class="link-item">
+                  <a href="https://oheng.com" target="_blank" class="link-item">
                     <img src="/icons/blog.svg" alt="Blog" />
                     <span>访问作者博客</span>
                   </a>
