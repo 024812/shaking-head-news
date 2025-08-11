@@ -8,7 +8,7 @@
 
 ## 🚀 **在线演示**
 
-[https://www.024812.xyz](https://www.024812.xyz)
+[https://oheng.com](https://oheng.com)
 
 ##  **项目理念**
 
@@ -17,15 +17,13 @@
 ## ✨ **主要特色**
 
 ### 📰 **每日新闻 + 颈椎健康**
-- 使用 [EverydayNews](https://github.com/ravelloh/everydaynews) 作为数据源
-- 实时获取每日新闻资讯
-- 支持历史日期新闻查询
-- 优雅降级到最新可用新闻
+- **多数据源支持**: 支持 [EverydayNews](https://github.com/ravelloh/everydaynews) 和自定义 RSS 订阅源。
+- **实时新闻**: 自动获取最新新闻资讯。
+- **智能降级**: 当日新闻不可用时，自动获取最新可用新闻。
 
 ### 🤖 **三种摇头模式**
-- **柔和模式**: 轻微摇头，适合敏感颈椎
-- **连续模式**: 每4秒自动摇头，持续提醒
-- **全面模式**: 随机角度摇头，全面活动颈椎（默认）
+- **固定模式**: 页面保持固定，适合静态阅读。
+- **连续模式**: 页面按设定的时间间隔（默认为30秒）自动转动，持续提醒活动颈椎。
 
 ### 🎯 **设计哲学**
 将日常的"摇头叹息"转化为有益的颈椎运动，让看新闻变成一种健康的习惯。
@@ -87,7 +85,7 @@ npm run build
 ## 🔧 **配置**
 
 ### 数据源配置
-- **新闻数据**: 自动从 `https://ravelloh.github.io/EverydayNews/` 获取
+- **新闻数据**: 默认从 `https://ravelloh.github.io/EverydayNews/` 获取，同时支持用户在设置中添加自定义 RSS 订阅源。
 - **缓存策略**: 基于浏览器扩展存储API
 - **更新频率**: 每次打开新标签页时检查更新
 
@@ -101,7 +99,7 @@ npm run build
 shaking-head-news/
 ├── src/
 │   ├── components/          # Vue 组件
-│   │   ├── TodayEvent.vue  # 新闻展示组件
+│   │   ├── EverydayNews.vue  # 新闻展示组件
 │   │   ├── DateTime.vue    # 时间日期组件
 │   │   ├── ContentCard.vue # 内容卡片组件
 │   │   └── SettingsMenu.vue # 设置菜单组件
