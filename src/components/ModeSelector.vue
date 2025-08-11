@@ -12,7 +12,7 @@ interface IModeSelector {
 }
 
 const MODE_OPTIONS: IOption[] = [
-  { label: '柔和模式', value: Mode.Soft },
+  { label: '固定模式', value: Mode.Soft },
   { label: '连续模式', value: Mode.Continuous },
 ]
 
