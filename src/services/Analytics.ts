@@ -425,8 +425,9 @@ export class AnalyticsTracker {
     recentEvents
       .filter((e) => e.category === 'mode')
       .forEach((event) => {
-        const mode = event.metadata?.to || event.label || 'unknown'
-        modeUsage[mode] = (modeUsage[mode] || 0) + 1
+        const mode = String((event.metadata as Record<string, unknown>)?.to || event.label || 'unknown')
+        if (!modeUsage[mode]) modeUsage[mode] = 0
+        modeUsage[mode] += 1
       })
 
     return {

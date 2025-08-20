@@ -146,7 +146,7 @@ export class AdvancedRssParser {
             title: json.feed?.title || 'RSS Feed',
             description: json.feed?.description || '',
             link: json.feed?.link || sourceUrl || '',
-            items: json.items.slice(0, this.config.maxItems).map(this.normalizeRssItem),
+            items: json.items.slice(0, this.config.maxItems).map((item: unknown) => this.normalizeRssItem(item)),
           }
         }
       }
@@ -239,7 +239,7 @@ export class AdvancedRssParser {
           title: json.title || 'JSON Feed',
           description: json.description || '',
           link: json.home_page_url || sourceUrl || '',
-          items: json.items.slice(0, this.config.maxItems).map(this.normalizeJsonFeedItem),
+          items: json.items.slice(0, this.config.maxItems).map((item: unknown) => this.normalizeJsonFeedItem(item)),
         }
       }
 
@@ -249,7 +249,7 @@ export class AdvancedRssParser {
           title: 'JSON Feed',
           description: '',
           link: sourceUrl || '',
-          items: json.slice(0, this.config.maxItems).map(this.normalizeJsonItem),
+          items: json.slice(0, this.config.maxItems).map((item: unknown) => this.normalizeJsonItem(item)),
         }
       }
 
@@ -259,7 +259,7 @@ export class AdvancedRssParser {
           title: 'News API Feed',
           description: '',
           link: sourceUrl || '',
-          items: json.articles.slice(0, this.config.maxItems).map(this.normalizeNewsApiItem),
+          items: json.articles.slice(0, this.config.maxItems).map((item: unknown) => this.normalizeNewsApiItem(item)),
         }
       }
 
@@ -269,7 +269,7 @@ export class AdvancedRssParser {
           title: json.title || 'JSON Feed',
           description: json.description || '',
           link: json.link || sourceUrl || '',
-          items: json.items.slice(0, this.config.maxItems).map(this.normalizeJsonItem),
+          items: json.items.slice(0, this.config.maxItems).map((item: unknown) => this.normalizeJsonItem(item)),
         }
       }
 
@@ -353,61 +353,75 @@ export class AdvancedRssParser {
 
   // Normalize RSS proxy item
   private normalizeRssItem(item: unknown): INewsItem {
+    const rssItem = item as Record<string, unknown>
     return {
-      id: item.guid || item.link,
-      title: item.title,
-      description: item.description,
-      content: item.content,
-      url: item.link,
-      publishedAt: item.pubDate,
+      id: String(rssItem.guid || rssItem.link || ''),
+      title: String(rssItem.title || ''),
+      description: String(rssItem.description || ''),
+      content: rssItem.content ? String(rssItem.content) : undefined,
+      url: String(rssItem.link || ''),
+      publishedAt: String(rssItem.pubDate || ''),
       source: 'RSS',
-      author: item.author,
-      imageUrl: this.config.extractImages ? this.extractImageUrl(item.content || item.description) : undefined,
+      author: rssItem.author ? String(rssItem.author) : undefined,
+      imageUrl: this.config.extractImages
+        ? this.extractImageUrl(String(rssItem.content || rssItem.description || ''))
+        : undefined,
     }
   }
 
   // Normalize JSON Feed item
   private normalizeJsonFeedItem(item: unknown): INewsItem {
+    const jsonItem = item as Record<string, unknown>
+    const author = jsonItem.author as Record<string, unknown> | undefined
     return {
-      id: item.id || item.url,
-      title: item.title,
-      description: item.summary || item.content_text,
-      content: item.content_html || item.content_text,
-      url: item.url,
-      publishedAt: item.date_published || item.published,
+      id: String(jsonItem.id || jsonItem.url || ''),
+      title: String(jsonItem.title || ''),
+      description: String(jsonItem.summary || jsonItem.content_text || ''),
+      content:
+        jsonItem.content_html || jsonItem.content_text
+          ? String(jsonItem.content_html || jsonItem.content_text)
+          : undefined,
+      url: String(jsonItem.url || ''),
+      publishedAt: String(jsonItem.date_published || jsonItem.published || ''),
       source: 'JSON Feed',
-      author: item.author?.name,
-      imageUrl: item.image || item.banner_image,
+      author: author?.name ? String(author.name) : undefined,
+      imageUrl: jsonItem.image || jsonItem.banner_image ? String(jsonItem.image || jsonItem.banner_image) : undefined,
     }
   }
 
   // Normalize generic JSON item
   private normalizeJsonItem(item: unknown): INewsItem {
+    const jsonItem = item as Record<string, unknown>
     return {
-      id: item.id || item.url || String(Math.random()),
-      title: item.title || item.headline || '',
-      description: item.description || item.summary || item.excerpt || '',
-      content: item.content || item.body || '',
-      url: item.url || item.link || '',
-      publishedAt: item.publishedAt || item.date || item.created_at || new Date().toISOString(),
+      id: String(jsonItem.id || jsonItem.url || Math.random()),
+      title: String(jsonItem.title || jsonItem.headline || ''),
+      description: String(jsonItem.description || jsonItem.summary || jsonItem.excerpt || ''),
+      content: jsonItem.content || jsonItem.body ? String(jsonItem.content || jsonItem.body) : undefined,
+      url: String(jsonItem.url || jsonItem.link || ''),
+      publishedAt: String(jsonItem.publishedAt || jsonItem.date || jsonItem.created_at || new Date().toISOString()),
       source: 'JSON',
-      author: item.author || item.creator || '',
-      imageUrl: item.image || item.thumbnail || item.featured_image,
+      author: jsonItem.author || jsonItem.creator ? String(jsonItem.author || jsonItem.creator) : undefined,
+      imageUrl:
+        jsonItem.image || jsonItem.thumbnail || jsonItem.featured_image
+          ? String(jsonItem.image || jsonItem.thumbnail || jsonItem.featured_image)
+          : undefined,
     }
   }
 
   // Normalize NewsAPI item
   private normalizeNewsApiItem(item: unknown): INewsItem {
+    const newsItem = item as Record<string, unknown>
+    const source = newsItem.source as Record<string, unknown> | undefined
     return {
-      id: item.url,
-      title: item.title,
-      description: item.description,
-      content: item.content,
-      url: item.url,
-      publishedAt: item.publishedAt,
-      source: item.source?.name || 'News API',
-      author: item.author,
-      imageUrl: item.urlToImage,
+      id: String(newsItem.url || ''),
+      title: String(newsItem.title || ''),
+      description: newsItem.description ? String(newsItem.description) : undefined,
+      content: newsItem.content ? String(newsItem.content) : undefined,
+      url: String(newsItem.url || ''),
+      publishedAt: String(newsItem.publishedAt || ''),
+      source: source?.name ? String(source.name) : 'News API',
+      author: newsItem.author ? String(newsItem.author) : undefined,
+      imageUrl: newsItem.urlToImage ? String(newsItem.urlToImage) : undefined,
     }
   }
 
