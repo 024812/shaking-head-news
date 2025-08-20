@@ -4,7 +4,12 @@
       "Bash(git add:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run build:*)",
-      "Bash(npx stylelint:*)"
+      "Bash(npx stylelint:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

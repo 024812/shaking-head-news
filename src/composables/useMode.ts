@@ -62,8 +62,8 @@ export const useMode = () => {
 
   watch([mode, continuousModeInterval, shouldRotate], () => {
     clear()
-    storage.setItem(MODE_KEY, mode.value)
-    storage.setItem(CONTINUOUS_MODE_INTERVAL_KEY, continuousModeInterval.value.toString())
+    storage.set(MODE_KEY, mode.value)
+    storage.set(CONTINUOUS_MODE_INTERVAL_KEY, continuousModeInterval.value.toString())
 
     if (shouldRotate.value) {
       startRotation()
@@ -74,11 +74,11 @@ export const useMode = () => {
   })
 
   onBeforeMount(async () => {
-    const storedMode = (await storage.getItem(MODE_KEY)) as Mode | null
-    const storedInterval = await storage.getItem(CONTINUOUS_MODE_INTERVAL_KEY)
+    const storedMode = (await storage.get(MODE_KEY)) as Mode | null
+    const storedInterval = await storage.get(CONTINUOUS_MODE_INTERVAL_KEY)
 
     mode.value = storedMode ?? Mode.Soft
-    if (storedInterval && !isNaN(Number(storedInterval))) {
+    if (storedInterval && typeof storedInterval === 'string' && !isNaN(Number(storedInterval))) {
       continuousModeInterval.value = parseInt(storedInterval, 10)
     }
   })

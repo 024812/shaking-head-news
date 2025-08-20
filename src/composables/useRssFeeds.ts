@@ -1,174 +1,218 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { storage } from '../helpers/storage'
-import { EverydayNewsService } from '../services/EverydayNewsService'
 
 export interface IRssFeed {
   id: string
   name: string
   url: string
+  isActive: boolean
   enabled: boolean
   lastUpdated?: string
   error?: string
 }
 
-const RSS_FEEDS_KEY = 'setting.rssFeeds'
+const STORAGE_KEY = 'setting.rssFeeds'
 const ACTIVE_FEED_KEY = 'setting.activeFeed'
 
+const defaultFeeds: IRssFeed[] = [
+  {
+    id: 'everyday-news',
+    name: 'EverydayNews',
+    url: 'https://ravelloh.github.io/EverydayNews',
+    isActive: true,
+    enabled: true,
+  },
+  {
+    id: 'ravelloh-rss',
+    name: 'Ravelloh RSS',
+    url: 'https://news.ravelloh.top/rss.xml',
+    isActive: false,
+    enabled: true,
+  },
+]
+
+const rssFeeds = ref<IRssFeed[]>(defaultFeeds)
+const activeFeedId = ref<string>('everyday-news')
+
 export const useRssFeeds = () => {
-  const feeds = ref<IRssFeed[]>([])
-  const activeFeedId = ref<string>('')
-  const isLoading = ref(false)
-  const error = ref<string | null>(null)
-
-  // Default feeds
-  const defaultFeeds: IRssFeed[] = [
-    {
-      id: 'everydaynews',
-      name: '每日新闻 (EverydayNews)',
-      url: 'https://ravelloh.github.io/EverydayNews',
-      enabled: true,
-    },
-    {
-      id: 'ravelloh-rss',
-      name: 'Ravelloh RSS',
-      url: 'https://news.ravelloh.top/rss.xml',
-      enabled: true,
-    },
-  ]
-
-  const generateId = () => {
-    return `feed_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-  }
-
-  const addFeed = (name: string, url: string) => {
-    const newFeed: IRssFeed = {
-      id: generateId(),
-      name: name.trim(),
-      url: url.trim(),
-      enabled: true,
-    }
-    feeds.value.push(newFeed)
-    saveFeeds()
-    return newFeed
-  }
-
-  const removeFeed = (feedId: string) => {
-    const index = feeds.value.findIndex((f) => f.id === feedId)
-    if (index > -1) {
-      feeds.value.splice(index, 1)
-      // If removing the active feed, switch to the first available
-      if (activeFeedId.value === feedId && feeds.value.length > 0) {
-        activeFeedId.value = feeds.value[0].id
-        storage.setItem(ACTIVE_FEED_KEY, activeFeedId.value)
-      }
-      saveFeeds()
-    }
-  }
-
-  const toggleFeed = (feedId: string) => {
-    const feed = feeds.value.find((f) => f.id === feedId)
-    if (feed) {
-      feed.enabled = !feed.enabled
-      saveFeeds()
-    }
-  }
-
-  const setActiveFeed = (feedId: string) => {
-    const feed = feeds.value.find((f) => f.id === feedId)
-    if (feed && feed.enabled) {
-      activeFeedId.value = feedId
-      storage.setItem(ACTIVE_FEED_KEY, feedId)
-    }
-  }
-
-  const getActiveFeed = (): IRssFeed | null => {
-    return feeds.value.find((f) => f.id === activeFeedId.value) || null
-  }
-
-  const validateFeedUrl = async (url: string): Promise<{ valid: boolean; error?: string }> => {
+  const loadFeeds = async () => {
     try {
-      const service = new EverydayNewsService(url)
-      const result = await service.getNewsFromRss(url)
-      return { valid: result !== null }
-    } catch (err) {
-      return {
-        valid: false,
-        error: err instanceof Error ? err.message : 'Invalid RSS feed',
-      }
-    }
-  }
-
-  const testFeed = async (feedId: string): Promise<boolean> => {
-    const feed = feeds.value.find((f) => f.id === feedId)
-    if (!feed) return false
-
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const validation = await validateFeedUrl(feed.url)
-      if (validation.valid) {
-        feed.error = undefined
-        feed.lastUpdated = new Date().toISOString()
+      const stored = await storage.get<IRssFeed[]>(STORAGE_KEY)
+      if (stored && Array.isArray(stored) && stored.length > 0) {
+        rssFeeds.value = stored
       } else {
-        feed.error = validation.error || 'Feed validation failed'
+        // Ensure we always have the default feeds
+        rssFeeds.value = [...defaultFeeds]
       }
-      saveFeeds()
-      return validation.valid
-    } catch (err) {
-      feed.error = err instanceof Error ? err.message : 'Test failed'
-      saveFeeds()
-      return false
-    } finally {
-      isLoading.value = false
+    } catch (error) {
+      console.error('Failed to load RSS feeds:', error)
+      // Fallback to default feeds
+      rssFeeds.value = [...defaultFeeds]
     }
   }
 
   const saveFeeds = async () => {
-    await storage.setItem(RSS_FEEDS_KEY, JSON.stringify(feeds.value))
-  }
-
-  const loadFeeds = async () => {
     try {
-      const stored = await storage.getItem(RSS_FEEDS_KEY)
-      const storedActiveFeed = await storage.getItem(ACTIVE_FEED_KEY)
-
-      if (stored) {
-        const parsed = JSON.parse(stored) as IRssFeed[]
-        feeds.value = parsed
-      } else {
-        // Initialize with default feeds
-        feeds.value = [...defaultFeeds]
-        await saveFeeds()
-      }
-
-      // Set active feed
-      if (storedActiveFeed && feeds.value.some((f) => f.id === storedActiveFeed)) {
-        activeFeedId.value = storedActiveFeed
-      } else if (feeds.value.length > 0) {
-        activeFeedId.value = feeds.value[0].id
-        await storage.setItem(ACTIVE_FEED_KEY, activeFeedId.value)
-      }
-    } catch (err) {
-      console.warn('Failed to load RSS feeds:', err)
-      feeds.value = [...defaultFeeds]
-      activeFeedId.value = defaultFeeds[0].id
+      await storage.set(STORAGE_KEY, rssFeeds.value)
+    } catch (error) {
+      console.error('Failed to save RSS feeds:', error)
     }
   }
 
-  onMounted(loadFeeds)
+  const loadActiveFeed = async () => {
+    try {
+      const stored = await storage.get<string>(ACTIVE_FEED_KEY)
+      if (
+        stored &&
+        rssFeeds.value &&
+        Array.isArray(rssFeeds.value) &&
+        rssFeeds.value.some((feed) => feed.id === stored)
+      ) {
+        activeFeedId.value = stored
+      }
+    } catch (error) {
+      console.error('Failed to load active feed:', error)
+    }
+  }
+
+  const saveActiveFeed = async () => {
+    try {
+      await storage.set(ACTIVE_FEED_KEY, activeFeedId.value)
+    } catch (error) {
+      console.error('Failed to save active feed:', error)
+    }
+  }
+
+  const addFeed = async (name: string, url: string) => {
+    const id = `feed-${Date.now()}`
+    const newFeed: IRssFeed = {
+      id,
+      name,
+      url,
+      isActive: false,
+      enabled: true,
+    }
+
+    rssFeeds.value.push(newFeed)
+    await saveFeeds()
+    return newFeed
+  }
+
+  const removeFeed = async (id: string) => {
+    rssFeeds.value = rssFeeds.value.filter((feed: IRssFeed) => feed.id !== id)
+
+    // If removing active feed, switch to first available
+    if (activeFeedId.value === id && rssFeeds.value.length > 0) {
+      activeFeedId.value = rssFeeds.value[0].id
+      await saveActiveFeed()
+    }
+
+    await saveFeeds()
+  }
+
+  const setActiveFeed = async (id: string) => {
+    const feed = rssFeeds.value.find((f: IRssFeed) => f.id === id)
+    if (feed) {
+      // Deactivate all feeds
+      rssFeeds.value.forEach((f: IRssFeed) => (f.isActive = false))
+      // Activate selected feed
+      feed.isActive = true
+      activeFeedId.value = id
+
+      await saveFeeds()
+      await saveActiveFeed()
+    }
+  }
+
+  const toggleFeed = async (id: string) => {
+    const feed = rssFeeds.value.find((f: IRssFeed) => f.id === id)
+    if (feed) {
+      feed.enabled = !feed.enabled
+      await saveFeeds()
+    }
+  }
+
+  const updateFeedStatus = async (id: string, status: Partial<IRssFeed>) => {
+    const feed = rssFeeds.value.find((f: IRssFeed) => f.id === id)
+    if (feed) {
+      Object.assign(feed, status)
+      await saveFeeds()
+    }
+  }
+
+  const getActiveFeed = () => {
+    return rssFeeds.value.find((feed) => feed.id === activeFeedId.value)
+  }
+
+  const testFeed = async (feedId: string): Promise<boolean> => {
+    const feed = rssFeeds.value.find((f: IRssFeed) => f.id === feedId)
+    if (!feed) return false
+
+    try {
+      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`)
+      const data = await response.json()
+
+      if (data.contents) {
+        // Try to parse as RSS
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(data.contents, 'text/xml')
+
+        // Check if it's valid RSS
+        const rssItems = doc.querySelectorAll('item')
+        const isValid = rssItems.length > 0
+
+        // Update feed status
+        await updateFeedStatus(feedId, {
+          lastUpdated: new Date().toISOString(),
+          error: isValid ? undefined : 'Invalid RSS format',
+        })
+
+        return isValid
+      }
+
+      await updateFeedStatus(feedId, {
+        lastUpdated: new Date().toISOString(),
+        error: 'No content received',
+      })
+      return false
+    } catch (error) {
+      console.error('Feed test failed:', error)
+      await updateFeedStatus(feedId, {
+        lastUpdated: new Date().toISOString(),
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+      return false
+    }
+  }
+
+  // Return computed values for template
+  const feeds = rssFeeds
+  const isLoading = ref(false)
+
+  const resetToDefaults = async () => {
+    rssFeeds.value = defaultFeeds
+    activeFeedId.value = 'everyday-news'
+    await saveFeeds()
+    await saveActiveFeed()
+  }
+
+  const init = async () => {
+    await loadFeeds()
+    await loadActiveFeed()
+  }
 
   return {
     feeds,
     activeFeedId,
     isLoading,
-    error,
+    init,
     addFeed,
     removeFeed,
-    toggleFeed,
     setActiveFeed,
+    toggleFeed,
+    updateFeedStatus,
     getActiveFeed,
-    validateFeedUrl,
     testFeed,
+    resetToDefaults,
   }
 }

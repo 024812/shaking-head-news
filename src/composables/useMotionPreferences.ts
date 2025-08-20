@@ -48,13 +48,13 @@ export const useMotionPreferences = () => {
   }
 
   const savePreferences = async () => {
-    await storage.setItem(MOTION_PREFERENCES_KEY, JSON.stringify(motionPreferences.value))
+    await storage.set(MOTION_PREFERENCES_KEY, JSON.stringify(motionPreferences.value))
   }
 
   const loadPreferences = async () => {
     try {
-      const stored = await storage.getItem(MOTION_PREFERENCES_KEY)
-      if (stored) {
+      const stored = await storage.get<string>(MOTION_PREFERENCES_KEY)
+      if (stored && typeof stored === 'string') {
         const parsed = JSON.parse(stored)
         motionPreferences.value = { ...motionPreferences.value, ...parsed }
       }

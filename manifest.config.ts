@@ -15,7 +15,7 @@ export default {
     '64': 'icons/logo64.png',
     '128': 'icons/logo128.png',
   },
-  permissions: ['storage', 'https://api.allorigins.win/'],
+  permissions: ['storage'],
   content_security_policy: {
     extension_pages: "script-src 'self'; object-src 'self';",
   },

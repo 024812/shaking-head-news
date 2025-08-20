@@ -1,24 +1,211 @@
+<template>
+  <div class="settings-container">
+    <img src="/icons/settings.svg" alt="Settings" class="icon-button" @click="toggleMenu" />
+
+    <div v-if="isOpen" class="settings-overlay" @click="toggleMenu">
+      <div class="settings-menu" @click.stop>
+        <div class="settings-header">
+          <h3>设置</h3>
+          <img class="icon-button" src="/icons/close.svg" alt="Close" @click="toggleMenu" />
+        </div>
+        <div class="settings-content">
+          <div class="setting-item">
+            <label>模式</label>
+            <ModeSelector v-model="modelValue" />
+          </div>
+
+          <!-- Motion Accessibility Settings -->
+          <div class="setting-item">
+            <label>动效与无障碍</label>
+            <div class="motion-controls">
+              <!-- System Motion Preference Warning -->
+              <div v-if="prefersReducedMotion" class="motion-warning">
+                <p>⚠️ 检测到您的系统偏好减少动效。页面旋转已自动禁用以保护您的健康。</p>
+              </div>
+
+              <!-- Motion Controls -->
+              <div class="motion-options">
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    :checked="motionPreferences.respectSystemPreferences"
+                    @change="
+                      setMotionPreference('respectSystemPreferences', ($event.target as HTMLInputElement).checked)
+                    "
+                  />
+                  <span>遵循系统动效偏好设置</span>
+                </label>
+
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    :checked="motionPreferences.allowMotion"
+                    @change="setMotionPreference('allowMotion', ($event.target as HTMLInputElement).checked)"
+                  />
+                  <span>允许页面旋转动效</span>
+                </label>
+
+                <!-- Pause/Play for Continuous Mode -->
+                <div v-if="modelValue === Mode.Continuous" class="playback-controls">
+                  <button :disabled="shouldDisableMotion" @click="togglePause">
+                    {{ isPaused ? '▶️ 继续旋转' : '⏸️ 暂停旋转' }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Motion Status -->
+              <div class="motion-status">
+                <p v-if="shouldDisableMotion" class="status-disabled">🛡️ 页面旋转已禁用 - 保护您免受动效影响</p>
+                <p v-else-if="modelValue === Mode.Continuous && shouldRotate" class="status-active">
+                  🔄 页面旋转活跃中
+                </p>
+                <p v-else-if="modelValue === Mode.Continuous && isPaused" class="status-paused">⏸️ 页面旋转已暂停</p>
+              </div>
+            </div>
+          </div>
+          <div v-if="modelValue === Mode.Continuous" class="setting-item">
+            <label>连续模式间隔时间</label>
+            <div class="interval-section">
+              <div class="preset-buttons">
+                <button
+                  v-for="preset in intervalPresets"
+                  :key="preset.value"
+                  :class="{ active: continuousModeInterval === preset.value }"
+                  @click="setPresetInterval(preset.value)"
+                >
+                  {{ preset.label }}
+                </button>
+              </div>
+              <div class="custom-interval">
+                <label class="custom-label">自定义:</label>
+                <div class="interval-input">
+                  <input v-model.number="continuousModeInterval" type="number" min="5" max="300" step="1" />
+                  <span>秒</span>
+                </div>
+              </div>
+              <p class="interval-hint">推荐：30-60秒适合大多数用户</p>
+            </div>
+          </div>
+
+          <!-- RSS Feed Management -->
+          <div class="setting-item">
+            <label>新闻源管理</label>
+            <div class="rss-management">
+              <div class="active-feed">
+                <label>当前活跃源:</label>
+                <select v-model="activeFeedId" @change="setActiveFeed(activeFeedId)">
+                  <option v-for="feed in feeds.filter((f: IRssFeed) => f.enabled)" :key="feed.id" :value="feed.id">
+                    {{ feed.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="rss-controls">
+                <button class="manage-button" @click="toggleRssManagement">
+                  {{ showRssManagement ? '取消管理' : '管理RSS源' }}
+                </button>
+              </div>
+
+              <!-- RSS Management Panel -->
+              <div v-if="showRssManagement" class="rss-panel">
+                <!-- Add New Feed Form -->
+                <div class="add-feed-form">
+                  <h4>添加新RSS源</h4>
+                  <div class="form-group">
+                    <input v-model="newFeedName" placeholder="RSS源名称" maxlength="50" />
+                    <input v-model="newFeedUrl" placeholder="RSS源地址 (http://...)" type="url" />
+                    <div class="form-actions">
+                      <button :disabled="isLoading" @click="handleAddFeed">
+                        {{ isLoading ? '添加中...' : '添加RSS源' }}
+                      </button>
+                    </div>
+                    <p v-if="feedError" class="error-message">{{ feedError }}</p>
+                  </div>
+                </div>
+
+                <!-- Existing Feeds List -->
+                <div class="feeds-list">
+                  <h4>现有RSS源</h4>
+                  <div v-if="feeds.length === 0" class="no-feeds">暂无RSS源</div>
+                  <div v-for="feed in feeds" :key="feed.id" class="feed-item">
+                    <div class="feed-info">
+                      <div class="feed-header">
+                        <span class="feed-name">{{ feed.name }}</span>
+                        <div class="feed-status">
+                          <span v-if="feed.error" class="status-error" :title="feed.error">❌</span>
+                          <span v-else-if="feed.lastUpdated" class="status-success">✅</span>
+                          <span v-else class="status-untested">❓</span>
+                        </div>
+                      </div>
+                      <div class="feed-url">{{ feed.url }}</div>
+                      <div v-if="feed.error" class="feed-error">错误: {{ feed.error }}</div>
+                    </div>
+                    <div class="feed-actions">
+                      <button class="toggle-button" :class="{ active: feed.enabled }" @click="toggleFeed(feed.id)">
+                        {{ feed.enabled ? '启用' : '禁用' }}
+                      </button>
+                      <button :disabled="isLoading" class="test-button" @click="handleTestFeed(feed.id)">测试</button>
+                      <button class="remove-button" @click="handleRemoveFeed(feed.id)">删除</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <template v-if="latestUpdate?.message">
+            <div class="setting-item">
+              <label>最新动态</label>
+              <div class="about-content">
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <p class="about-description" v-html="latestUpdate.message" />
+              </div>
+            </div>
+          </template>
+          <div class="setting-item">
+            <label>关于</label>
+            <div class="about-content">
+              <p class="about-description">
+                Shaking Head News is a browser extension that helps you exercise your neck while you read the news.
+              </p>
+              <div class="links-section">
+                <a href="https://oheng.com" target="_blank" class="link-item">
+                  <img src="/icons/blog.svg" alt="Blog" />
+                  <span>访问作者博客</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ModeSelector from './ModeSelector.vue'
 import { Mode } from '../types'
 import { useLatestUpdate } from '../composables/useLatestUpdateApi'
 import { useMode } from '../composables/useMode'
 import { useMotionPreferences } from '../composables/useMotionPreferences'
-import { useRssFeeds } from '../composables/useRssFeeds'
+import { useRssFeeds, type IRssFeed } from '../composables/useRssFeeds'
 
 const isOpen = ref(false)
 const modelValue = defineModel<Mode>({ required: true })
 const { latestUpdate } = useLatestUpdate()
 const { continuousModeInterval, isPaused, shouldDisableMotion, shouldRotate, togglePause } = useMode()
 const { motionPreferences, prefersReducedMotion, setMotionPreference } = useMotionPreferences()
-const { feeds, activeFeedId, isLoading, addFeed, removeFeed, toggleFeed, setActiveFeed, testFeed } = useRssFeeds()
+const { feeds, activeFeedId, isLoading, addFeed, removeFeed, toggleFeed, setActiveFeed, testFeed, init } = useRssFeeds()
 
 // RSS Feed Management State
 const showRssManagement = ref(false)
 const newFeedName = ref('')
 const newFeedUrl = ref('')
 const feedError = ref<string | null>(null)
+
+// Initialize RSS feeds on mount
+onMounted(() => {
+  init()
+})
 
 // Preset interval options (in seconds)
 const intervalPresets = [
@@ -63,7 +250,7 @@ const handleAddFeed = async () => {
   }
 
   try {
-    const feed = addFeed(newFeedName.value, newFeedUrl.value)
+    const feed = await addFeed(newFeedName.value, newFeedUrl.value)
     // Test the feed after adding
     const isValid = await testFeed(feed.id)
     if (!isValid) {
@@ -90,191 +277,6 @@ const handleTestFeed = async (feedId: string) => {
 }
 </script>
 
-<template>
-  <div class="settings-container">
-    <img src="/icons/settings.svg" alt="Settings" class="icon-button" @click="toggleMenu" />
-
-    <Transition name="slide">
-      <div v-if="isOpen" class="settings-overlay" @click="toggleMenu">
-        <div class="settings-menu" @click.stop>
-          <div class="settings-header">
-            <h3>设置</h3>
-            <img class="icon-button" src="/icons/close.svg" alt="Close" @click="toggleMenu" />
-          </div>
-          <div class="settings-content">
-            <div class="setting-item">
-              <label>模式</label>
-              <ModeSelector v-model="modelValue" />
-            </div>
-
-            <!-- Motion Accessibility Settings -->
-            <div class="setting-item">
-              <label>动效与无障碍</label>
-              <div class="motion-controls">
-                <!-- System Motion Preference Warning -->
-                <div v-if="prefersReducedMotion" class="motion-warning">
-                  <p>⚠️ 检测到您的系统偏好减少动效。页面旋转已自动禁用以保护您的健康。</p>
-                </div>
-
-                <!-- Motion Controls -->
-                <div class="motion-options">
-                  <label class="checkbox-item">
-                    <input
-                      type="checkbox"
-                      :checked="motionPreferences.respectSystemPreferences"
-                      @change="
-                        setMotionPreference('respectSystemPreferences', ($event.target as HTMLInputElement).checked)
-                      "
-                    />
-                    <span>遵循系统动效偏好设置</span>
-                  </label>
-
-                  <label class="checkbox-item">
-                    <input
-                      type="checkbox"
-                      :checked="motionPreferences.allowMotion"
-                      @change="setMotionPreference('allowMotion', ($event.target as HTMLInputElement).checked)"
-                    />
-                    <span>允许页面旋转动效</span>
-                  </label>
-
-                  <!-- Pause/Play for Continuous Mode -->
-                  <div v-if="modelValue === Mode.Continuous" class="playback-controls">
-                    <button :disabled="shouldDisableMotion" @click="togglePause">
-                      {{ isPaused ? '▶️ 继续旋转' : '⏸️ 暂停旋转' }}
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Motion Status -->
-                <div class="motion-status">
-                  <p v-if="shouldDisableMotion" class="status-disabled">🛡️ 页面旋转已禁用 - 保护您免受动效影响</p>
-                  <p v-else-if="modelValue === Mode.Continuous && shouldRotate" class="status-active">
-                    🔄 页面旋转活跃中
-                  </p>
-                  <p v-else-if="modelValue === Mode.Continuous && isPaused" class="status-paused">⏸️ 页面旋转已暂停</p>
-                </div>
-              </div>
-            </div>
-            <div v-if="modelValue === Mode.Continuous" class="setting-item">
-              <label>连续模式间隔时间</label>
-              <div class="interval-section">
-                <div class="preset-buttons">
-                  <button
-                    v-for="preset in intervalPresets"
-                    :key="preset.value"
-                    :class="{ active: continuousModeInterval === preset.value }"
-                    @click="setPresetInterval(preset.value)"
-                  >
-                    {{ preset.label }}
-                  </button>
-                </div>
-                <div class="custom-interval">
-                  <label class="custom-label">自定义:</label>
-                  <div class="interval-input">
-                    <input v-model.number="continuousModeInterval" type="number" min="5" max="300" step="1" />
-                    <span>秒</span>
-                  </div>
-                </div>
-                <p class="interval-hint">推荐：30-60秒适合大多数用户</p>
-              </div>
-            </div>
-
-            <!-- RSS Feed Management -->
-            <div class="setting-item">
-              <label>新闻源管理</label>
-              <div class="rss-management">
-                <div class="active-feed">
-                  <label>当前活跃源:</label>
-                  <select v-model="activeFeedId" @change="setActiveFeed(activeFeedId)">
-                    <option v-for="feed in feeds.filter((f) => f.enabled)" :key="feed.id" :value="feed.id">
-                      {{ feed.name }}
-                    </option>
-                  </select>
-                </div>
-
-                <div class="rss-controls">
-                  <button class="manage-button" @click="toggleRssManagement">
-                    {{ showRssManagement ? '取消管理' : '管理RSS源' }}
-                  </button>
-                </div>
-
-                <!-- RSS Management Panel -->
-                <div v-if="showRssManagement" class="rss-panel">
-                  <!-- Add New Feed Form -->
-                  <div class="add-feed-form">
-                    <h4>添加新RSS源</h4>
-                    <div class="form-group">
-                      <input v-model="newFeedName" placeholder="RSS源名称" maxlength="50" />
-                      <input v-model="newFeedUrl" placeholder="RSS源地址 (http://...)" type="url" />
-                      <div class="form-actions">
-                        <button :disabled="isLoading" @click="handleAddFeed">
-                          {{ isLoading ? '添加中...' : '添加RSS源' }}
-                        </button>
-                      </div>
-                      <p v-if="feedError" class="error-message">{{ feedError }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Existing Feeds List -->
-                  <div class="feeds-list">
-                    <h4>现有RSS源</h4>
-                    <div v-if="feeds.length === 0" class="no-feeds">暂无RSS源</div>
-                    <div v-for="feed in feeds" :key="feed.id" class="feed-item">
-                      <div class="feed-info">
-                        <div class="feed-header">
-                          <span class="feed-name">{{ feed.name }}</span>
-                          <div class="feed-status">
-                            <span v-if="feed.error" class="status-error" :title="feed.error">❌</span>
-                            <span v-else-if="feed.lastUpdated" class="status-success">✅</span>
-                            <span v-else class="status-untested">❓</span>
-                          </div>
-                        </div>
-                        <div class="feed-url">{{ feed.url }}</div>
-                        <div v-if="feed.error" class="feed-error">错误: {{ feed.error }}</div>
-                      </div>
-                      <div class="feed-actions">
-                        <button class="toggle-button" :class="{ active: feed.enabled }" @click="toggleFeed(feed.id)">
-                          {{ feed.enabled ? '启用' : '禁用' }}
-                        </button>
-                        <button :disabled="isLoading" class="test-button" @click="handleTestFeed(feed.id)">测试</button>
-                        <button class="remove-button" @click="handleRemoveFeed(feed.id)">删除</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <template v-if="latestUpdate?.message">
-              <div class="setting-item">
-                <label>最新动态</label>
-                <div class="about-content">
-                  <!-- eslint-disable-next-line vue/no-v-html -->
-                  <p class="about-description" v-html="latestUpdate.message" />
-                </div>
-              </div>
-            </template>
-            <div class="setting-item">
-              <label>关于</label>
-              <div class="about-content">
-                <p class="about-description">
-                  Shaking Head News is a browser extension that helps you exercise your neck while you read the news.
-                </p>
-                <div class="links-section">
-                  <a href="https://oheng.com" target="_blank" class="link-item">
-                    <img src="/icons/blog.svg" alt="Blog" />
-                    <span>访问作者博客</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </div>
-</template>
-
 <style lang="scss" scoped>
 @use 'sass:color';
 
@@ -283,7 +285,7 @@ const handleTestFeed = async (feedId: string) => {
 
 .settings-container {
   position: fixed;
-  z-index: 10;
+  z-index: 9999;
   right: 56px; /* 16px for its own margin + 32px for github icon + 8px spacing */
   bottom: 16px;
 }
@@ -292,19 +294,32 @@ const handleTestFeed = async (feedId: string) => {
   cursor: pointer;
   width: 28px;
   height: 28px;
+  border-radius: 50%;
+  padding: 4px;
+  transition: all 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid $color-accent;
 
   &:hover {
     opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
   }
 }
 
 .settings-overlay {
   position: fixed;
-  z-index: 100;
+  z-index: 10000;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .settings-menu {
@@ -312,13 +327,17 @@ const handleTestFeed = async (feedId: string) => {
   top: 0;
   right: 0;
   bottom: 0;
+  z-index: 10001;
 
   overflow-y: auto;
 
   width: 400px;
   padding: 24px;
 
-  background: $color-text-light;
+  background: #fefdf5; /* $color-text-light */
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
 
 .settings-header {
@@ -329,7 +348,7 @@ const handleTestFeed = async (feedId: string) => {
 
   h3 {
     margin: 0;
-    color: $color-accent;
+    color: #8f8148; /* $color-accent */
   }
 }
 
@@ -341,7 +360,7 @@ const handleTestFeed = async (feedId: string) => {
       display: block;
       margin-bottom: 12px;
       font-size: 1.1em;
-      color: $color-accent;
+      color: #8f8148; /* $color-accent */
     }
   }
 }
@@ -398,7 +417,7 @@ const handleTestFeed = async (feedId: string) => {
         border-radius: 20px;
 
         font-size: 0.9em;
-        color: $color-accent;
+        color: #8f8148; /* $color-accent */
 
         background: transparent;
 
@@ -462,7 +481,7 @@ const handleTestFeed = async (feedId: string) => {
       padding: 8px 12px;
       border: 1px solid #{$color-accent};
       border-radius: 4px;
-      background: $color-text-light;
+      background: #fefdf5; /* $color-text-light */
 
       color: $color-text-dark;
     }
@@ -479,7 +498,7 @@ const handleTestFeed = async (feedId: string) => {
       border-radius: 20px;
 
       font-size: 0.9em;
-      color: $color-accent;
+      color: #8f8148; /* $color-accent */
 
       background: transparent;
 
@@ -503,7 +522,7 @@ const handleTestFeed = async (feedId: string) => {
 
       h4 {
         margin: 0 0 12px;
-        color: $color-accent;
+        color: #8f8148; /* $color-accent */
       }
 
       .form-group {
@@ -551,7 +570,7 @@ const handleTestFeed = async (feedId: string) => {
     .feeds-list {
       h4 {
         margin: 0 0 12px;
-        color: $color-accent;
+        color: #8f8148; /* $color-accent */
       }
 
       .no-feeds {
@@ -568,7 +587,7 @@ const handleTestFeed = async (feedId: string) => {
         padding: 12px;
         border: 1px solid color.adjust($color-accent, $alpha: -0.8);
         border-radius: 6px;
-        background: $color-text-light;
+        background: #fefdf5; /* $color-text-light */
 
         .feed-info {
           flex-grow: 1;
@@ -618,7 +637,7 @@ const handleTestFeed = async (feedId: string) => {
 
             &.toggle-button {
               border-color: #{$color-accent};
-              color: $color-accent;
+              color: #8f8148; /* $color-accent */
               background: transparent;
 
               &.active {
@@ -678,7 +697,7 @@ const handleTestFeed = async (feedId: string) => {
       border-radius: 16px;
 
       font-size: 0.9em;
-      color: $color-accent;
+      color: #8f8148; /* $color-accent */
 
       background: transparent;
 
@@ -815,7 +834,7 @@ const handleTestFeed = async (feedId: string) => {
     padding: 8px;
     border-radius: 12px;
 
-    background: $color-text-light;
+    background: #fefdf5; /* $color-text-light */
     box-shadow: 0 2px 12px #{$color-shadow};
 
     transition:
@@ -827,21 +846,5 @@ const handleTestFeed = async (feedId: string) => {
       box-shadow: 0 4px 16px color.adjust($color-shadow, $alpha: 0.1);
     }
   }
-}
-
-// Slide animation
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.4s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
-}
-
-.slide-enter-to,
-.slide-leave-from {
-  transform: translateX(0);
 }
 </style>
