@@ -1,0 +1,6 @@
+src/components/Badge.vue
+src/components/PreloaderStatus.vue
+src/components/Slider.vue
+src/components/StyledDropdown.vue
+src/components/ToggleSwitch.vue
+src/components/SettingsMenu.vue

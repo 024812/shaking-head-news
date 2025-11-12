@@ -1,141 +1,514 @@
 # 🚀 摇头看新闻 (Shaking Head News)
 
-> **"Shake your head while watching the news"** - 一边摇头一边看新闻的颈椎健康浏览器扩展
+> **"Shake your head while watching the news"** - 一边摇头一边看新闻的颈椎健康 Web 应用
 
 <p align="center">
-  <img width="128" height="128" src="ytkxw.png" />
+  <img width="128" height="128" src="ytkxw.png" alt="Shaking Head News Logo" />
 </p>
+
+<p align="center">
+  <a href="#english-summary">English</a> •
+  <a href="#-在线演示">在线演示</a> •
+  <a href="#-主要特色">特色功能</a> •
+  <a href="#-快速开始">快速开始</a> •
+  <a href="#-技术栈">技术栈</a>
+</p>
+
+---
+
+## English Summary
+
+Shaking Head News is a modern web application that promotes neck health through gentle page rotation while browsing daily news. Built with Next.js 15 and React 19, it features customizable news sources, smart caching, user authentication, and two neck health modes to encourage cervical activity.
+
+**Key Features:**
+- 📰 Customizable news sources with RSS support
+- 🤸 Two rotation modes (Fixed/Continuous) for neck health
+- 🔐 Google OAuth authentication with cloud sync
+- 🌍 Multi-language support (Chinese/English)
+- 📊 Statistics tracking and health reminders
+- 🎨 Modern UI with dark mode support
+- ⚡ Optimized performance with ISR and caching
+
+---
 
 ## 🚀 **在线演示**
 
 [https://024812.xyz](https://024812.xyz)
 
-> 如果不想作为浏览器扩展安装，也可以直接把该网站收藏使用。
+> 现已升级为 Web 应用，无需安装浏览器扩展，直接访问即可使用！
 
-##  **项目理念**
+---
 
-看新闻让人摇头叹息？不如真的摇摇头！这款扩展让你在浏览每日新闻的同时，通过巧妙的页面转动设计促进颈椎活动，把"摇头叹息"变成"健康摇头"。
+## **项目理念**
+
+看新闻让人摇头叹息？不如真的摇摇头！这款应用让你在浏览每日新闻的同时，通过巧妙的页面转动设计促进颈椎活动，把"摇头叹息"变成"健康摇头"。
+
+---
 
 ## ✨ **主要特色**
 
 ### 📰 **高度可定制的新闻源**
-- **内置新闻**: 默认集成 [EverydayNews](https://github.com/ravelloh/everydaynews) 数据源。
-- **RSS 订阅**: 支持添加、管理和切换多个自定义 RSS 订阅源。
-- **智能缓存**: 内置缓存系统，加速内容加载并减少网络请求，支持自定义缓存策略。
+- **内置新闻**: 默认集成 [EverydayNews](https://github.com/ravelloh/everydaynews) 数据源
+- **RSS 订阅**: 支持添加、管理和切换多个自定义 RSS 订阅源
+- **智能缓存**: ISR (Incremental Static Regeneration) 缓存策略，加速内容加载
+- **OPML 导入/导出**: 方便迁移和备份 RSS 订阅
 
 ### 🤸 **智能颈椎健康模式**
 - **两种核心模式**:
-    - **固定模式 (Soft)**: 页面保持近乎固定，仅进行微小、不易察觉的转动，适合需要集中注意力的静态阅读。
-    - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（预设10秒至2分钟，或自定义）自动转动，有效提醒和促进颈部活动。
+    - **固定模式 (Fixed)**: 页面保持近乎固定，仅进行微小、不易察觉的转动，适合需要集中注意力的静态阅读
+    - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（10秒至2分钟）自动转动，有效提醒和促进颈部活动
 - **动效与无障碍**:
-    - **尊重系统偏好**: 自动检测并遵循操作系统的“减弱动态效果”设置。
-    - **手动控制**: 用户可随时暂停/继续页面旋转，或完全禁用旋转效果。
-    - **清晰的状态提示**: 明确告知用户当前的旋转状态（激活、暂停、禁用）。
+    - **尊重系统偏好**: 自动检测并遵循操作系统的"减弱动态效果"设置
+    - **手动控制**: 用户可随时暂停/继续页面旋转，或完全禁用旋转效果
+    - **清晰的状态提示**: 明确告知用户当前的旋转状态（激活、暂停、禁用）
 
-### 🎨 **用户体验**
-- **简洁布局**: 专注于新闻和时间显示
-- **响应式设计**: 适配各种屏幕尺寸
-- **可滚动内容**: 支持大量新闻内容展示
-- **休息日提醒**: 快速知晓下一个休息日
+### 🔐 **用户认证与云同步**
+- **Google OAuth 登录**: 安全便捷的第三方登录
+- **云端设置同步**: 用户设置自动保存到云端，跨设备同步
+- **隐私保护**: 仅存储必要的用户设置，不收集个人信息
+
+### 📊 **统计数据与健康提醒**
+- **运动记录**: 自动记录每次页面旋转的角度和时长
+- **数据可视化**: 图表展示每日、每周、每月的运动统计
+- **健康提醒**: 浏览器通知提醒用户达成每日运动目标
+- **目标设置**: 自定义每日运动次数目标
+
+### 🌍 **多语言支持**
+- **中英文切换**: 完整的中英文界面支持
+- **自动新闻源切换**: 根据语言自动切换对应的新闻源
+- **本地化日期时间**: 根据用户语言显示本地化的日期和时间格式
+
+### 🎨 **现代化用户体验**
+- **响应式设计**: 完美适配桌面、平板和移动设备
+- **深色模式**: 支持浅色/深色主题切换
+- **字体大小调整**: 4 档字体大小可选（小、中、大、特大）
+- **布局模式**: 紧凑/正常布局模式切换
+- **流畅动画**: Framer Motion 驱动的流畅过渡动画
+- **无障碍支持**: 完整的键盘导航和屏幕阅读器支持
+
+---
 
 ## 🛠️ **技术栈**
 
-- **Vue 3** - 现代前端框架
-- **TypeScript** - 类型安全
-- **Vite** - 快速构建工具
-- **SCSS** - 样式预处理
-- **ESLint + Prettier** - 代码质量保证
+### 核心框架
+- **[Next.js 15](https://nextjs.org/)** - React 框架，支持 App Router、Server Components 和 ISR
+- **[React 19](https://react.dev/)** - 最新的 React 版本
+- **[TypeScript 5.7+](https://www.typescriptlang.org/)** - 类型安全的 JavaScript
 
-## 📦 **安装和使用**
+### UI 和样式
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - 实用优先的 CSS 框架
+- **[Shadcn/ui](https://ui.shadcn.com/)** - 高质量的 React 组件库
+- **[Radix UI](https://www.radix-ui.com/)** - 无障碍的 UI 组件基础
+- **[Framer Motion](https://www.framer.com/motion/)** - 强大的动画库
+- **[Lucide React](https://lucide.dev/)** - 美观的图标库
 
-### 开发环境
+### 状态管理和数据
+- **[Zustand](https://zustand-demo.pmnd.rs/)** - 轻量级状态管理
+- **[Zod](https://zod.dev/)** - TypeScript 优先的模式验证
+- **[NextAuth.js v5](https://next-auth.js.org/)** - 完整的认证解决方案
+- **[Upstash Redis](https://upstash.com/)** - Serverless Redis 数据库 (Vercel Marketplace Storage)
+
+### 国际化和工具
+- **[next-intl](https://next-intl-docs.vercel.app/)** - Next.js 国际化
+- **[next-themes](https://github.com/pacocoursey/next-themes)** - 主题管理
+- **[Recharts](https://recharts.org/)** - React 图表库
+
+### 开发工具
+- **[Turbopack](https://turbo.build/pack)** - 极速开发构建工具
+- **[ESLint 9](https://eslint.org/)** - 代码质量检查
+- **[Prettier](https://prettier.io/)** - 代码格式化
+- **[Husky](https://typicode.github.io/husky/)** - Git hooks
+- **[lint-staged](https://github.com/okonet/lint-staged)** - 暂存文件检查
+- **[Commitlint](https://commitlint.js.org/)** - 提交信息规范
+
+### 测试 (可选)
+- **[Vitest](https://vitest.dev/)** - 单元测试框架
+- **[React Testing Library](https://testing-library.com/react)** - React 组件测试
+- **[Playwright](https://playwright.dev/)** - E2E 测试
+
+---
+
+## 🚀 **快速开始**
+
+### 环境要求
+
+- **Node.js**: 20.0.0 或更高版本
+- **npm**: 10.0.0 或更高版本
+
+### 安装步骤
+
+1. **克隆项目**
+
 ```bash
-# 克隆项目
 git clone https://github.com/024812/shaking-head-news.git
 cd shaking-head-news
-
-# 安装依赖
-npm install
-
-# 开发模式
-npm run dev
-
-# 构建扩展
-npm run build
 ```
 
-### 浏览器扩展安装
+2. **安装依赖**
 
-#### Chrome 安装
-1. 运行 `npm run build` 构建项目
-2. 打开 `chrome://extensions/`
-3. 启用"开发者模式"
-4. 点击"加载已解压的扩展程序"
-5. 选择项目的 `dist` 文件夹
+```bash
+npm install
+```
 
-#### Firefox 安装
-1. 运行 `npm run build` 构建项目
-2. 打开 `about:debugging`
-3. 点击"此 Firefox"
-4. 点击"加载临时附加组件"
-5. 选择 `dist` 文件夹中的 `manifest.json`
+3. **配置环境变量**
 
-## 🔧 **配置**
+```bash
+cp .env.example .env.local
+```
 
-### 数据源配置
-- **RSS源管理**: 提供完整的UI界面，用于添加、删除、启用/禁用和测试RSS源。
-- **活跃源切换**: 用户可以方便地在多个已启用的RSS源之间切换。
-- **缓存管理**: 提供UI界面，用于查看缓存统计、设置缓存有效期、清除过期缓存或清空所有缓存。
+编辑 `.env.local` 文件，填入以下必需的环境变量：
 
-### 模式与动效配置
-- **模式切换**: 用户可在“固定模式”和“连续模式”之间自由切换。
-- **间隔自定义**: 在“连续模式”下，用户可选择预设的时间间隔或输入自定义秒数。
-- **无障碍控制**: 用户可配置是否遵循系统动效偏好，并可独立控制是否允许页面旋转。
+```env
+# 应用配置
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-## 🏗️ **项目结构**
+# NextAuth.js
+NEXTAUTH_SECRET=your-secret-key-here
+NEXTAUTH_URL=http://localhost:3000
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Upstash Redis (Vercel Marketplace Storage)
+UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
+UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
+
+# 新闻 API
+NEWS_API_BASE_URL=https://news.ravelloh.top
+```
+
+4. **启动开发服务器**
+
+```bash
+npm run dev
+```
+
+应用将在 [http://localhost:3000](http://localhost:3000) 启动。
+
+### 开发命令
+
+```bash
+# 开发模式 (使用 Turbopack)
+npm run dev
+
+# 生产构建
+npm run build
+
+# 启动生产服务器
+npm start
+
+# 代码检查
+npm run lint
+
+# 修复代码问题
+npm run lint:fix
+
+# TypeScript 类型检查
+npm run type-check
+
+# 代码格式化
+npm run format
+
+# 检查代码格式
+npm run format:check
+
+# 运行测试 (可选)
+npm run test
+
+# 分析包体积
+npm run analyze
+```
+
+---
+
+## 📦 **项目结构**
 
 ```
 shaking-head-news/
-├── src/
-│   ├── components/              # Vue 组件
-│   │   ├── EverydayNews.vue     # 新闻展示
-│   │   ├── DateTime.vue         # 日期和时间
-│   │   ├── SettingsMenu.vue     # 核心设置菜单
-│   │   ├── ModeSelector.vue     # 模式选择器
-│   │   └── NotificationCenter.vue # 全局通知中心
-│   ├── composables/             # Vue 组合式API
-│   │   ├── useEverydayNews.ts     # 新闻数据获取与管理
-│   │   ├── useMode.ts           # 旋转模式逻辑
-│   │   ├── useRssFeeds.ts       # RSS 源管理
-│   │   ├── useNewsCache.ts      # 新闻缓存管理
-│   │   ├── useMotionPreferences.ts # 动效与无障碍首选项
-│   │   └── ...
-│   ├── services/               # API 服务
-│   │   ├── EverydayNewsService.ts # 新闻数据服务
-│   │   └── ...
-│   ├── types.ts           # TypeScript 类型定义
-│   └── ...
-├── manifest.config.ts     # 扩展清单配置
-└── package.json          # 项目配置
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # 认证相关路由
+│   │   └── login/                # 登录页面
+│   ├── (main)/                   # 主应用路由
+│   │   ├── rss/                  # RSS 管理页面
+│   │   ├── settings/             # 设置页面
+│   │   └── stats/                # 统计页面
+│   ├── api/                      # API 路由
+│   │   └── auth/                 # NextAuth.js API
+│   ├── layout.tsx                # 根布局
+│   ├── page.tsx                  # 首页
+│   ├── error.tsx                 # 错误页面
+│   ├── not-found.tsx             # 404 页面
+│   └── providers.tsx             # 全局 Providers
+├── components/                   # React 组件
+│   ├── ui/                       # Shadcn/ui 基础组件
+│   ├── layout/                   # 布局组件
+│   │   ├── header.tsx            # 页头
+│   │   └── footer.tsx            # 页脚
+│   ├── news/                     # 新闻相关组件
+│   │   ├── NewsDisplay.tsx       # 新闻展示
+│   │   ├── NewsItem.tsx          # 新闻项
+│   │   └── RefreshButton.tsx    # 刷新按钮
+│   ├── rotation/                 # 旋转相关组件
+│   │   ├── TiltWrapper.tsx       # 旋转包装器
+│   │   └── RotationControls.tsx # 旋转控制
+│   ├── settings/                 # 设置相关组件
+│   │   ├── SettingsPanel.tsx     # 设置面板
+│   │   └── LanguageSelector.tsx  # 语言选择器
+│   ├── stats/                    # 统计相关组件
+│   │   ├── StatsDisplay.tsx      # 统计展示
+│   │   ├── StatsChart.tsx        # 统计图表
+│   │   └── HealthReminder.tsx    # 健康提醒
+│   └── rss/                      # RSS 相关组件
+│       ├── RSSSourceList.tsx     # RSS 源列表
+│       ├── AddRSSSourceDialog.tsx # 添加 RSS 对话框
+│       └── ExportOPMLButton.tsx  # OPML 导出按钮
+├── lib/                          # 核心库
+│   ├── actions/                  # Server Actions
+│   │   ├── news.ts               # 新闻操作
+│   │   ├── settings.ts           # 设置操作
+│   │   ├── stats.ts              # 统计操作
+│   │   └── rss.ts                # RSS 操作
+│   ├── stores/                   # Zustand 状态管理
+│   │   └── rotation-store.ts     # 旋转状态
+│   ├── utils/                    # 工具函数
+│   │   ├── error-handler.ts      # 错误处理
+│   │   ├── input-validation.ts   # 输入验证
+│   │   └── performance.ts        # 性能工具
+│   ├── auth.ts                   # NextAuth.js 配置
+│   ├── storage.ts                # Upstash Redis 客户端
+│   ├── rate-limit.ts             # 速率限制
+│   └── i18n.ts                   # 国际化配置
+├── types/                        # TypeScript 类型定义
+│   ├── news.ts                   # 新闻类型
+│   ├── settings.ts               # 设置类型
+│   ├── stats.ts                  # 统计类型
+│   └── rss.ts                    # RSS 类型
+├── messages/                     # 国际化翻译文件
+│   ├── zh.json                   # 中文翻译
+│   └── en.json                   # 英文翻译
+├── public/                       # 静态资源
+│   ├── icons/                    # 图标
+│   └── images/                   # 图片
+├── docs/                         # 文档
+│   ├── SETUP.md                  # 设置指南
+│   ├── MIGRATION_CLEANUP.md      # 迁移清理指南
+│   ├── PERFORMANCE_GUIDE.md      # 性能指南
+│   └── PRE_DEPLOYMENT_CHECKLIST.md # 部署前检查清单
+├── .kiro/                        # Kiro AI 规范文档
+│   └── specs/                    # 技术规范
+│       └── tech-stack-upgrade/   # 技术栈升级规范
+│           ├── requirements.md   # 需求文档
+│           ├── design.md         # 设计文档
+│           ├── tasks.md          # 任务列表
+│           └── SECURITY_IMPLEMENTATION.md # 安全实施指南
+├── next.config.js                # Next.js 配置
+├── tailwind.config.ts            # Tailwind CSS 配置
+├── tsconfig.json                 # TypeScript 配置
+├── proxy.ts                      # 中间件 (认证和安全)
+└── package.json                  # 项目配置
 ```
+
+---
+
+## 🔧 **配置说明**
+
+### Google OAuth 配置
+
+1. 访问 [Google Cloud Console](https://console.cloud.google.com/)
+2. 创建新项目或选择现有项目
+3. 启用 Google+ API
+4. 创建 OAuth 2.0 客户端 ID
+5. 添加授权重定向 URI：
+   - 开发环境: `http://localhost:3000/api/auth/callback/google`
+   - 生产环境: `https://your-domain.com/api/auth/callback/google`
+6. 复制客户端 ID 和客户端密钥到 `.env.local`
+
+### Upstash Redis 配置
+
+1. 访问 [Upstash Console](https://console.upstash.com/)
+2. 创建新的 Redis 数据库
+3. 选择区域（推荐：香港或新加坡）
+4. 复制 REST URL 和 REST Token 到 `.env.local`
+
+或者在 Vercel 部署时：
+1. 在 Vercel 项目设置中
+2. 进入 "Storage" 标签
+3. 添加 Upstash Redis (Vercel Marketplace Storage)
+4. 环境变量会自动配置
+
+---
 
 ## 🔒 **隐私和安全**
 
-- **最小权限**: 仅使用 `storage` 权限存储用户设置
-- **数据安全**: 所有新闻数据来自公开API，不收集个人信息
-- **本地存储**: 用户设置仅存储在本地浏览器中
+### 已实施的安全措施
+
+- ✅ **Content Security Policy (CSP)**: 防止 XSS 攻击
+- ✅ **速率限制**: 4 个层级的速率限制，防止滥用
+- ✅ **输入验证**: 所有用户输入都经过验证和清理
+- ✅ **CORS 配置**: 严格的跨域资源共享策略
+- ✅ **用户权限验证**: 所有 Server Actions 都验证用户权限
+- ✅ **XSS 防护**: 输入清理和 CSP headers
+- ✅ **CSRF 防护**: NextAuth.js 内置 CSRF 保护
+- ✅ **SQL 注入防护**: 使用 Zod 验证和参数化查询
+
+### 数据隐私
+
+- **最小数据收集**: 仅收集必要的用户设置和统计数据
+- **本地优先**: 未登录用户的设置仅存储在本地
+- **云端加密**: 用户数据在 Upstash Redis 中加密存储
+- **不追踪**: 不使用第三方追踪工具
+- **可删除**: 用户可随时删除自己的数据
+
+详细的安全实施文档请参考：[SECURITY_IMPLEMENTATION.md](.kiro/specs/tech-stack-upgrade/SECURITY_IMPLEMENTATION.md)
+
+---
+
+## 🚀 **部署**
+
+### Vercel 部署 (推荐)
+
+1. **Fork 本项目到你的 GitHub 账号**
+
+2. **在 Vercel 中导入项目**
+   - 访问 [Vercel](https://vercel.com/)
+   - 点击 "New Project"
+   - 导入你的 GitHub 仓库
+
+3. **配置环境变量**
+   - 在 Vercel 项目设置中添加所有必需的环境变量
+   - 参考 `.env.example` 文件
+
+4. **添加 Upstash Redis**
+   - 在 Vercel 项目设置中
+   - 进入 "Storage" 标签
+   - 添加 Upstash Redis
+   - 环境变量会自动配置
+
+5. **部署**
+   - Vercel 会自动构建和部署
+   - 每次推送到主分支都会自动部署
+
+### 自定义域名
+
+1. 在 Vercel 项目设置中添加自定义域名
+2. 配置 DNS 记录指向 Vercel
+3. SSL 证书会自动配置
+4. 更新 Google OAuth 回调 URL
+
+### 环境变量配置
+
+在 Vercel 项目设置中配置以下环境变量：
+
+```env
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=https://your-domain.com
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+UPSTASH_REDIS_REST_URL=your-upstash-url
+UPSTASH_REDIS_REST_TOKEN=your-upstash-token
+NEWS_API_BASE_URL=https://news.ravelloh.top
+```
+
+详细的部署检查清单请参考：[PRE_DEPLOYMENT_CHECKLIST.md](docs/PRE_DEPLOYMENT_CHECKLIST.md)
+
+---
+
+## 🧪 **测试**
+
+### 运行测试
+
+```bash
+# 运行所有测试
+npm run test
+
+# 运行测试并生成覆盖率报告
+npm run test:coverage
+
+# 运行 E2E 测试
+npm run test:e2e
+```
+
+### 测试覆盖率目标
+
+- 单元测试覆盖率: 70%+
+- Server Actions: 100%
+- 关键用户流程: E2E 测试覆盖
+
+---
+
+## 📊 **性能优化**
+
+### 已实施的优化措施
+
+- ✅ **ISR 缓存**: 新闻内容使用 ISR，1 小时重新验证
+- ✅ **图片优化**: Next.js Image 组件自动优化
+- ✅ **代码分割**: 动态导入重型组件
+- ✅ **字体优化**: 字体预加载和子集化
+- ✅ **DNS 预取**: 预连接到外部域名
+- ✅ **Bundle 分析**: 使用 @next/bundle-analyzer 分析包体积
+
+### 性能指标
+
+- **LCP (Largest Contentful Paint)**: < 2.5s
+- **FID (First Input Delay)**: < 100ms
+- **CLS (Cumulative Layout Shift)**: < 0.1
+- **TTI (Time to Interactive)**: < 3.5s
+
+详细的性能指南请参考：[PERFORMANCE_GUIDE.md](docs/PERFORMANCE_GUIDE.md)
+
+---
 
 ## 🤝 **贡献指南**
 
-1. Fork 本项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+我们欢迎所有形式的贡献！
+
+### 贡献流程
+
+1. **Fork 本项目**
+2. **创建功能分支**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. **提交更改**
+   ```bash
+   git commit -m 'feat: add some amazing feature'
+   ```
+4. **推送到分支**
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. **创建 Pull Request**
+
+### 提交信息规范
+
+我们使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范：
+
+- `feat`: 新功能
+- `fix`: 修复 bug
+- `docs`: 文档更新
+- `style`: 代码格式调整
+- `refactor`: 代码重构
+- `perf`: 性能优化
+- `test`: 测试相关
+- `chore`: 构建/工具相关
+
+### 代码规范
+
+- 遵循 ESLint 和 Prettier 配置
+- 编写有意义的提交信息
+- 添加必要的注释和文档
+- 确保所有测试通过
+- 保持代码覆盖率
+
+---
 
 ## 📄 **开源协议**
 
 本项目基于 [MPL-2.0](LICENSE) 协议开源。
+
+---
 
 ## 🙏 **致谢**
 
@@ -145,9 +518,68 @@ shaking-head-news/
 
 ### 数据源
 - 新闻数据来源：[EverydayNews](https://github.com/ravelloh/everydaynews)
-- 感谢 [@ravelloh](https://github.com/ravelloh) 提供的每日新闻API
-- 休息日API由 [timor.tech](https://timor.tech/api/holiday) 提供
+- 感谢 [@ravelloh](https://github.com/ravelloh) 提供的每日新闻 API
+
+### 技术栈
+- [Next.js](https://nextjs.org/) - React 框架
+- [Vercel](https://vercel.com/) - 部署平台
+- [Shadcn/ui](https://ui.shadcn.com/) - UI 组件库
+- [Upstash](https://upstash.com/) - Serverless Redis
+
+---
+
+## 💰 **支持与资助**
+
+如果这个项目对你有帮助，欢迎支持：
+
+- **Ko-fi**: [https://ko-fi.com/huanluo](https://ko-fi.com/huanluo)
+- **GitHub Sponsors**: [https://github.com/sponsors/dukeluo](https://github.com/sponsors/dukeluo)
+
+---
+
+## 📞 **联系方式**
+
+- **作者**: 024812
+- **Email**: 024812@users.noreply.github.com
+- **GitHub**: [@024812](https://github.com/024812)
+- **项目主页**: [https://github.com/024812/shaking-head-news](https://github.com/024812/shaking-head-news)
+
+---
+
+## 🗺️ **路线图**
+
+### 已完成 ✅
+- [x] Next.js 15 + React 19 迁移
+- [x] 用户认证和云同步
+- [x] 多语言支持
+- [x] RSS 源管理
+- [x] 统计数据和健康提醒
+- [x] 性能优化
+- [x] 安全加固
+
+### 计划中 🚧
+- [ ] PWA 支持
+- [ ] 移动端 App
+- [ ] 更多新闻源
+- [ ] 社交分享功能
+- [ ] 用户社区
+- [ ] AI 新闻摘要
+
+---
+
+## 📚 **相关文档**
+
+- [设置指南](docs/SETUP.md)
+- [迁移清理指南](docs/MIGRATION_CLEANUP.md)
+- [性能指南](docs/PERFORMANCE_GUIDE.md)
+- [部署前检查清单](docs/PRE_DEPLOYMENT_CHECKLIST.md)
+- [安全实施指南](.kiro/specs/tech-stack-upgrade/SECURITY_IMPLEMENTATION.md)
+- [需求文档](.kiro/specs/tech-stack-upgrade/requirements.md)
+- [设计文档](.kiro/specs/tech-stack-upgrade/design.md)
+- [任务列表](.kiro/specs/tech-stack-upgrade/tasks.md)
 
 ---
 
 **把摇头叹息变成健康摇头，让看新闻成为一种颈椎运动！** 📰🤸‍♂️
+
+<p align="center">Made with ❤️ by 024812</p>

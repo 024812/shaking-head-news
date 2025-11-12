@@ -1,0 +1,98 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import { useRotationStore } from '@/lib/stores/rotation-store'
+import { useEffect, useState, useRef } from 'react'
+import { recordRotation } from '@/lib/actions/stats'
+
+interface TiltWrapperProps {
+  children: React.ReactNode
+  mode?: 'fixed' | 'continuous'
+  interval?: number
+}
+
+export function TiltWrapper({
+  children,
+  mode: propMode,
+  interval: propInterval,
+}: TiltWrapperProps) {
+  const { angle, setAngle, isPaused, mode, interval } = useRotationStore()
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const lastRotationTime = useRef<number>(Date.now())
+  const previousAngle = useRef<number>(0)
+
+  // Use props if provided, otherwise use store values
+  const effectiveMode = propMode ?? mode
+  const effectiveInterval = propInterval ?? interval
+
+  // Check for prefers-reduced-motion
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // eslint-disable-next-line no-undef
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleChange = (e: any) => {
+      setPrefersReducedMotion(e.matches)
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
+  // Handle rotation logic
+  useEffect(() => {
+    if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion) {
+      return
+    }
+
+    // Continuous mode: change angle at intervals
+    const timer = setInterval(() => {
+      // Generate random angle between -10 and 10 degrees
+      const newAngle = Math.random() * 20 - 10
+      setAngle(newAngle)
+
+      // Record rotation (需求 8.1)
+      const now = Date.now()
+      const duration = Math.round((now - lastRotationTime.current) / 1000)
+      lastRotationTime.current = now
+
+      // Only record if there's a significant angle change
+      if (Math.abs(newAngle - previousAngle.current) > 1) {
+        recordRotation(newAngle, duration).catch((error) => {
+          console.error('Failed to record rotation:', error)
+        })
+        previousAngle.current = newAngle
+      }
+    }, effectiveInterval * 1000)
+
+    return () => clearInterval(timer)
+  }, [effectiveMode, effectiveInterval, isPaused, prefersReducedMotion, setAngle])
+
+  // Set initial angle for fixed mode
+  useEffect(() => {
+    if (effectiveMode === 'fixed' && !prefersReducedMotion) {
+      // Fixed mode: angle between -2 and 2 degrees
+      const fixedAngle = Math.random() * 4 - 2
+      setAngle(fixedAngle)
+    }
+  }, [effectiveMode, prefersReducedMotion, setAngle])
+
+  // If user prefers reduced motion, render without animation
+  if (prefersReducedMotion) {
+    return <div className="min-h-screen">{children}</div>
+  }
+
+  return (
+    <motion.div
+      animate={{ rotate: angle }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      className="min-h-screen"
+      data-testid="tilt-wrapper"
+    >
+      {children}
+    </motion.div>
+  )
+}

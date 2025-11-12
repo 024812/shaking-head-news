@@ -1,95 +1,66 @@
 import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import globals from 'globals'
-import vuePlugin from 'eslint-plugin-vue'
-import prettierPlugin from 'eslint-plugin-prettier'
-import checkFilePlugin from 'eslint-plugin-check-file'
-import prettierConfig from 'eslint-config-prettier/flat'
+import tsParser from '@typescript-eslint/parser'
+import tsPlugin from '@typescript-eslint/eslint-plugin'
 
-export default tseslint.config(
-  {
-    ignores: ['node_modules/**', 'dist/**', '**/*.json'],
-  },
+export default [
   js.configs.recommended,
-  tseslint.configs.strict,
-  tseslint.configs.stylistic,
-  ...vuePlugin.configs['flat/recommended'],
   {
-    files: ['src/**/*.{ts,vue}'],
-    plugins: {
-      '@typescript-eslint': tseslint.plugin,
-    },
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
+      parser: tsParser,
       parserOptions: {
-        parser: tseslint.parser,
-        project: './tsconfig.json',
-        extraFileExtensions: ['.vue'],
         ecmaVersion: 'latest',
         sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        React: 'readonly',
+        JSX: 'readonly',
+        NodeJS: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+        fetch: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLParagraphElement: 'readonly',
+        HTMLHeadingElement: 'readonly',
+        HTMLElement: 'readonly',
+        Element: 'readonly',
+        Document: 'readonly',
+        Window: 'readonly',
       },
     },
-    rules: {
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: 'enum',
-          format: ['PascalCase'],
-        },
-        {
-          selector: 'enumMember',
-          format: ['PascalCase'],
-        },
-        {
-          selector: 'typeParameter',
-          format: ['PascalCase'],
-          prefix: ['T'],
-        },
-        {
-          selector: 'interface',
-          format: ['PascalCase'],
-          prefix: ['I'],
-        },
-      ],
-    },
-  },
-  {
-    files: ['**/*.scss'],
-    processor: 'check-file/eslint-processor-check-file',
-  },
-  {
-    files: ['src/**/*.*'],
     plugins: {
-      prettier: prettierPlugin,
-      'check-file': checkFilePlugin,
+      '@typescript-eslint': tsPlugin,
     },
     rules: {
-      'prettier/prettier': 'error',
-      'check-file/no-index': [
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          ignoreMiddleExtensions: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
-      'check-file/folder-naming-convention': [
-        'error',
-        {
-          'src/*/': 'CAMEL_CASE',
-        },
-      ],
-      'check-file/filename-naming-convention': [
-        'error',
-        {
-          'src/components/*.vue': 'PASCAL_CASE',
-          'src/composables/*.ts': 'CAMEL_CASE',
-          'src/data/*.json': 'SNAKE_CASE',
-          'src/helpers/*.ts': 'CAMEL_CASE',
-          'src/services/*.ts': 'PASCAL_CASE',
-        },
-      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
-  prettierConfig
-)
+  {
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'dist/**',
+      'build/**',
+      'src/**',
+      'public/**',
+      '*.config.js',
+      '*.config.ts',
+    ],
+  },
+]
