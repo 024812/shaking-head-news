@@ -82,10 +82,6 @@ const nextConfig = {
   },
   // Enable compression
   compress: true,
-  // Optimize fonts
-  optimizeFonts: true,
-  // Enable SWC minification
-  swcMinify: true,
   // Security headers
   async headers() {
     return [
@@ -132,16 +128,7 @@ const nextConfig = {
           },
         ],
       },
-      // Cache images
-      {
-        source: '/:path*.(?:jpg|jpeg|png|gif|webp|avif|svg|ico)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
+
       // Don't cache API routes
       {
         source: '/api/:path*',
