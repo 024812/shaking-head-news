@@ -1,8 +1,8 @@
 import { RotationControls } from '@/components/rotation/RotationControls'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 
-export default function HomePage() {
-  const t = useTranslations('home')
+export default async function HomePage() {
+  const t = await getTranslations('home')
 
   return (
     <div className="container py-12">
