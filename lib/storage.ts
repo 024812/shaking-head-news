@@ -1,9 +1,22 @@
 import { Redis } from '@upstash/redis'
 
+// 检查环境变量
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN
+
+if (!redisUrl || !redisToken) {
+  console.error('[Storage] Missing Redis configuration:', {
+    hasUrl: !!redisUrl,
+    hasToken: !!redisToken,
+    env: process.env.NODE_ENV,
+  })
+}
+
 // 创建 Storage 客户端（使用 Upstash Redis）
+// 如果环境变量缺失，使用空字符串避免构建时错误
 export const storage = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  url: redisUrl || '',
+  token: redisToken || '',
 })
 
 // 类型安全的存储操作

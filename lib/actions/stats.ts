@@ -213,6 +213,18 @@ export async function getSummaryStats() {
       throw new AuthError('Please sign in to view statistics')
     }
 
+    // 检查 Redis 是否配置
+    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+      console.warn('[getSummaryStats] Redis not configured, returning empty stats')
+      return {
+        today: { count: 0, duration: 0 },
+        week: { count: 0, duration: 0 },
+        month: { count: 0, duration: 0 },
+        dailyData: [],
+        monthlyData: [],
+      }
+    }
+
     const [todayStats, weekStats, monthStats] = await Promise.all([
       getTodayStats(),
       getWeekStats(),
