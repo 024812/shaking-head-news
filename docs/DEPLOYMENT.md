@@ -93,7 +93,7 @@ The project includes a `vercel.json` file with optimal settings:
 
 ```json
 {
-  "regions": ["hkg1", "sin1"], // Hong Kong and Singapore
+  "framework": "nextjs",
   "functions": {
     "app/**/*.tsx": {
       "memory": 1024,
@@ -105,10 +105,16 @@ The project includes a `vercel.json` file with optimal settings:
 
 ### Region Codes
 
-- `hkg1`: Hong Kong
-- `sin1`: Singapore
+**Note**: Region selection is only available on Vercel Pro plans and above.
 
-These regions provide optimal performance for users in Asia-Pacific.
+- **Hobby Plan (Free)**: Automatically uses US regions (Washington DC, San Francisco)
+- **Pro Plan**: Can specify regions like:
+  - `hkg1`: Hong Kong
+  - `sin1`: Singapore
+  - `iad1`: Washington DC
+  - `sfo1`: San Francisco
+
+For Hobby accounts, Vercel automatically routes traffic to the nearest available US region.
 
 ## Deployment Steps
 
@@ -132,11 +138,12 @@ These regions provide optimal performance for users in Asia-Pacific.
 2. Add all required variables from the [Environment Variables](#environment-variables) section
 3. Set variables for all environments (Production, Preview, Development)
 
-### 4. Configure Regions
+### 4. Configure Regions (Pro Plan Only)
 
-1. Go to Settings > Functions
-2. Verify regions are set to Hong Kong and Singapore
-3. This is automatically configured via `vercel.json`
+**Note**: Region configuration is only available on Vercel Pro plans.
+
+- **Hobby Plan**: Automatically uses US regions (no configuration needed)
+- **Pro Plan**: Can specify regions in `vercel.json` or project settings
 
 ### 5. Deploy
 

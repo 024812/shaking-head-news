@@ -12,9 +12,9 @@ Completed comprehensive deployment configuration for Vercel with optimized setti
 
 **Key Features**:
 
-- Region configuration: Hong Kong (hkg1) and Singapore (sin1)
 - Function memory: 1024 MB
 - Function max duration: 10 seconds
+- **Note**: Region configuration removed (requires Vercel Pro plan; Hobby plan uses US regions)
 - Security headers (HSTS, CSP, X-Frame-Options, etc.)
 - Cache control for static assets and images
 - Redirects for legacy URLs
@@ -152,14 +152,15 @@ Completed comprehensive deployment configuration for Vercel with optimized setti
 
 **Selected Regions**:
 
-- **hkg1** (Hong Kong): Primary region for Asia-Pacific users
-- **sin1** (Singapore): Secondary region for Southeast Asia
+- **Vercel Hobby Plan**: Automatically uses US regions (Washington DC, San Francisco)
+- **Note**: Custom region selection (Hong Kong, Singapore) requires Vercel Pro plan
 
-**Benefits**:
+**Benefits of US Regions**:
 
-- Low latency for target audience
-- Geographic redundancy
-- Optimal performance for Chinese and international users
+- Free tier availability
+- Reliable performance with global CDN
+- Automatic edge caching
+- No additional configuration needed
 
 ### Function Configuration
 

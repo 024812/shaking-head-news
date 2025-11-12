@@ -48,8 +48,8 @@ Quick reference checklist for deploying Shaking Head News to Vercel.
 
 ### 6. Region Configuration
 
-- [ ] Regions set to Hong Kong (hkg1) and Singapore (sin1)
-- [ ] Verified in `vercel.json`
+- [ ] Using Vercel Hobby plan (US regions automatically assigned)
+- [ ] Or Pro plan with custom regions configured (optional)
 
 ### 7. Deploy
 

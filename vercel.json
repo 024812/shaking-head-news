@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "regions": ["hkg1", "sin1"],
   "functions": {
     "app/**/*.tsx": {
       "memory": 1024,
