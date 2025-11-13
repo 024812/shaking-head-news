@@ -27,6 +27,16 @@ export function TiltWrapper({
   const effectiveMode = propMode ?? mode
   const effectiveInterval = propInterval ?? interval
 
+  // Debug: Log component mount
+  useEffect(() => {
+    console.log('[TiltWrapper] Component mounted', {
+      mode: effectiveMode,
+      interval: effectiveInterval,
+      isPaused,
+      pathname,
+    })
+  }, [])
+
   // Disable rotation on settings page
   const isSettingsPage = pathname === '/settings'
 
