@@ -94,7 +94,16 @@ export function TiltWrapper({
         console.log('[TiltWrapper] Recording rotation:', { newAngle, duration })
         recordRotation(newAngle, duration)
           .then((result) => {
-            console.log('[TiltWrapper] Record result:', result)
+            if (result === null) {
+              console.warn(
+                '[TiltWrapper] Record returned null - user may not be logged in or error occurred'
+              )
+            } else {
+              console.log('[TiltWrapper] Record SUCCESS:', {
+                count: result.rotationCount,
+                totalDuration: result.totalDuration,
+              })
+            }
           })
           .catch((error) => {
             console.error('[TiltWrapper] Failed to record rotation:', error)
