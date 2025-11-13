@@ -36,6 +36,12 @@ export async function Header() {
               {t('home')}
             </Link>
             <Link
+              href="/about"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              关于
+            </Link>
+            <Link
               href="/settings"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
