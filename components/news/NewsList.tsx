@@ -21,7 +21,7 @@ export function NewsList({ news }: NewsListProps) {
   }
 
   return (
-    <div className="space-y-4" data-testid="news-list">
+    <div className="divide-y divide-border" data-testid="news-list">
       {news.map((item) => (
         <NewsItem key={item.id} item={item} />
       ))}

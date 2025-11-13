@@ -31,9 +31,9 @@ async function NewsContent({ language = 'zh', source }: NewsDisplayProps) {
 
 export async function NewsDisplay({ language = 'zh', source }: NewsDisplayProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">今日新闻</h1>
+        <h1 className="text-xl font-bold">今日新闻</h1>
         <RefreshButton language={language} source={source} />
       </div>
 
