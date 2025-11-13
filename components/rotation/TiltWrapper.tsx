@@ -72,10 +72,21 @@ export function TiltWrapper({
 
       // Only record if there's a significant angle change
       if (Math.abs(newAngle - previousAngle.current) > 1) {
-        recordRotation(newAngle, duration).catch((error) => {
-          console.error('Failed to record rotation:', error)
-        })
+        console.log('[TiltWrapper] Recording rotation:', { newAngle, duration })
+        recordRotation(newAngle, duration)
+          .then((result) => {
+            console.log('[TiltWrapper] Record result:', result)
+          })
+          .catch((error) => {
+            console.error('[TiltWrapper] Failed to record rotation:', error)
+          })
         previousAngle.current = newAngle
+      } else {
+        console.log('[TiltWrapper] Skipping record - angle change too small:', {
+          newAngle,
+          previousAngle: previousAngle.current,
+          diff: Math.abs(newAngle - previousAngle.current),
+        })
       }
     }, effectiveInterval * 1000)
 

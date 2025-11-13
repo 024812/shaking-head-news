@@ -16,8 +16,11 @@ export async function recordRotation(angle: number, duration: number) {
     const session = await auth()
 
     if (!session?.user?.id) {
+      console.log('[recordRotation] User not logged in, skipping record')
       return null // 未登录用户不记录
     }
+
+    console.log('[recordRotation] Recording for user:', session.user.id, { angle, duration })
 
     // 速率限制：每分钟最多100次记录（防止恶意刷数据）
     const rateLimitResult = await rateLimitByUser(session.user.id, {
@@ -78,6 +81,11 @@ export async function recordRotation(angle: number, duration: number) {
 
     // 保留 90 天
     await setStorageItem(key, validatedStats, 60 * 60 * 24 * 90)
+
+    console.log('[recordRotation] Successfully saved stats:', {
+      count: validatedStats.rotationCount,
+      duration: validatedStats.totalDuration,
+    })
 
     return validatedStats
   } catch (error) {
