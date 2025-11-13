@@ -2,7 +2,12 @@
 
 import { cache } from 'react'
 import { revalidateTag } from 'next/cache'
-import { NewsResponseSchema, NewsItemSchema, type NewsItem } from '@/types/news'
+import { 
+  RawNewsResponseSchema,
+  NewsResponseSchema, 
+  type NewsItem,
+  type NewsResponse 
+} from '@/types/news'
 import { z } from 'zod'
 import { logError, validateOrThrow } from '@/lib/utils/error-handler'
 import { NewsAPIError } from '@/lib/errors/news-error'
@@ -78,12 +83,26 @@ export const getNews = cache(async (
       return res
     })
     
-    const data = await response.json()
+    const rawData = await response.json()
     
-    // Validate response data
-    const validatedData = validateOrThrow(NewsResponseSchema, data)
+    // Validate raw response data
+    const validatedRawData = validateOrThrow(RawNewsResponseSchema, rawData)
     
-    return validatedData
+    // Transform to our format
+    const items: NewsItem[] = validatedRawData.content.map((title, index) => ({
+      id: `${validatedRawData.date}-${index}`,
+      title,
+      source: source || 'everydaynews',
+      publishedAt: validatedRawData.date,
+    }))
+    
+    const transformedData: NewsResponse = {
+      items,
+      total: items.length,
+      updatedAt: new Date().toISOString(),
+    }
+    
+    return transformedData
   } catch (error) {
     // Log error for monitoring
     logError(error, {
