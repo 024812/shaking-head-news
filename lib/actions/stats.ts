@@ -51,8 +51,10 @@ export async function recordRotation(angle: number, duration: number) {
 
     const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
     const key = StorageKeys.userStats(session.user.id, today)
+    console.log('[recordRotation] Storage key:', key)
 
     const existingStats = await getStorageItem<UserStats>(key)
+    console.log('[recordRotation] Existing stats:', existingStats)
 
     const stats: UserStats = existingStats || {
       userId: session.user.id,
@@ -176,8 +178,12 @@ export async function getStats(startDate: string, endDate: string) {
  * 需求: 8.2 - 显示今日运动数据
  */
 export async function getTodayStats() {
+  const session = await auth()
   const today = new Date().toISOString().split('T')[0]
+  const key = session?.user?.id ? StorageKeys.userStats(session.user.id, today) : 'no-user'
+  console.log('[getTodayStats] Fetching stats:', { userId: session?.user?.id, date: today, key })
   const stats = await getStats(today, today)
+  console.log('[getTodayStats] Found stats:', stats[0] || null)
   return stats[0] || null
 }
 
