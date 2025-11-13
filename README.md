@@ -7,6 +7,18 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/024812/shaking-head-news/actions/workflows/ci.yml">
+    <img src="https://github.com/024812/shaking-head-news/actions/workflows/ci.yml/badge.svg" alt="CI/CD Status" />
+  </a>
+  <a href="https://codecov.io/gh/024812/shaking-head-news">
+    <img src="https://codecov.io/gh/024812/shaking-head-news/branch/main/graph/badge.svg" alt="Code Coverage" />
+  </a>
+  <a href="https://github.com/024812/shaking-head-news/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-MPL--2.0-blue.svg" alt="License" />
+  </a>
+</p>
+
+<p align="center">
   <a href="#english-summary">English</a> •
   <a href="#-在线演示">在线演示</a> •
   <a href="#-主要特色">特色功能</a> •
@@ -216,8 +228,14 @@ npm run format:check
 # 运行测试 (可选)
 npm run test
 
+# 运行测试并生成覆盖率
+npm run test:coverage
+
+# 运行 E2E 测试
+npm run test:e2e
+
 # 分析包体积
-npm run analyze
+npm run build:analyze
 ```
 
 ---
@@ -385,9 +403,15 @@ shaking-head-news/
    - 添加 Upstash Redis
    - 环境变量会自动配置
 
-5. **部署**
+5. **配置 CI/CD**
+   - 参考 [CI/CD 设置指南](.github/ACTIONS_SETUP.md)
+   - 配置 GitHub Secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
+   - 推送代码会自动触发 CI/CD 流程
+
+6. **部署**
    - Vercel 会自动构建和部署
    - 每次推送到主分支都会自动部署
+   - Pull Request 会自动创建预览部署
 
 ### 自定义域名
 
@@ -448,6 +472,69 @@ npm run test:e2e
 - ✅ **字体优化**: 字体预加载和子集化
 - ✅ **DNS 预取**: 预连接到外部域名
 - ✅ **Bundle 分析**: 使用 @next/bundle-analyzer 分析包体积
+
+---
+
+## 📈 **监控和日志**
+
+### 监控功能
+
+应用内置了完整的监控和日志系统：
+
+- **错误监控**: Sentry 集成，实时错误追踪和性能监控
+- **用户分析**: Google Analytics 和 Vercel Analytics 支持
+- **性能监控**: Web Vitals 自动追踪 (LCP, FID, CLS, etc.)
+- **结构化日志**: 多级别日志系统，支持开发和生产环境
+
+### 快速设置
+
+```bash
+# 运行监控设置脚本 (Windows)
+.\scripts\setup-monitoring.ps1
+```
+
+### 环境变量配置
+
+```env
+# Sentry (可选)
+NEXT_PUBLIC_SENTRY_DSN=https://your-dsn@sentry.io/project-id
+
+# Google Analytics (可选)
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# 日志级别 (可选)
+NEXT_PUBLIC_LOG_LEVEL=info
+```
+
+### 使用示例
+
+```typescript
+import { logger } from '@/lib/logger'
+import { trackEvent } from '@/lib/analytics'
+import { captureException } from '@/lib/sentry'
+
+// 记录日志
+logger.info('User action', { userId: '123' })
+
+// 追踪事件
+trackEvent({
+  action: 'click',
+  category: 'button',
+  label: 'refresh'
+})
+
+// 捕获错误
+try {
+  await riskyOperation()
+} catch (error) {
+  captureException(error)
+}
+```
+
+### 文档
+
+- **快速开始**: [MONITORING_QUICK_START.md](docs/MONITORING_QUICK_START.md)
+- **完整文档**: [MONITORING_AND_LOGGING.md](.kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md)
 
 ### 性能指标
 

@@ -158,14 +158,14 @@
   - 配置 Vercel 区域（香港、新加坡）
   - _需求: 1.1_
 
-- [ ]\* 17. 测试实施
+- [x] 17. 测试实施
 
   - 配置 Vitest 和 React Testing Library
   - 配置 Playwright 用于 E2E 测试
   - 创建测试设置文件（tests/setup.ts）
   - _需求: 9.2, 9.3, 9.5_
 
-- [ ]\* 17.1 编写 Server Actions 单元测试
+- [x] 17.1 编写 Server Actions 单元测试
 
   - 测试 lib/actions/settings.ts（getUserSettings, updateSettings）
   - 测试 lib/actions/news.ts（getNews, refreshNews）
@@ -174,7 +174,7 @@
   - Mock Vercel Marketplace Storage 和 NextAuth
   - _需求: 9.2, 9.4, 9.6_
 
-- [ ]\* 17.2 编写组件单元测试
+- [x] 17.2 编写组件单元测试
 
   - 测试 SettingsPanel 组件
   - 测试 TiltWrapper 组件
@@ -182,7 +182,7 @@
   - 测试 ThemeToggle 组件
   - _需求: 9.3, 9.6_
 
-- [ ]\* 17.3 编写 E2E 测试
+- [x] 17.3 编写 E2E 测试
 
   - 测试新闻浏览流程
   - 测试用户登录和设置保存流程
@@ -190,7 +190,7 @@
   - 测试 RSS 源管理流程
   - _需求: 9.5, 9.6_
 
-- [ ] 18. 监控和日志
+- [x] 18. 监控和日志
 
   - 集成 Sentry 错误监控（lib/sentry.ts）
   - 配置 Google Analytics 或 Vercel Analytics
@@ -199,7 +199,7 @@
   - 配置日志记录策略
   - _需求: 10.1_
 
-- [ ] 19. CI/CD 配置
+- [x] 19. CI/CD 配置
 
   - 创建 .github/workflows/ci.yml
   - 配置 lint、type-check、test 和 build 任务
@@ -207,7 +207,7 @@
   - 设置自动部署到 Vercel
   - _需求: 9.1, 10.4_
 
-- [ ] 20. 文档和迁移工具
+- [x] 20. 文档和迁移工具
   - 更新 README.md 包含新技术栈说明
   - 创建 MIGRATION.md 迁移指南
   - 创建用户设置导入工具（从旧版本）
