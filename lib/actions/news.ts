@@ -4,7 +4,7 @@ import { cache } from 'react'
 import { revalidateTag } from 'next/cache'
 import { 
   RawNewsResponseSchema,
-  NewsResponseSchema, 
+  NewsItemSchema,
   type NewsItem,
   type NewsResponse 
 } from '@/types/news'
