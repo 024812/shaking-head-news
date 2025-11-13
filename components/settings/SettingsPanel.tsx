@@ -58,29 +58,23 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   ])
 
   const handleSave = () => {
-    console.log('[Settings] Save button clicked, current settings:', settings)
     startTransition(async () => {
       try {
-        console.log('[Settings] Calling updateSettings...')
         const result = await updateSettings(settings)
-        console.log('[Settings] updateSettings result:', result)
 
         if (result.success) {
-          console.log('[Settings] Save successful!')
           toast({
             title: t('saveSuccess'),
             description: t('saveSuccessDescription'),
           })
         } else {
-          console.error('[Settings] Save failed:', result.error)
           toast({
             title: t('saveError'),
             description: result.error || t('saveErrorDescription'),
             variant: 'destructive',
           })
         }
-      } catch (error) {
-        console.error('[Settings] Save error:', error)
+      } catch {
         toast({
           title: t('saveError'),
           description: t('saveErrorDescription'),
