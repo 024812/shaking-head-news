@@ -4,25 +4,42 @@ import { Redis } from '@upstash/redis'
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN
 
-if (!redisUrl || !redisToken) {
-  console.error('[Storage] Missing Redis configuration:', {
-    hasUrl: !!redisUrl,
-    hasToken: !!redisToken,
-    env: process.env.NODE_ENV,
-  })
+const isRedisConfigured = !!(redisUrl && redisToken)
+
+if (!isRedisConfigured) {
+  console.warn('[Storage] Redis not configured, using in-memory storage (data will not persist)')
 }
 
+// 内存存储备选方案（仅用于开发/测试）
+const memoryStorage = new Map<string, { value: unknown; expiry?: number }>()
+
 // 创建 Storage 客户端（使用 Upstash Redis）
-// 如果环境变量缺失，使用空字符串避免构建时错误
-export const storage = new Redis({
-  url: redisUrl || '',
-  token: redisToken || '',
-})
+export const storage = isRedisConfigured
+  ? new Redis({
+      url: redisUrl,
+      token: redisToken,
+    })
+  : null
 
 // 类型安全的存储操作
 export async function getStorageItem<T>(key: string): Promise<T | null> {
   try {
-    return await storage.get<T>(key)
+    // 使用 Redis
+    if (storage) {
+      return await storage.get<T>(key)
+    }
+
+    // 使用内存存储
+    const item = memoryStorage.get(key)
+    if (!item) return null
+
+    // 检查是否过期
+    if (item.expiry && Date.now() > item.expiry) {
+      memoryStorage.delete(key)
+      return null
+    }
+
+    return item.value as T
   } catch (error) {
     console.error(`Failed to get storage item: ${key}`, error)
     return null
@@ -35,11 +52,20 @@ export async function setStorageItem<T>(
   expirationSeconds?: number
 ): Promise<void> {
   try {
-    if (expirationSeconds) {
-      await storage.set(key, value, { ex: expirationSeconds })
-    } else {
-      await storage.set(key, value)
+    // 使用 Redis
+    if (storage) {
+      if (expirationSeconds) {
+        await storage.set(key, value, { ex: expirationSeconds })
+      } else {
+        await storage.set(key, value)
+      }
+      return
     }
+
+    // 使用内存存储
+    const expiry = expirationSeconds ? Date.now() + expirationSeconds * 1000 : undefined
+
+    memoryStorage.set(key, { value, expiry })
   } catch (error) {
     console.error(`Failed to set storage item: ${key}`, error)
     throw error
@@ -48,7 +74,14 @@ export async function setStorageItem<T>(
 
 export async function deleteStorageItem(key: string): Promise<void> {
   try {
-    await storage.del(key)
+    // 使用 Redis
+    if (storage) {
+      await storage.del(key)
+      return
+    }
+
+    // 使用内存存储
+    memoryStorage.delete(key)
   } catch (error) {
     console.error(`Failed to delete storage item: ${key}`, error)
     throw error
@@ -56,11 +89,26 @@ export async function deleteStorageItem(key: string): Promise<void> {
 }
 
 // 批量操作
-export async function getMultipleStorageItems(
-  keys: string[]
-): Promise<unknown[]> {
+export async function getMultipleStorageItems(keys: string[]): Promise<unknown[]> {
   try {
-    return await storage.mget(...keys)
+    // 使用 Redis
+    if (storage) {
+      return await storage.mget(...keys)
+    }
+
+    // 使用内存存储
+    return keys.map((key) => {
+      const item = memoryStorage.get(key)
+      if (!item) return null
+
+      // 检查是否过期
+      if (item.expiry && Date.now() > item.expiry) {
+        memoryStorage.delete(key)
+        return null
+      }
+
+      return item.value
+    })
   } catch (error) {
     console.error('Failed to get multiple storage items', error)
     return keys.map(() => null)

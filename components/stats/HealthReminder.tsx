@@ -27,7 +27,6 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
 
   // 检查通知权限
   useEffect(() => {
-    // eslint-disable-next-line no-undef
     if (typeof window !== 'undefined' && 'Notification' in window) {
       // eslint-disable-next-line no-undef
       setPermission(Notification.permission)
@@ -71,15 +70,13 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
     // 每30分钟检查一次
     const interval = setInterval(checkReminder, 30 * 60 * 1000)
 
-    // 立即检查一次
-    checkReminder()
+    // 不立即检查，等待第一个间隔
 
     return () => clearInterval(interval)
   }, [notificationsEnabled])
 
   // 请求通知权限
   const requestNotificationPermission = async () => {
-    // eslint-disable-next-line no-undef
     if (typeof window === 'undefined' || !('Notification' in window)) {
       toast({
         title: t('notificationNotSupported'),
@@ -129,7 +126,6 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
       })
 
       notification.onclick = () => {
-        // eslint-disable-next-line no-undef
         window.focus()
         notification.close()
       }
@@ -155,9 +151,7 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>{t('healthReminder')}</span>
-          {goalAchieved && (
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-          )}
+          {goalAchieved && <CheckCircle2 className="h-5 w-5 text-green-500" />}
         </CardTitle>
         <CardDescription>{t('healthReminderDescription')}</CardDescription>
       </CardHeader>
@@ -165,9 +159,7 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium">
-              {notificationsEnabled
-                ? t('notificationsOn')
-                : t('notificationsOff')}
+              {notificationsEnabled ? t('notificationsOn') : t('notificationsOff')}
             </p>
             <p className="text-xs text-muted-foreground">
               {notificationsEnabled
@@ -177,21 +169,13 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
           </div>
           <div>
             {!notificationsEnabled ? (
-              <Button
-                onClick={requestNotificationPermission}
-                variant="outline"
-                size="sm"
-              >
-                <Bell className="h-4 w-4 mr-2" />
+              <Button onClick={requestNotificationPermission} variant="outline" size="sm">
+                <Bell className="mr-2 h-4 w-4" />
                 {t('enableNotifications')}
               </Button>
             ) : (
-              <Button
-                onClick={disableNotifications}
-                variant="outline"
-                size="sm"
-              >
-                <BellOff className="h-4 w-4 mr-2" />
+              <Button onClick={disableNotifications} variant="outline" size="sm">
+                <BellOff className="mr-2 h-4 w-4" />
                 {t('disableNotifications')}
               </Button>
             )}
