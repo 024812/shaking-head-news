@@ -175,6 +175,62 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
         </CardContent>
       </Card>
 
+      {/* 旋转设置 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('rotation')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="rotationMode">{t('rotationMode')}</Label>
+            <Select
+              value={settings.rotationMode}
+              onValueChange={(value) =>
+                updateSetting('rotationMode', value as 'fixed' | 'continuous')
+              }
+            >
+              <SelectTrigger id="rotationMode">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fixed">{t('fixed')}</SelectItem>
+                <SelectItem value="continuous">{t('continuous')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">{t('rotationModeDescription')}</p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="rotationInterval">{t('interval')}</Label>
+              <span className="text-sm text-muted-foreground">{settings.rotationInterval}s</span>
+            </div>
+            <Slider
+              id="rotationInterval"
+              value={[settings.rotationInterval]}
+              onValueChange={([value]) => updateSetting('rotationInterval', value)}
+              min={5}
+              max={300}
+              step={5}
+              className="w-full"
+            />
+            <p className="text-sm text-muted-foreground">{t('intervalDescription')}</p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="animationEnabled">{t('animation')}</Label>
+              <p className="text-sm text-muted-foreground">{t('animationDescription')}</p>
+            </div>
+            <Switch
+              id="animationEnabled"
+              checked={settings.animationEnabled}
+              onCheckedChange={(checked) => updateSetting('animationEnabled', checked)}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* 健康提醒设置 */}
       <Card>
         <CardHeader>
