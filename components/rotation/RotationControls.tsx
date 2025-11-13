@@ -9,8 +9,7 @@ import { Pause, Play, RotateCw } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 export function RotationControls() {
-  const { isPaused, mode, interval, togglePause, setMode, setInterval } =
-    useRotationStore()
+  const { isPaused, mode, interval, togglePause, setMode, setInterval } = useRotationStore()
   const t = useTranslations('rotation')
   const tSettings = useTranslations('settings')
 
@@ -25,9 +24,7 @@ export function RotationControls() {
       <CardContent className="space-y-6">
         {/* Pause/Resume Button */}
         <div className="flex items-center justify-between">
-          <Label htmlFor="pause-toggle">
-            {isPaused ? t('resume') : t('pause')}
-          </Label>
+          <Label htmlFor="pause-toggle">{isPaused ? t('resume') : t('pause')}</Label>
           <Button
             id="pause-toggle"
             variant="outline"
@@ -70,9 +67,6 @@ export function RotationControls() {
               {tSettings('continuous')}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {tSettings('rotationModeDescription')}
-          </p>
         </div>
 
         {/* Rotation Interval (only for continuous mode) */}
@@ -80,9 +74,7 @@ export function RotationControls() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="interval-slider">{tSettings('interval')}</Label>
-              <span className="text-sm text-muted-foreground">
-                {interval}s
-              </span>
+              <span className="text-sm text-muted-foreground">{interval}s</span>
             </div>
             <Slider
               id="interval-slider"
@@ -93,21 +85,8 @@ export function RotationControls() {
               step={5}
               className="w-full"
             />
-            <p className="text-xs text-muted-foreground">
-              {tSettings('intervalDescription')}
-            </p>
           </div>
         )}
-
-        {/* Info */}
-        <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
-          <p>
-            💡{' '}
-            {mode === 'fixed'
-              ? tSettings('rotationModeDescription')
-              : tSettings('intervalDescription')}
-          </p>
-        </div>
       </CardContent>
     </Card>
   )
