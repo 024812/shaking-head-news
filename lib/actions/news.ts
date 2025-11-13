@@ -5,6 +5,7 @@ import { revalidateTag } from 'next/cache'
 import { NewsResponseSchema, NewsItemSchema, type NewsItem } from '@/types/news'
 import { z } from 'zod'
 import { logError, validateOrThrow } from '@/lib/utils/error-handler'
+import { NewsAPIError } from '@/lib/errors/news-error'
 
 // Configuration
 const NEWS_API_BASE_URL = process.env.NEWS_API_BASE_URL || 'https://news.ravelloh.top'
@@ -12,20 +13,6 @@ const DEFAULT_REVALIDATE = 3600 // 1 hour - optimized for ISR
 const RSS_REVALIDATE = 1800 // 30 minutes - faster updates for RSS
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // 1 second
-
-/**
- * Error class for news API errors
- */
-export class NewsAPIError extends Error {
-  constructor(
-    message: string,
-    public statusCode?: number,
-    public source?: string
-  ) {
-    super(message)
-    this.name = 'NewsAPIError'
-  }
-}
 
 /**
  * Retry helper function with exponential backoff
