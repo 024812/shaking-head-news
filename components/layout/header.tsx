@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Newspaper, LogOut, User } from 'lucide-react'
 import { ThemeToggle } from '@/components/settings/ThemeToggle'
 import { Button } from '@/components/ui/button'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { auth, signOut } from '@/lib/auth'
 import {
   DropdownMenu,
@@ -16,8 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export async function Header() {
   const session = await auth()
-  const t = useTranslations('nav')
-  const tCommon = useTranslations('common')
+  const t = await getTranslations('nav')
+  const tCommon = await getTranslations('common')
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
