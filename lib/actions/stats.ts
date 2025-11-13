@@ -4,7 +4,8 @@ import { auth } from '@/lib/auth'
 import { getStorageItem, setStorageItem, StorageKeys } from '@/lib/storage'
 import { UserStatsSchema, RotationRecord, UserStats } from '@/types/stats'
 import { AuthError, logError, validateOrThrow } from '@/lib/utils/error-handler'
-import { rateLimitByUser, RateLimitTiers } from '@/lib/rate-limit'
+// Temporarily disabled rate limiting for debugging
+// import { rateLimitByUser, RateLimitTiers } from '@/lib/rate-limit'
 
 /**
  * 记录旋转动作
@@ -115,14 +116,15 @@ export async function getStats(startDate: string, endDate: string) {
       throw new AuthError('Please sign in to view statistics')
     }
 
-    // 速率限制：每分钟最多30次查询
-    const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.STANDARD,
-    })
+    // 速率限制：暂时禁用以调试
+    // TODO: 重新启用合理的速率限制
+    // const rateLimitResult = await rateLimitByUser(session.user.id, {
+    //   ...RateLimitTiers.STANDARD,
+    // })
 
-    if (!rateLimitResult.success) {
-      throw new Error('Too many requests. Please try again later.')
-    }
+    // if (!rateLimitResult.success) {
+    //   throw new Error('Too many requests. Please try again later.')
+    // }
 
     // 验证日期格式
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/
