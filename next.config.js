@@ -75,7 +75,9 @@ const nextConfig = {
   },
   // Optimize production builds
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    // Temporarily disabled to debug stats recording issue
+    // removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: false,
   },
   // Enable compression
   compress: true,
