@@ -18,9 +18,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      // 使用Google的sub作为稳定的用户ID
       if (user) {
-        token.id = user.id
+        token.id = account?.providerAccountId || user.email || user.id
       }
       return token
     },
@@ -30,16 +31,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session
     },
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       try {
+        // 使用稳定的用户标识符
+        const userId = account?.providerAccountId || user.email || user.id
+
         // 首次登录时初始化用户设置
-        const key = StorageKeys.userSettings(user.id!)
+        const key = StorageKeys.userSettings(userId!)
         const existingSettings = await getStorageItem(key)
 
         if (!existingSettings) {
           await setStorageItem(key, {
             ...defaultSettings,
-            userId: user.id,
+            userId,
           })
         }
 
