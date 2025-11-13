@@ -1,10 +1,16 @@
 'use server'
 
 import { auth } from '@/lib/auth'
-import { storage } from '@/lib/storage'
+import { getStorageItem, setStorageItem, StorageKeys } from '@/lib/storage'
 import { RSSSourceSchema, RSSSource } from '@/types/rss'
 import { revalidateTag } from 'next/cache'
-import { AuthError, NotFoundError, ValidationError, logError, validateOrThrow } from '@/lib/utils/error-handler'
+import {
+  AuthError,
+  NotFoundError,
+  ValidationError,
+  logError,
+  validateOrThrow,
+} from '@/lib/utils/error-handler'
 import { rateLimitByUser, rateLimitByAction, RateLimitTiers } from '@/lib/rate-limit'
 import { sanitizeUrl, sanitizeString, sanitizeObject } from '@/lib/utils/input-validation'
 
@@ -12,12 +18,13 @@ import { sanitizeUrl, sanitizeString, sanitizeObject } from '@/lib/utils/input-v
 export async function getRSSSources(): Promise<RSSSource[]> {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       return []
     }
-    
-    const sources = (await storage.get(`user:${session.user.id}:rss-sources`)) as unknown[] || []
+
+    const key = StorageKeys.userRSSSources(session.user.id)
+    const sources = (await getStorageItem<unknown[]>(key)) || []
     return sources.map((s: unknown) => validateOrThrow(RSSSourceSchema, s))
   } catch (error) {
     logError(error, {
@@ -31,7 +38,7 @@ export async function getRSSSources(): Promise<RSSSource[]> {
 export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'failureCount'>) {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       throw new AuthError('Please sign in to add RSS sources')
     }
@@ -55,10 +62,12 @@ export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'fai
       ...source,
       url: sanitizedUrl,
       name: sanitizeString(source.name, { maxLength: 200 }),
-      description: source.description ? sanitizeString(source.description, { maxLength: 500 }) : undefined,
-      tags: source.tags.map(tag => sanitizeString(tag, { maxLength: 50 })),
+      description: source.description
+        ? sanitizeString(source.description, { maxLength: 500 })
+        : undefined,
+      tags: source.tags.map((tag) => sanitizeString(tag, { maxLength: 50 })),
     }
-    
+
     const sources = await getRSSSources()
 
     // 限制每个用户最多50个RSS源
@@ -70,21 +79,21 @@ export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'fai
       ...sanitizedSource,
       id: globalThis.crypto.randomUUID(),
       order: sources.length,
-      failureCount: 0
+      failureCount: 0,
     }
-    
+
     // 验证 RSS URL
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 5000)
-      
-      const response = await fetch(newSource.url, { 
+
+      const response = await fetch(newSource.url, {
         method: 'HEAD',
-        signal: controller.signal
+        signal: controller.signal,
       })
-      
+
       clearTimeout(timeoutId)
-      
+
       if (!response.ok) {
         throw new ValidationError('RSS URL is not accessible')
       }
@@ -94,13 +103,14 @@ export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'fai
       }
       throw new ValidationError('Invalid RSS URL or URL is not accessible')
     }
-    
+
     // Validate the source data
     const validatedSource = validateOrThrow(RSSSourceSchema, newSource)
-    
+
     sources.push(validatedSource)
-    await storage.set(`user:${session.user.id}:rss-sources`, sources)
-    
+    const key = StorageKeys.userRSSSources(session.user.id)
+    await setStorageItem(key, sources)
+
     return validatedSource
   } catch (error) {
     logError(error, {
@@ -115,7 +125,7 @@ export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'fai
 export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       throw new AuthError('Please sign in to update RSS sources')
     }
@@ -143,10 +153,10 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
       }
       sanitizedUpdates.url = sanitizedUrl
     }
-    
+
     const sources = await getRSSSources()
-    const index = sources.findIndex(s => s.id === id)
-    
+    const index = sources.findIndex((s) => s.id === id)
+
     if (index === -1) {
       throw new NotFoundError('RSS source not found')
     }
@@ -156,18 +166,19 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
     if (!source) {
       throw new AuthError('Unauthorized to update this RSS source')
     }
-    
+
     const updatedSource = { ...source, ...sanitizedUpdates }
-    
+
     // Validate the updated source
     const validatedSource = validateOrThrow(RSSSourceSchema, updatedSource)
-    
+
     sources[index] = validatedSource
-    await storage.set(`user:${session.user.id}:rss-sources`, sources)
-    
+    const key = StorageKeys.userRSSSources(session.user.id)
+    await setStorageItem(key, sources)
+
     // 清除该源的缓存
     revalidateTag(`rss-${validatedSource.url}`)
-    
+
     return validatedSource
   } catch (error) {
     logError(error, {
@@ -183,22 +194,23 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
 export async function deleteRSSSource(id: string) {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       throw new AuthError('Please sign in to delete RSS sources')
     }
-    
+
     const sources = await getRSSSources()
-    const sourceToDelete = sources.find(s => s.id === id)
-    
+    const sourceToDelete = sources.find((s) => s.id === id)
+
     if (!sourceToDelete) {
       throw new NotFoundError('RSS source not found')
     }
-    
-    const filtered = sources.filter(s => s.id !== id)
-    
-    await storage.set(`user:${session.user.id}:rss-sources`, filtered)
-    
+
+    const filtered = sources.filter((s) => s.id !== id)
+
+    const key = StorageKeys.userRSSSources(session.user.id)
+    await setStorageItem(key, filtered)
+
     // Clear cache for the deleted source
     revalidateTag(`rss-${sourceToDelete.url}`)
   } catch (error) {
@@ -214,21 +226,22 @@ export async function deleteRSSSource(id: string) {
 export async function reorderRSSSources(sourceIds: string[]) {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       throw new AuthError('Please sign in to reorder RSS sources')
     }
-    
+
     const sources = await getRSSSources()
     const reordered = sourceIds.map((id, index) => {
-      const source = sources.find(s => s.id === id)
+      const source = sources.find((s) => s.id === id)
       if (!source) {
         throw new NotFoundError(`Source ${id} not found`)
       }
       return { ...source, order: index }
     })
-    
-    await storage.set(`user:${session.user.id}:rss-sources`, reordered)
+
+    const key = StorageKeys.userRSSSources(session.user.id)
+    await setStorageItem(key, reordered)
     return reordered
   } catch (error) {
     logError(error, {
@@ -243,32 +256,36 @@ export async function reorderRSSSources(sourceIds: string[]) {
 export async function exportOPML() {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.id) {
       throw new AuthError('Please sign in to export RSS sources')
     }
-    
+
     const sources = await getRSSSources()
-    
+
     if (sources.length === 0) {
       throw new ValidationError('No RSS sources to export')
     }
-    
+
     const opml = `<?xml version="1.0" encoding="UTF-8"?>
 <opml version="2.0">
   <head>
     <title>Shaking Head News - RSS Sources</title>
   </head>
   <body>
-    ${sources.map(s => `
+    ${sources
+      .map(
+        (s) => `
     <outline text="${s.name}" 
              type="rss" 
              xmlUrl="${s.url}" 
              htmlUrl="${s.url}" />
-    `).join('')}
+    `
+      )
+      .join('')}
   </body>
 </opml>`
-    
+
     return opml
   } catch (error) {
     logError(error, {
