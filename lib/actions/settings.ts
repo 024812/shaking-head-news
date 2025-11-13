@@ -56,9 +56,10 @@ export async function updateSettings(
       throw new AuthError('Please sign in to save settings')
     }
 
-    // 速率限制：每分钟最多100次更新（放宽限制以支持滑块调整）
+    // 速率限制：每分钟最多300次更新（非常宽松，支持滑块频繁调整）
     const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.RELAXED,
+      limit: 300,
+      window: 60,
     })
 
     if (!rateLimitResult.success) {
