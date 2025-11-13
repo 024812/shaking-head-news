@@ -215,7 +215,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               value={[settings.rotationInterval]}
               onValueChange={([value]) => updateSetting('rotationInterval', value)}
               min={5}
-              max={300}
+              max={60}
               step={5}
               className="w-full"
             />

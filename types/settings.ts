@@ -5,7 +5,7 @@ export const UserSettingsSchema = z.object({
   language: z.enum(['zh', 'en']),
   theme: z.enum(['light', 'dark', 'system']),
   rotationMode: z.enum(['fixed', 'continuous']),
-  rotationInterval: z.number().min(5).max(300),
+  rotationInterval: z.number().min(5).max(60),
   animationEnabled: z.boolean(),
   fontSize: z.enum(['small', 'medium', 'large', 'xlarge']),
   layoutMode: z.enum(['normal', 'compact']),
