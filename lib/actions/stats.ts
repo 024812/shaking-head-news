@@ -23,16 +23,16 @@ export async function recordRotation(angle: number, duration: number) {
     console.log('[recordRotation] Recording for user:', session.user.id, { angle, duration })
     console.log('[recordRotation] Session:', { userId: session.user.id, email: session.user.email })
 
-    // 速率限制：每分钟最多100次记录（防止恶意刷数据）
-    const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.RELAXED,
-    })
+    // 速率限制：暂时禁用以调试统计记录问题
+    // TODO: 重新启用速率限制
+    // const rateLimitResult = await rateLimitByUser(session.user.id, {
+    //   ...RateLimitTiers.RELAXED,
+    // })
 
-    if (!rateLimitResult.success) {
-      // 静默失败，不影响用户体验
-      console.warn('Rate limit exceeded for recordRotation')
-      return null
-    }
+    // if (!rateLimitResult.success) {
+    //   console.warn('Rate limit exceeded for recordRotation')
+    //   return null
+    // }
 
     // 验证输入参数
     if (typeof angle !== 'number' || typeof duration !== 'number') {
