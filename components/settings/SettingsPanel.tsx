@@ -303,7 +303,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           className="flex-1"
         >
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {t('save', { ns: 'common' })}
+          保存
         </Button>
         <Button
           onClick={handleReset}
@@ -312,7 +312,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
         >
           {isResetting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {!isResetting && <RotateCcw className="mr-2 h-4 w-4" />}
-          {t('retry', { ns: 'common' })}
+          重置
         </Button>
       </div>
     </div>
