@@ -28,9 +28,7 @@ export async function getUserSettings(): Promise<UserSettings> {
   }
 
   try {
-    const settings = await getStorageItem<UserSettings>(
-      StorageKeys.userSettings(session.user.id)
-    )
+    const settings = await getStorageItem<UserSettings>(StorageKeys.userSettings(session.user.id))
 
     if (!settings) {
       // 用户首次访问，返回默认设置
@@ -64,10 +62,9 @@ export async function updateSettings(
       throw new AuthError('Please sign in to save settings')
     }
 
-    // 速率限制：每分钟最多30次更新
+    // 速率限制：每分钟最多100次更新（放宽限制以支持滑块调整）
     const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.STANDARD,
-      limit: 30,
+      ...RateLimitTiers.RELAXED,
     })
 
     if (!rateLimitResult.success) {
@@ -94,10 +91,7 @@ export async function updateSettings(
     const validatedSettings = validateOrThrow(UserSettingsSchema, newSettings)
 
     // 存储到 Vercel Marketplace Storage
-    await setStorageItem(
-      StorageKeys.userSettings(session.user.id),
-      validatedSettings
-    )
+    await setStorageItem(StorageKeys.userSettings(session.user.id), validatedSettings)
 
     // 重新验证相关页面
     revalidatePath('/')
@@ -150,10 +144,7 @@ export async function resetSettings(): Promise<{
       userId: session.user.id,
     }
 
-    await setStorageItem(
-      StorageKeys.userSettings(session.user.id),
-      resetSettings
-    )
+    await setStorageItem(StorageKeys.userSettings(session.user.id), resetSettings)
 
     // 重新验证相关页面
     revalidatePath('/')
