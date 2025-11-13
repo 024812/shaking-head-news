@@ -15,14 +15,13 @@ export function UIWrapper({ children }: UIWrapperProps) {
     setMounted(true)
   }, [])
 
-  // Avoid hydration mismatch by not applying classes until mounted
-  if (!mounted) {
-    return <>{children}</>
-  }
+  useEffect(() => {
+    if (mounted) {
+      // Apply font size to document root
+      document.documentElement.setAttribute('data-font-size', fontSize)
+      document.documentElement.setAttribute('data-layout-mode', layoutMode)
+    }
+  }, [mounted, fontSize, layoutMode])
 
-  return (
-    <div className={`font-size-${fontSize} layout-${layoutMode}`}>
-      {children}
-    </div>
-  )
+  return <>{children}</>
 }
