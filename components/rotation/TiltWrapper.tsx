@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useRotationStore } from '@/lib/stores/rotation-store'
 import { useEffect, useState, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { recordRotation } from '@/lib/actions/stats'
 
 interface TiltWrapperProps {
@@ -20,16 +21,19 @@ export function TiltWrapper({
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const lastRotationTime = useRef<number>(Date.now())
   const previousAngle = useRef<number>(0)
+  const pathname = usePathname()
 
   // Use props if provided, otherwise use store values
   const effectiveMode = propMode ?? mode
   const effectiveInterval = propInterval ?? interval
 
+  // Disable rotation on settings page
+  const isSettingsPage = pathname === '/settings'
+
   // Check for prefers-reduced-motion
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    // eslint-disable-next-line no-undef
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mediaQuery.matches)
 
@@ -42,9 +46,16 @@ export function TiltWrapper({
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  // Reset angle to 0 on settings page
+  useEffect(() => {
+    if (isSettingsPage) {
+      setAngle(0)
+    }
+  }, [isSettingsPage, setAngle])
+
   // Handle rotation logic
   useEffect(() => {
-    if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion) {
+    if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion || isSettingsPage) {
       return
     }
 
@@ -69,16 +80,16 @@ export function TiltWrapper({
     }, effectiveInterval * 1000)
 
     return () => clearInterval(timer)
-  }, [effectiveMode, effectiveInterval, isPaused, prefersReducedMotion, setAngle])
+  }, [effectiveMode, effectiveInterval, isPaused, prefersReducedMotion, isSettingsPage, setAngle])
 
   // Set initial angle for fixed mode
   useEffect(() => {
-    if (effectiveMode === 'fixed' && !prefersReducedMotion) {
+    if (effectiveMode === 'fixed' && !prefersReducedMotion && !isSettingsPage) {
       // Fixed mode: angle between -2 and 2 degrees
       const fixedAngle = Math.random() * 4 - 2
       setAngle(fixedAngle)
     }
-  }, [effectiveMode, prefersReducedMotion, setAngle])
+  }, [effectiveMode, prefersReducedMotion, isSettingsPage, setAngle])
 
   // If user prefers reduced motion, render without animation
   if (prefersReducedMotion) {
