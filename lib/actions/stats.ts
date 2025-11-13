@@ -213,11 +213,24 @@ export async function getSummaryStats() {
       throw new AuthError('Please sign in to view statistics')
     }
 
+    console.log('[getSummaryStats] Fetching stats for user:', session.user.id)
+
     const [todayStats, weekStats, monthStats] = await Promise.all([
-      getTodayStats(),
-      getWeekStats(),
-      getMonthStats(),
+      getTodayStats().catch((err) => {
+        console.error('[getSummaryStats] Error fetching today stats:', err)
+        return null
+      }),
+      getWeekStats().catch((err) => {
+        console.error('[getSummaryStats] Error fetching week stats:', err)
+        return []
+      }),
+      getMonthStats().catch((err) => {
+        console.error('[getSummaryStats] Error fetching month stats:', err)
+        return []
+      }),
     ])
+
+    console.log('[getSummaryStats] Stats fetched successfully')
 
     // 计算汇总数据
     const weekTotal = weekStats.reduce(
@@ -255,6 +268,7 @@ export async function getSummaryStats() {
       })),
     }
   } catch (error) {
+    console.error('[getSummaryStats] Fatal error:', error)
     logError(error, {
       action: 'getSummaryStats',
     })
