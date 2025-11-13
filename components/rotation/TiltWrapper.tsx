@@ -27,15 +27,24 @@ export function TiltWrapper({
   const effectiveMode = propMode ?? mode
   const effectiveInterval = propInterval ?? interval
 
-  // Debug: Log component mount
+  // Debug: Log component mount and state changes
   useEffect(() => {
-    console.log('[TiltWrapper] Component mounted', {
+    console.log('[TiltWrapper] Component mounted/updated', {
       mode: effectiveMode,
       interval: effectiveInterval,
       isPaused,
       pathname,
+      prefersReducedMotion,
+      isSettingsPage,
     })
-  }, [])
+  }, [effectiveMode, effectiveInterval, isPaused, pathname, prefersReducedMotion])
+
+  // Log immediately on render
+  console.log('[TiltWrapper] Rendering with:', {
+    mode: effectiveMode,
+    interval: effectiveInterval,
+    isPaused,
+  })
 
   // Disable rotation on settings page
   const isSettingsPage = pathname === '/settings'
