@@ -20,6 +20,7 @@ import { Loader2, RotateCcw } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { LanguageSelector } from './LanguageSelector'
 import { useUIStore } from '@/lib/stores/ui-store'
+import { useRotationStore } from '@/lib/stores/rotation-store'
 import { useTheme } from 'next-themes'
 
 interface SettingsPanelProps {
@@ -33,14 +34,28 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const { toast } = useToast()
   const t = useTranslations('settings')
   const { setFontSize, setLayoutMode } = useUIStore()
+  const { setMode: setRotationMode, setInterval: setRotationInterval } = useRotationStore()
   const { setTheme } = useTheme()
 
-  // Sync UI store and theme with settings on mount and when settings change
+  // Sync UI store, rotation store, and theme with settings on mount and when settings change
   useEffect(() => {
     setFontSize(settings.fontSize)
     setLayoutMode(settings.layoutMode)
     setTheme(settings.theme)
-  }, [settings.fontSize, settings.layoutMode, settings.theme, setFontSize, setLayoutMode, setTheme])
+    setRotationMode(settings.rotationMode)
+    setRotationInterval(settings.rotationInterval)
+  }, [
+    settings.fontSize,
+    settings.layoutMode,
+    settings.theme,
+    settings.rotationMode,
+    settings.rotationInterval,
+    setFontSize,
+    setLayoutMode,
+    setTheme,
+    setRotationMode,
+    setRotationInterval,
+  ])
 
   const handleSave = () => {
     console.log('[Settings] Save button clicked, current settings:', settings)
@@ -106,13 +121,17 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
 
-    // Update UI store and theme immediately for instant visual feedback
+    // Update UI store, rotation store, and theme immediately for instant visual feedback
     if (key === 'fontSize') {
       setFontSize(value as UserSettings['fontSize'])
     } else if (key === 'layoutMode') {
       setLayoutMode(value as UserSettings['layoutMode'])
     } else if (key === 'theme') {
       setTheme(value as string)
+    } else if (key === 'rotationMode') {
+      setRotationMode(value as 'fixed' | 'continuous')
+    } else if (key === 'rotationInterval') {
+      setRotationInterval(value as number)
     }
   }
 
