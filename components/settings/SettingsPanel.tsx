@@ -43,7 +43,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
     startTransition(async () => {
       try {
         const result = await updateSettings(settings)
-        
+
         if (result.success) {
           toast({
             title: t('saveSuccess'),
@@ -70,7 +70,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
     startResetTransition(async () => {
       try {
         const result = await resetSettings()
-        
+
         if (result.success && result.settings) {
           setSettings(result.settings)
           toast({
@@ -94,12 +94,9 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
     })
   }
 
-  const updateSetting = <K extends keyof UserSettings>(
-    key: K,
-    value: UserSettings[K]
-  ) => {
+  const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
-    
+
     // Update UI store immediately for instant visual feedback
     if (key === 'fontSize') {
       setFontSize(value as UserSettings['fontSize'])
@@ -156,18 +153,14 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="xlarge">{t('xlarge')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">
-              {t('fontSizeDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('fontSizeDescription')}</p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="layoutMode">{t('layout')}</Label>
             <Select
               value={settings.layoutMode}
-              onValueChange={(value) =>
-                updateSetting('layoutMode', value as 'normal' | 'compact')
-              }
+              onValueChange={(value) => updateSetting('layoutMode', value as 'normal' | 'compact')}
             >
               <SelectTrigger id="layoutMode">
                 <SelectValue />
@@ -177,9 +170,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="compact">{t('compact')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">
-              {t('layoutDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('layoutDescription')}</p>
           </div>
         </CardContent>
       </Card>
@@ -188,7 +179,6 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
       <Card>
         <CardHeader>
           <CardTitle>{t('rotation')}</CardTitle>
-          <CardDescription>{t('rotationModeDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
@@ -207,17 +197,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="continuous">{t('continuous')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">
-              {t('rotationModeDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('rotationModeDescription')}</p>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="rotationInterval">{t('interval')}</Label>
-              <span className="text-sm text-muted-foreground">
-                {settings.rotationInterval}s
-              </span>
+              <span className="text-sm text-muted-foreground">{settings.rotationInterval}s</span>
             </div>
             <Slider
               id="rotationInterval"
@@ -228,17 +214,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               step={5}
               className="w-full"
             />
-            <p className="text-sm text-muted-foreground">
-              {t('intervalDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('intervalDescription')}</p>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="animationEnabled">{t('animation')}</Label>
-              <p className="text-sm text-muted-foreground">
-                {t('animationDescription')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('animationDescription')}</p>
             </div>
             <Switch
               id="animationEnabled"
@@ -259,9 +241,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="dailyGoal">{t('dailyGoal')}</Label>
-              <span className="text-sm text-muted-foreground">
-                {settings.dailyGoal}
-              </span>
+              <span className="text-sm text-muted-foreground">{settings.dailyGoal}</span>
             </div>
             <Slider
               id="dailyGoal"
@@ -272,24 +252,18 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               step={5}
               className="w-full"
             />
-            <p className="text-sm text-muted-foreground">
-              {t('dailyGoalDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('dailyGoalDescription')}</p>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="notificationsEnabled">{t('notifications')}</Label>
-              <p className="text-sm text-muted-foreground">
-                {t('notificationsDescription')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('notificationsDescription')}</p>
             </div>
             <Switch
               id="notificationsEnabled"
               checked={settings.notificationsEnabled}
-              onCheckedChange={(checked) =>
-                updateSetting('notificationsEnabled', checked)
-              }
+              onCheckedChange={(checked) => updateSetting('notificationsEnabled', checked)}
             />
           </div>
         </CardContent>
@@ -297,19 +271,11 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
 
       {/* 操作按钮 */}
       <div className="flex gap-4">
-        <Button
-          onClick={handleSave}
-          disabled={isPending || isResetting}
-          className="flex-1"
-        >
+        <Button onClick={handleSave} disabled={isPending || isResetting} className="flex-1">
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           保存
         </Button>
-        <Button
-          onClick={handleReset}
-          disabled={isPending || isResetting}
-          variant="outline"
-        >
+        <Button onClick={handleReset} disabled={isPending || isResetting} variant="outline">
           {isResetting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {!isResetting && <RotateCcw className="mr-2 h-4 w-4" />}
           重置
