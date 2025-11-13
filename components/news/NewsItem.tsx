@@ -6,10 +6,8 @@ interface NewsItemProps {
 
 export function NewsItem({ item }: NewsItemProps) {
   return (
-    <div className="py-2 border-b border-border last:border-0">
-      <p className="text-sm leading-relaxed text-foreground">
-        {item.title}
-      </p>
+    <div className="border-b border-border py-2 last:border-0">
+      <p className="text-base leading-relaxed text-foreground">{item.title}</p>
     </div>
   )
 }
