@@ -88,7 +88,7 @@ export function initSentry(Sentry: any) {
     ],
     
     // Filter sensitive data before sending
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       // Remove sensitive headers
       if (event.request?.headers) {
         delete event.request.headers['cookie']

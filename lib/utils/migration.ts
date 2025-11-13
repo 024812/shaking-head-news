@@ -142,7 +142,8 @@ function convertRSSSources(
       
       // 转换为新格式
       const rssSource: RSSSource = {
-        id: source.id || crypto.randomUUID(),
+        // eslint-disable-next-line no-undef
+        id: source.id || globalThis.crypto.randomUUID(),
         name: source.name,
         url: source.url,
         description: source.description,
@@ -255,6 +256,7 @@ export function migrateSettings(legacyData: any): MigrationResult {
 /**
  * 从 JSON 文件导入设置
  */
+// eslint-disable-next-line no-undef
 export async function importFromJSON(file: File): Promise<MigrationResult> {
   try {
     // 验证文件类型
@@ -335,6 +337,8 @@ export function exportToJSON(
  * 下载 JSON 文件
  */
 export function downloadJSON(content: string, filename: string = 'settings.json') {
+  if (typeof window === 'undefined') return
+  // eslint-disable-next-line no-undef
   const blob = new Blob([content], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
