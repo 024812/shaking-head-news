@@ -36,10 +36,10 @@ export async function Header() {
               {t('home')}
             </Link>
             <Link
-              href="/about"
+              href="/stats"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
-              关于
+              {t('stats')}
             </Link>
             <Link
               href="/settings"
@@ -48,10 +48,10 @@ export async function Header() {
               {t('settings')}
             </Link>
             <Link
-              href="/stats"
+              href="/about"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
-              {t('stats')}
+              关于
             </Link>
           </nav>
         </div>
