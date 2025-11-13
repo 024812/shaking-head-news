@@ -1,3 +1,0 @@
-{
-  "extends": ["stylelint-config-clean-order/error", "stylelint-config-recommended-vue/scss"]
-}

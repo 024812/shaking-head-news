@@ -1,76 +1,53 @@
-# 更新日志
+# Changelog
 
-## [1.5.0](https://github.com/dukeluo/wai/compare/v1.4.2...v1.5.0) - 2025-03-08
+All notable changes to Shaking Head News will be documented in this file.
 
-### 新增
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-- 增加侧边栏设置菜单
+## [2.0.0] - 2025-11-13
 
-### 变化
+### Major Rewrite
 
-- 更新「历史上的今天」数据
+Complete rewrite from Vue 3 browser extension to Next.js 15 web application.
 
-## [1.4.2](https://github.com/dukeluo/wai/compare/v1.4.1...v1.4.2) - 2024-03-02
+### Added
 
-### 修复
+- **Modern Tech Stack**: Next.js 15, React 19, TypeScript
+- **User Authentication**: Google OAuth via NextAuth.js
+- **Cloud Sync**: Settings sync via Upstash Redis
+- **RSS Management**: Add, manage, and export custom RSS feeds
+- **Statistics Dashboard**: Track rotation activity with charts
+- **Health Reminders**: Browser notifications for neck health
+- **Internationalization**: Full Chinese and English support
+- **Theme Support**: Light, dark, and system theme modes
+- **Responsive Design**: Mobile-first, works on all devices
+- **Performance**: ISR caching, optimized images, code splitting
+- **Security**: Rate limiting, input validation, CSP headers
+- **Testing**: Unit tests (Vitest), E2E tests (Playwright)
+- **CI/CD**: GitHub Actions workflow
+- **Monitoring**: Logging and analytics integration
 
-- 修复在 2.29 号因缺少内置「历史上的今天」数据而崩溃的问题
+### Changed
 
-## [1.4.1](https://github.com/dukeluo/wai/compare/v1.4.0...v1.4.1) - 2023-09-10
+- Migrated from browser extension to web application
+- Replaced Pinia with Zustand for state management
+- Replaced Vue Router with Next.js App Router
+- Replaced Vite with Turbopack
+- Improved UI with Tailwind CSS 4 and Shadcn/ui
+- Enhanced accessibility features
 
-### 修复
+### Removed
 
-- 修复在狭窄屏幕下内容不歪的问题
+- Browser extension functionality (now web-only)
+- Local-only storage (now supports cloud sync)
 
-## [1.4.0](https://github.com/dukeluo/wai/compare/v1.3.0...v1.4.0) - 2023-08-19
+## [1.x.x] - Previous Versions
 
-### 新增
+See the original [WAI project](https://github.com/dukeluo/wai) for version 1.x changelog.
 
-- 更多的平台字体支持
+---
 
-### 变化
+## Credits
 
-- 使用全新方式实现内容布局，展示区域更加方正
-- 更新「历史上的今天」数据
-
-### 修复
-
-- 修复特定角度倾斜出现滚动条的问题
-
-## [1.3.0](https://github.com/dukeluo/wai/compare/v1.1.0...v1.3.0) - 2023-01-18
-
-### 新增
-
-- 上架 Add-ons for Firefox，支持 Firefox 浏览器
-
-### 变化
-
-- 更新「历史上的今天」数据
-
-### 修复
-
-- 修复在线版模式选择功能在 Chrome 浏览器不可用问题
-
-## [1.1.0](https://github.com/dukeluo/wai/compare/v1.0.0...v1.1.0) - 2022-10-5
-
-### 新增
-
-- 三种模式[柔和模式/连续模式/全面模式]支持，强度自己选择
-
-### 变化
-
-- 更新「历史上的今天」数据
-- 更新「历史上的今天」布局
-
-### 修复
-
-- 修复内容时背景没有全面覆盖问题
-
-## [1.0.0](https://github.com/dukeluo/wai/releases/tag/v1.0.0) - 2022-06-25
-
-### 新增
-
-- 活动脖子，预防颈椎病
-- 休息日指南，快速知晓下一个休息日
-- 当季蔬果提示，健康饮食每一天
-- 历史上的今天，回顾历史长河
+This project is based on the excellent [WAI](https://github.com/dukeluo/wai) project by [@dukeluo](https://github.com/dukeluo).
