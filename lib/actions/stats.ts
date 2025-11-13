@@ -229,11 +229,19 @@ export async function getSummaryStats() {
       throw new AuthError('Please sign in to view statistics')
     }
 
+    console.log('[getSummaryStats] Fetching for user:', session.user.id)
+
     const [todayStats, weekStats, monthStats] = await Promise.all([
       getTodayStats().catch(() => null),
       getWeekStats().catch(() => []),
       getMonthStats().catch(() => []),
     ])
+
+    console.log('[getSummaryStats] Results:', {
+      today: todayStats,
+      weekCount: weekStats.length,
+      monthCount: monthStats.length,
+    })
 
     // 计算汇总数据
     const weekTotal = weekStats.reduce(
