@@ -33,6 +33,7 @@
 Shaking Head News is a modern web application that promotes neck health through gentle page rotation while browsing daily news. Built with Next.js 15 and React 19, it features customizable news sources, smart caching, user authentication, and two neck health modes to encourage cervical activity.
 
 **Key Features:**
+
 - 📰 Customizable news sources with RSS support
 - 🤸 Two rotation modes (Fixed/Continuous) for neck health
 - 🔐 Google OAuth authentication with cloud sync
@@ -49,6 +50,14 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 > 现已升级为 Web 应用，无需安装浏览器扩展，直接访问即可使用！
 
+### 🆕 最近更新 (2025-01)
+
+- ✅ **CSS 加载修复**: 优化 PostCSS 配置，确保 Vercel 部署时样式正确加载
+- ✅ **设置持久化**: 使用 Google 稳定标识符，确保用户设置跨会话保留
+- ✅ **主题切换优化**: 设置页面主题选项现在可以正常工作
+- ✅ **旋转间隔调整**: 将旋转间隔范围从 5-300秒 优化为 5-60秒
+- ✅ **设置页面体验**: 进入设置页面时自动禁用页面旋转，避免干扰
+
 ---
 
 ## **项目理念**
@@ -60,39 +69,48 @@ Shaking Head News is a modern web application that promotes neck health through 
 ## ✨ **主要特色**
 
 ### 📰 **高度可定制的新闻源**
+
 - **内置新闻**: 默认集成 [EverydayNews](https://github.com/ravelloh/everydaynews) 数据源
 - **RSS 订阅**: 支持添加、管理和切换多个自定义 RSS 订阅源
 - **智能缓存**: ISR (Incremental Static Regeneration) 缓存策略，加速内容加载
 - **OPML 导入/导出**: 方便迁移和备份 RSS 订阅
 
 ### 🤸 **智能颈椎健康模式**
+
 - **两种核心模式**:
-    - **固定模式 (Fixed)**: 页面保持近乎固定，仅进行微小、不易察觉的转动，适合需要集中注意力的静态阅读
-    - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（10秒至2分钟）自动转动，有效提醒和促进颈部活动
+  - **固定模式 (Fixed)**: 页面保持近乎固定，仅进行微小、不易察觉的转动，适合需要集中注意力的静态阅读
+  - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（5-60秒可调）自动转动，有效提醒和促进颈部活动
 - **动效与无障碍**:
-    - **尊重系统偏好**: 自动检测并遵循操作系统的"减弱动态效果"设置
-    - **手动控制**: 用户可随时暂停/继续页面旋转，或完全禁用旋转效果
-    - **清晰的状态提示**: 明确告知用户当前的旋转状态（激活、暂停、禁用）
+  - **尊重系统偏好**: 自动检测并遵循操作系统的"减弱动态效果"设置
+  - **手动控制**: 用户可随时暂停/继续页面旋转，或完全禁用旋转效果
+  - **智能禁用**: 在设置页面自动禁用旋转，避免干扰用户调整设置
+  - **清晰的状态提示**: 明确告知用户当前的旋转状态（激活、暂停、禁用）
 
 ### 🔐 **用户认证与云同步**
+
 - **Google OAuth 登录**: 安全便捷的第三方登录
-- **云端设置同步**: 用户设置自动保存到云端，跨设备同步
+- **稳定的用户标识**: 使用 Google 提供的永久标识符，确保设置持久化
+- **云端设置同步**: 用户设置自动保存到 Upstash Redis，跨设备同步
 - **隐私保护**: 仅存储必要的用户设置，不收集个人信息
 
 ### 📊 **统计数据与健康提醒**
+
 - **运动记录**: 自动记录每次页面旋转的角度和时长
 - **数据可视化**: 图表展示每日、每周、每月的运动统计
 - **健康提醒**: 浏览器通知提醒用户达成每日运动目标
 - **目标设置**: 自定义每日运动次数目标
 
 ### 🌍 **多语言支持**
+
 - **中英文切换**: 完整的中英文界面支持
 - **自动新闻源切换**: 根据语言自动切换对应的新闻源
 - **本地化日期时间**: 根据用户语言显示本地化的日期和时间格式
 
 ### 🎨 **现代化用户体验**
+
 - **响应式设计**: 完美适配桌面、平板和移动设备
-- **深色模式**: 支持浅色/深色主题切换
+- **深色模式**: 支持浅色/深色/跟随系统三种主题模式
+- **即时主题切换**: 设置页面和顶部按钮均可切换主题，立即生效
 - **字体大小调整**: 4 档字体大小可选（小、中、大、特大）
 - **布局模式**: 紧凑/正常布局模式切换
 - **流畅动画**: Framer Motion 驱动的流畅过渡动画
@@ -103,11 +121,13 @@ Shaking Head News is a modern web application that promotes neck health through 
 ## 🛠️ **技术栈**
 
 ### 核心框架
+
 - **[Next.js 15](https://nextjs.org/)** - React 框架，支持 App Router、Server Components 和 ISR
 - **[React 19](https://react.dev/)** - 最新的 React 版本
 - **[TypeScript 5.7+](https://www.typescriptlang.org/)** - 类型安全的 JavaScript
 
 ### UI 和样式
+
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - 实用优先的 CSS 框架
 - **[Shadcn/ui](https://ui.shadcn.com/)** - 高质量的 React 组件库
 - **[Radix UI](https://www.radix-ui.com/)** - 无障碍的 UI 组件基础
@@ -115,17 +135,20 @@ Shaking Head News is a modern web application that promotes neck health through 
 - **[Lucide React](https://lucide.dev/)** - 美观的图标库
 
 ### 状态管理和数据
+
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - 轻量级状态管理
 - **[Zod](https://zod.dev/)** - TypeScript 优先的模式验证
 - **[NextAuth.js v5](https://next-auth.js.org/)** - 完整的认证解决方案
 - **[Upstash Redis](https://upstash.com/)** - Serverless Redis 数据库 (Vercel Marketplace Storage)
 
 ### 国际化和工具
+
 - **[next-intl](https://next-intl-docs.vercel.app/)** - Next.js 国际化
 - **[next-themes](https://github.com/pacocoursey/next-themes)** - 主题管理
 - **[Recharts](https://recharts.org/)** - React 图表库
 
 ### 开发工具
+
 - **[Turbopack](https://turbo.build/pack)** - 极速开发构建工具
 - **[ESLint 9](https://eslint.org/)** - 代码质量检查
 - **[Prettier](https://prettier.io/)** - 代码格式化
@@ -134,6 +157,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 - **[Commitlint](https://commitlint.js.org/)** - 提交信息规范
 
 ### 测试 (可选)
+
 - **[Vitest](https://vitest.dev/)** - 单元测试框架
 - **[React Testing Library](https://testing-library.com/react)** - React 组件测试
 - **[Playwright](https://playwright.dev/)** - E2E 测试
@@ -350,6 +374,7 @@ shaking-head-news/
 4. 复制 REST URL 和 REST Token 到 `.env.local`
 
 或者在 Vercel 部署时：
+
 1. 在 Vercel 项目设置中
 2. 进入 "Storage" 标签
 3. 添加 Upstash Redis (Vercel Marketplace Storage)
@@ -389,21 +414,25 @@ shaking-head-news/
 1. **Fork 本项目到你的 GitHub 账号**
 
 2. **在 Vercel 中导入项目**
+
    - 访问 [Vercel](https://vercel.com/)
    - 点击 "New Project"
    - 导入你的 GitHub 仓库
 
 3. **配置环境变量**
+
    - 在 Vercel 项目设置中添加所有必需的环境变量
    - 参考 `.env.example` 文件
 
 4. **添加 Upstash Redis**
+
    - 在 Vercel 项目设置中
    - 进入 "Storage" 标签
    - 添加 Upstash Redis
    - 环境变量会自动配置
 
 5. **配置 CI/CD**
+
    - 参考 [CI/CD 设置指南](.github/ACTIONS_SETUP.md)
    - 配置 GitHub Secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
    - 推送代码会自动触发 CI/CD 流程
@@ -520,7 +549,7 @@ logger.info('User action', { userId: '123' })
 trackEvent({
   action: 'click',
   category: 'button',
-  label: 'refresh'
+  label: 'refresh',
 })
 
 // 捕获错误
@@ -600,14 +629,17 @@ try {
 ## 🙏 **致谢**
 
 ### 基础项目
+
 - 本项目基于 [WAI](https://github.com/dukeluo/wai) 项目开发
 - 感谢原作者 [@dukeluo](https://github.com/dukeluo) 的优秀工作
 
 ### 数据源
+
 - 新闻数据来源：[EverydayNews](https://github.com/ravelloh/everydaynews)
 - 感谢 [@ravelloh](https://github.com/ravelloh) 提供的每日新闻 API
 
 ### 技术栈
+
 - [Next.js](https://nextjs.org/) - React 框架
 - [Vercel](https://vercel.com/) - 部署平台
 - [Shadcn/ui](https://ui.shadcn.com/) - UI 组件库
@@ -636,15 +668,20 @@ try {
 ## 🗺️ **路线图**
 
 ### 已完成 ✅
+
 - [x] Next.js 15 + React 19 迁移
-- [x] 用户认证和云同步
-- [x] 多语言支持
-- [x] RSS 源管理
+- [x] 用户认证和云同步（使用稳定的用户标识符）
+- [x] 多语言支持（中英文）
+- [x] RSS 源管理（OPML 导入/导出）
 - [x] 统计数据和健康提醒
-- [x] 性能优化
-- [x] 安全加固
+- [x] 性能优化（ISR、图片优化、代码分割）
+- [x] 安全加固（CSP、速率限制、输入验证）
+- [x] 设置页面旋转禁用
+- [x] 主题切换优化
+- [x] CSS 加载修复（PostCSS 配置优化）
 
 ### 计划中 🚧
+
 - [ ] PWA 支持
 - [ ] 移动端 App
 - [ ] 更多新闻源
