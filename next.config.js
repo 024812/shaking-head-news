@@ -10,9 +10,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  turbopack: {
-    // Enable Turbopack for development
-  },
   images: {
     remotePatterns: [
       // News API images
