@@ -197,7 +197,6 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="continuous">{t('continuous')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">{t('rotationModeDescription')}</p>
           </div>
 
           <div className="space-y-2">
