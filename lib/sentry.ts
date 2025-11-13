@@ -88,7 +88,8 @@ export function initSentry(Sentry: any) {
     ],
     
     // Filter sensitive data before sending
-    beforeSend(event, _hint) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    beforeSend(event: any, _hint: any) {
       // Remove sensitive headers
       if (event.request?.headers) {
         delete event.request.headers['cookie']
