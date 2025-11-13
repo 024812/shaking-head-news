@@ -21,12 +21,6 @@ export async function getUserSettings(): Promise<UserSettings> {
     return { ...defaultSettings, userId: '' }
   }
 
-  // 检查 Redis 是否配置
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    console.warn('[getUserSettings] Redis not configured, returning default settings')
-    return { ...defaultSettings, userId: session.user.id }
-  }
-
   try {
     const settings = await getStorageItem<UserSettings>(StorageKeys.userSettings(session.user.id))
 
