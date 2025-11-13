@@ -20,6 +20,7 @@ import { Loader2, RotateCcw } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { LanguageSelector } from './LanguageSelector'
 import { useUIStore } from '@/lib/stores/ui-store'
+import { useTheme } from 'next-themes'
 
 interface SettingsPanelProps {
   initialSettings: UserSettings
@@ -32,12 +33,14 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const { toast } = useToast()
   const t = useTranslations('settings')
   const { setFontSize, setLayoutMode } = useUIStore()
+  const { setTheme } = useTheme()
 
-  // Sync UI store with settings on mount and when settings change
+  // Sync UI store and theme with settings on mount and when settings change
   useEffect(() => {
     setFontSize(settings.fontSize)
     setLayoutMode(settings.layoutMode)
-  }, [settings.fontSize, settings.layoutMode, setFontSize, setLayoutMode])
+    setTheme(settings.theme)
+  }, [settings.fontSize, settings.layoutMode, settings.theme, setFontSize, setLayoutMode, setTheme])
 
   const handleSave = () => {
     startTransition(async () => {
@@ -97,11 +100,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
 
-    // Update UI store immediately for instant visual feedback
+    // Update UI store and theme immediately for instant visual feedback
     if (key === 'fontSize') {
       setFontSize(value as UserSettings['fontSize'])
     } else if (key === 'layoutMode') {
       setLayoutMode(value as UserSettings['layoutMode'])
+    } else if (key === 'theme') {
+      setTheme(value as string)
     }
   }
 
