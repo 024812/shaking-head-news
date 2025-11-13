@@ -59,8 +59,25 @@ export function TiltWrapper({
       return
     }
 
+    // Log the actual interval being used
+    console.log(
+      `[Rotation] Setting up timer with interval: ${effectiveInterval}s (${effectiveInterval * 1000}ms)`
+    )
+
+    // Track when timer starts
+    const startTime = Date.now()
+    let rotationCount = 0
+
     // Continuous mode: change angle at intervals
     const timer = setInterval(() => {
+      rotationCount++
+      const elapsed = Date.now() - startTime
+      const averageInterval = elapsed / rotationCount / 1000
+
+      console.log(
+        `[Rotation] Rotation #${rotationCount} - Expected: ${effectiveInterval}s, Actual average: ${averageInterval.toFixed(2)}s`
+      )
+
       // Generate random angle between -10 and 10 degrees
       const newAngle = Math.random() * 20 - 10
       setAngle(newAngle)
@@ -79,7 +96,10 @@ export function TiltWrapper({
       }
     }, effectiveInterval * 1000)
 
-    return () => clearInterval(timer)
+    return () => {
+      console.log(`[Rotation] Cleaning up timer (ran ${rotationCount} times)`)
+      clearInterval(timer)
+    }
   }, [effectiveMode, effectiveInterval, isPaused, prefersReducedMotion, isSettingsPage, setAngle])
 
   // Set initial angle for fixed mode
