@@ -89,8 +89,8 @@ export function TiltWrapper({
       const duration = Math.round((now - lastRotationTime.current) / 1000)
       lastRotationTime.current = now
 
-      // Only record if there's a significant angle change
-      if (Math.abs(newAngle - previousAngle.current) > 1) {
+      // Only record if there's a significant angle change (lowered threshold to 0.5 degrees)
+      if (Math.abs(newAngle - previousAngle.current) > 0.5) {
         console.log('[TiltWrapper] Recording rotation:', { newAngle, duration })
         recordRotation(newAngle, duration)
           .then((result) => {
