@@ -1,10 +1,8 @@
 import { RotationControls } from '@/components/rotation/RotationControls'
 import { NewsDisplay } from '@/components/news/NewsDisplay'
-import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 
 export default async function HomePage() {
-  const t = await getTranslations('home')
 
   return (
     <div className="container py-8">
