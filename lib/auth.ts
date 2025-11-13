@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
-import { storage, StorageKeys } from './storage'
+import { getStorageItem, setStorageItem, StorageKeys } from './storage'
 import { defaultSettings } from '@/types/settings'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -33,12 +33,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user }) {
       try {
         // 首次登录时初始化用户设置
-        const existingSettings = await storage.get(
-          StorageKeys.userSettings(user.id!)
-        )
+        const key = StorageKeys.userSettings(user.id!)
+        const existingSettings = await getStorageItem(key)
 
         if (!existingSettings) {
-          await storage.set(StorageKeys.userSettings(user.id!), {
+          await setStorageItem(key, {
             ...defaultSettings,
             userId: user.id,
           })

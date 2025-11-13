@@ -115,6 +115,61 @@ export async function getMultipleStorageItems(keys: string[]): Promise<unknown[]
   }
 }
 
+// 获取 TTL（剩余过期时间，秒）
+export async function getTTL(key: string): Promise<number> {
+  try {
+    // 使用 Redis
+    if (storage) {
+      return await storage.ttl(key)
+    }
+
+    // 使用内存存储
+    const item = memoryStorage.get(key)
+    if (!item || !item.expiry) return -1
+
+    const remaining = Math.floor((item.expiry - Date.now()) / 1000)
+    return remaining > 0 ? remaining : -2
+  } catch (error) {
+    console.error(`Failed to get TTL for key: ${key}`, error)
+    return -1
+  }
+}
+
+// 设置带选项的存储项（支持 keepTtl）
+export async function setStorageItemWithOptions<T>(
+  key: string,
+  value: T,
+  options?: { ex?: number; keepTtl?: boolean }
+): Promise<void> {
+  try {
+    // 使用 Redis
+    if (storage) {
+      // 根据选项构建 Redis 命令
+      if (options?.keepTtl) {
+        await storage.set(key, value, { keepTtl: true })
+      } else if (options?.ex) {
+        await storage.set(key, value, { ex: options.ex })
+      } else {
+        await storage.set(key, value)
+      }
+      return
+    }
+
+    // 使用内存存储
+    if (options?.keepTtl) {
+      // 保持现有的过期时间
+      const existing = memoryStorage.get(key)
+      memoryStorage.set(key, { value, expiry: existing?.expiry })
+    } else {
+      const expiry = options?.ex ? Date.now() + options.ex * 1000 : undefined
+      memoryStorage.set(key, { value, expiry })
+    }
+  } catch (error) {
+    console.error(`Failed to set storage item: ${key}`, error)
+    throw error
+  }
+}
+
 // 存储键格式化函数
 export const StorageKeys = {
   userSettings: (userId: string) => `user:${userId}:settings`,

@@ -1,11 +1,11 @@
 /**
  * Rate Limiting Utility
- * 
+ *
  * Implements rate limiting using Vercel Marketplace Storage (Upstash Redis)
  * to prevent abuse and protect Server Actions from excessive requests.
  */
 
-import { storage } from './storage'
+import { getStorageItem, setStorageItemWithOptions, deleteStorageItem, getTTL } from './storage'
 
 export interface RateLimitResult {
   success: boolean
@@ -19,13 +19,13 @@ export interface RateLimitOptions {
    * @default 10
    */
   limit?: number
-  
+
   /**
    * Time window in seconds
    * @default 60
    */
   window?: number
-  
+
   /**
    * Prefix for the rate limit key
    * @default 'rate-limit'
@@ -35,11 +35,11 @@ export interface RateLimitOptions {
 
 /**
  * Rate limit a specific identifier (e.g., user ID, IP address)
- * 
+ *
  * @param identifier - Unique identifier for the rate limit (user ID, IP, etc.)
  * @param options - Rate limit configuration options
  * @returns Rate limit result with success status and remaining requests
- * 
+ *
  * @example
  * ```typescript
  * const result = await rateLimit('user-123', { limit: 10, window: 60 })
@@ -52,39 +52,35 @@ export async function rateLimit(
   identifier: string,
   options: RateLimitOptions = {}
 ): Promise<RateLimitResult> {
-  const {
-    limit = 10,
-    window = 60,
-    prefix = 'rate-limit',
-  } = options
+  const { limit = 10, window = 60, prefix = 'rate-limit' } = options
 
   const key = `${prefix}:${identifier}`
-  
+
   try {
     // Get current count
-    const current = await storage.get<number>(key)
+    const current = await getStorageItem<number>(key)
     const count = current || 0
-    
+
     // Check if limit exceeded
     if (count >= limit) {
-      const ttl = await storage.ttl(key)
+      const ttl = await getTTL(key)
       return {
         success: false,
         remaining: 0,
         reset: Date.now() + (ttl > 0 ? ttl * 1000 : window * 1000),
       }
     }
-    
+
     // Increment counter
     const newCount = count + 1
-    
+
     // Set with expiration if this is the first request
     if (count === 0) {
-      await storage.set(key, newCount, { ex: window })
+      await setStorageItemWithOptions(key, newCount, { ex: window })
     } else {
-      await storage.set(key, newCount, { keepTtl: true })
+      await setStorageItemWithOptions(key, newCount, { keepTtl: true })
     }
-    
+
     return {
       success: true,
       remaining: limit - newCount,
@@ -110,19 +106,19 @@ export const RateLimitTiers = {
    * 5 requests per 15 minutes
    */
   STRICT: { limit: 5, window: 900 },
-  
+
   /**
    * Standard rate limit for authenticated operations
    * 30 requests per minute
    */
   STANDARD: { limit: 30, window: 60 },
-  
+
   /**
    * Relaxed rate limit for read operations
    * 100 requests per minute
    */
   RELAXED: { limit: 100, window: 60 },
-  
+
   /**
    * Very relaxed rate limit for public endpoints
    * 300 requests per 5 minutes
@@ -185,7 +181,7 @@ export async function resetRateLimit(
   prefix: string = 'rate-limit'
 ): Promise<void> {
   const key = `${prefix}:${identifier}`
-  await storage.del(key)
+  await deleteStorageItem(key)
 }
 
 /**
@@ -195,19 +191,15 @@ export async function getRateLimitStatus(
   identifier: string,
   options: RateLimitOptions = {}
 ): Promise<RateLimitResult> {
-  const {
-    limit = 10,
-    window = 60,
-    prefix = 'rate-limit',
-  } = options
+  const { limit = 10, window = 60, prefix = 'rate-limit' } = options
 
   const key = `${prefix}:${identifier}`
-  
+
   try {
-    const current = await storage.get<number>(key)
+    const current = await getStorageItem<number>(key)
     const count = current || 0
-    const ttl = await storage.ttl(key)
-    
+    const ttl = await getTTL(key)
+
     return {
       success: count < limit,
       remaining: Math.max(0, limit - count),
