@@ -13,15 +13,16 @@ export function NewsList({ news }: NewsListProps) {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>暂无新闻</AlertTitle>
-        <AlertDescription>
-          当前没有可显示的新闻内容，请稍后再试或刷新页面。
-        </AlertDescription>
+        <AlertDescription>当前没有可显示的新闻内容，请稍后再试或刷新页面。</AlertDescription>
       </Alert>
     )
   }
 
   return (
-    <div className="divide-y divide-border" data-testid="news-list">
+    <div
+      className="scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent max-h-[80vh] divide-y divide-border overflow-y-auto pr-2"
+      data-testid="news-list"
+    >
       {news.map((item) => (
         <NewsItem key={item.id} item={item} />
       ))}
