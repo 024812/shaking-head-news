@@ -17,12 +17,8 @@ export async function recordRotation(angle: number, duration: number) {
     const session = await auth()
 
     if (!session?.user?.id) {
-      console.log('[recordRotation] User not logged in, skipping record', { session })
       return null // 未登录用户不记录
     }
-
-    console.log('[recordRotation] Recording for user:', session.user.id, { angle, duration })
-    console.log('[recordRotation] Session:', { userId: session.user.id, email: session.user.email })
 
     // 速率限制：暂时禁用以调试统计记录问题
     // TODO: 重新启用速率限制
@@ -52,10 +48,8 @@ export async function recordRotation(angle: number, duration: number) {
 
     const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
     const key = StorageKeys.userStats(session.user.id, today)
-    console.log('[recordRotation] Storage key:', key)
 
     const existingStats = await getStorageItem<UserStats>(key)
-    console.log('[recordRotation] Existing stats:', existingStats)
 
     const stats: UserStats = existingStats || {
       userId: session.user.id,
@@ -86,14 +80,8 @@ export async function recordRotation(angle: number, duration: number) {
     // 保留 90 天
     await setStorageItem(key, validatedStats, 60 * 60 * 24 * 90)
 
-    console.log('[recordRotation] Successfully saved stats:', {
-      count: validatedStats.rotationCount,
-      duration: validatedStats.totalDuration,
-    })
-
     return validatedStats
   } catch (error) {
-    console.error('[recordRotation] Error:', error)
     logError(error, {
       action: 'recordRotation',
       angle,
@@ -180,12 +168,8 @@ export async function getStats(startDate: string, endDate: string) {
  * 需求: 8.2 - 显示今日运动数据
  */
 export async function getTodayStats() {
-  const session = await auth()
   const today = new Date().toISOString().split('T')[0]
-  const key = session?.user?.id ? StorageKeys.userStats(session.user.id, today) : 'no-user'
-  console.log('[getTodayStats] Fetching stats:', { userId: session?.user?.id, date: today, key })
   const stats = await getStats(today, today)
-  console.log('[getTodayStats] Found stats:', stats[0] || null)
   return stats[0] || null
 }
 
@@ -231,19 +215,11 @@ export async function getSummaryStats() {
       throw new AuthError('Please sign in to view statistics')
     }
 
-    console.log('[getSummaryStats] Fetching for user:', session.user.id)
-
     const [todayStats, weekStats, monthStats] = await Promise.all([
       getTodayStats().catch(() => null),
       getWeekStats().catch(() => []),
       getMonthStats().catch(() => []),
     ])
-
-    console.log('[getSummaryStats] Results:', {
-      today: todayStats,
-      weekCount: weekStats.length,
-      monthCount: monthStats.length,
-    })
 
     // 计算汇总数据
     const weekTotal = weekStats.reduce(

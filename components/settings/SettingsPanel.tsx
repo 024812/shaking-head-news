@@ -199,6 +199,27 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
         </CardContent>
       </Card>
 
+      {/* 新闻源设置 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('newsSource') || '新闻源'}</CardTitle>
+          <CardDescription>
+            {t('newsSourceDescription') || '管理您的新闻来源和 RSS 订阅'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>RSS 订阅管理</Label>
+              <p className="text-sm text-muted-foreground">添加或移除自定义 RSS 新闻源</p>
+            </div>
+            <Button variant="outline" asChild>
+              <a href="/rss">管理订阅</a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* 旋转设置 */}
       <Card>
         <CardHeader>
