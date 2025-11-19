@@ -67,6 +67,8 @@
     "title": "设置",
     "language": "语言",
     "languageDescription": "选择界面语言",
+    "newsSource": "新闻源",
+    "newsSourceDescription": "管理您的新闻来源和 RSS 订阅",
     "chinese": "中文",
     "english": "English",
     "theme": "主题",

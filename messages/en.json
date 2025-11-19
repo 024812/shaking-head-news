@@ -67,6 +67,8 @@
     "title": "Settings",
     "language": "Language",
     "languageDescription": "Select interface language",
+    "newsSource": "News Sources",
+    "newsSourceDescription": "Manage your news sources and RSS subscriptions",
     "chinese": "中文",
     "english": "English",
     "theme": "Theme",
