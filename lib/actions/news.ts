@@ -12,6 +12,8 @@ import { z } from 'zod'
 import { logError, validateOrThrow } from '@/lib/utils/error-handler'
 import { NewsAPIError } from '@/lib/errors/news-error'
 import { XMLParser } from 'fast-xml-parser'
+import { auth } from '@/lib/auth'
+import { getRSSSources } from '@/lib/actions/rss'
 
 // Configuration
 const NEWS_API_BASE_URL = process.env.NEWS_API_BASE_URL || 'https://news.ravelloh.top'
@@ -142,6 +144,72 @@ export async function refreshNews(language?: 'zh' | 'en', source?: string) {
       source,
     })
     throw new NewsAPIError('Failed to refresh news cache')
+  }
+}
+
+/**
+ * Get news for the home page
+ * Prioritizes user's RSS sources if available
+ */
+export async function getHomePageNews(language: 'zh' | 'en' = 'zh', source?: string) {
+  try {
+    // If a specific source is requested, just get that
+    if (source) {
+      return getNews(language, source)
+    }
+
+    // Check for user RSS sources
+    const session = await auth()
+    if (session?.user?.id) {
+      const rssSources = await getRSSSources()
+
+      if (rssSources.length > 0) {
+        // Fetch all enabled RSS feeds in parallel
+        const enabledSources = rssSources.filter((s) => s.enabled !== false)
+
+        if (enabledSources.length > 0) {
+          const results = await Promise.allSettled(enabledSources.map((s) => getRSSNews(s.url)))
+
+          const allItems: NewsItem[] = []
+
+          results.forEach((result, index) => {
+            if (result.status === 'fulfilled') {
+              // Add source name to items if not present
+              const itemsWithSource = result.value.map((item) => ({
+                ...item,
+                source: item.source || enabledSources[index].name,
+              }))
+              allItems.push(...itemsWithSource)
+            } else {
+              console.error(
+                `Failed to fetch RSS source ${enabledSources[index].url}:`,
+                result.reason
+              )
+            }
+          })
+
+          if (allItems.length > 0) {
+            // Sort by date descending
+            allItems.sort(
+              (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+            )
+
+            return {
+              items: allItems,
+              total: allItems.length,
+              updatedAt: new Date().toISOString(),
+            }
+          }
+        }
+      }
+    }
+
+    // Fallback to default API news
+    return getNews(language, source)
+  } catch (error) {
+    console.error('Error in getHomePageNews:', error)
+    // Fallback to default API news on error
+    return getNews(language, source)
   }
 }
 

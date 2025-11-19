@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { getNews, refreshNews, getRSSNews, refreshRSSFeed } from '@/lib/actions/news'
+import {
+  getNews,
+  refreshNews,
+  getRSSNews,
+  refreshRSSFeed,
+  getHomePageNews,
+} from '@/lib/actions/news'
 import { mockNewsItems } from '@/tests/utils/test-utils'
 
 // Mock dependencies
@@ -14,6 +20,17 @@ vi.mock('@/lib/utils/error-handler', () => ({
   ValidationError: class ValidationError extends Error {},
   NotFoundError: class NotFoundError extends Error {},
 }))
+
+vi.mock('@/lib/auth', () => ({
+  auth: vi.fn(),
+}))
+
+vi.mock('@/lib/actions/rss', () => ({
+  getRSSSources: vi.fn(),
+}))
+
+import { auth } from '@/lib/auth'
+import { getRSSSources } from '@/lib/actions/rss'
 
 import { revalidateTag } from 'next/cache'
 
@@ -288,6 +305,149 @@ describe('News Actions', () => {
       })
 
       await expect(refreshRSSFeed('https://example.com/rss.xml')).rejects.toThrow()
+    })
+  })
+
+  describe('getHomePageNews', () => {
+    it('should return default news when user is not authenticated', async () => {
+      vi.mocked(auth).mockResolvedValue(null)
+
+      // Mock getNews response via fetch
+      const mockResponse = {
+        items: mockNewsItems,
+        total: mockNewsItems.length,
+        updatedAt: new Date().toISOString(),
+      }
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      })
+
+      const result = await getHomePageNews('zh')
+
+      expect(result.items).toHaveLength(mockNewsItems.length)
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('latest.json'),
+        expect.any(Object)
+      )
+    })
+
+    it('should return default news when user has no RSS sources', async () => {
+      vi.mocked(auth).mockResolvedValue({ user: { id: 'user-1' } })
+      vi.mocked(getRSSSources).mockResolvedValue([])
+
+      const mockResponse = {
+        items: mockNewsItems,
+        total: mockNewsItems.length,
+        updatedAt: new Date().toISOString(),
+      }
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      })
+
+      const result = await getHomePageNews('zh')
+
+      expect(result.items).toHaveLength(mockNewsItems.length)
+    })
+
+    it('should return RSS news when user has RSS sources', async () => {
+      vi.mocked(auth).mockResolvedValue({ user: { id: 'user-1' } })
+      vi.mocked(getRSSSources).mockResolvedValue([
+        {
+          id: '1',
+          name: 'RSS 1',
+          url: 'https://rss1.com/feed',
+          enabled: true,
+          order: 0,
+          failureCount: 0,
+          tags: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ])
+
+      const rssXML = `<?xml version="1.0"?>
+      <rss version="2.0">
+        <channel>
+          <title>RSS 1</title>
+          <item>
+            <title>RSS Item 1</title>
+            <link>https://rss1.com/1</link>
+            <description>Desc 1</description>
+            <pubDate>Wed, 19 Nov 2025 12:00:00 GMT</pubDate>
+          </item>
+        </channel>
+      </rss>`
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        text: async () => rssXML,
+      })
+
+      const result = await getHomePageNews('zh')
+
+      expect(result.items).toHaveLength(1)
+      expect(result.items[0].title).toBe('RSS Item 1')
+      expect(result.items[0].source).toBe('RSS 1')
+    })
+
+    it('should aggregate multiple RSS sources and sort by date', async () => {
+      vi.mocked(auth).mockResolvedValue({ user: { id: 'user-1' } })
+      vi.mocked(getRSSSources).mockResolvedValue([
+        {
+          id: '1',
+          name: 'RSS 1',
+          url: 'https://rss1.com/feed',
+          enabled: true,
+          order: 0,
+          failureCount: 0,
+          tags: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '2',
+          name: 'RSS 2',
+          url: 'https://rss2.com/feed',
+          enabled: true,
+          order: 1,
+          failureCount: 0,
+          tags: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ])
+
+      const rssXML1 = `<?xml version="1.0"?>
+      <rss version="2.0">
+        <channel>
+          <item>
+            <title>Old Item</title>
+            <pubDate>Wed, 19 Nov 2025 10:00:00 GMT</pubDate>
+          </item>
+        </channel>
+      </rss>`
+
+      const rssXML2 = `<?xml version="1.0"?>
+      <rss version="2.0">
+        <channel>
+          <item>
+            <title>New Item</title>
+            <pubDate>Wed, 19 Nov 2025 11:00:00 GMT</pubDate>
+          </item>
+        </channel>
+      </rss>`
+
+      mockFetch
+        .mockResolvedValueOnce({ ok: true, text: async () => rssXML1 })
+        .mockResolvedValueOnce({ ok: true, text: async () => rssXML2 })
+
+      const result = await getHomePageNews('zh')
+
+      expect(result.items).toHaveLength(2)
+      expect(result.items[0].title).toBe('New Item')
+      expect(result.items[1].title).toBe('Old Item')
     })
   })
 })

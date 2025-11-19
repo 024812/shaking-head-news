@@ -1,4 +1,4 @@
-import { getNews } from '@/lib/actions/news'
+import { getHomePageNews } from '@/lib/actions/news'
 import { NewsList } from './NewsList'
 import { Suspense } from 'react'
 import { NewsListSkeleton } from './NewsListSkeleton'
@@ -13,7 +13,7 @@ interface NewsDisplayProps {
 
 async function NewsContent({ language = 'zh', source }: NewsDisplayProps) {
   try {
-    const newsResponse = await getNews(language, source)
+    const newsResponse = await getHomePageNews(language, source)
     return <NewsList news={newsResponse.items} />
   } catch (error) {
     console.error('Error loading news:', error)
