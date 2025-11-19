@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RSSSource } from '@/types/rss'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,19 +21,23 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
   const { toast } = useToast()
   const t = useTranslations('rss')
 
+  useEffect(() => {
+    setSources(initialSources)
+  }, [initialSources])
+
   const handleToggleEnabled = async (id: string, enabled: boolean) => {
     try {
       const updated = await updateRSSSource(id, { enabled })
-      setSources(sources.map(s => s.id === id ? updated : s))
+      setSources(sources.map((s) => (s.id === id ? updated : s)))
       toast({
         title: t('success'),
-        description: enabled ? t('sourceEnabled') : t('sourceDisabled')
+        description: enabled ? t('sourceEnabled') : t('sourceDisabled'),
       })
     } catch {
       toast({
         title: t('error'),
         description: t('updateFailed'),
-        variant: 'destructive'
+        variant: 'destructive',
       })
     }
   }
@@ -41,19 +45,19 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
   const handleDelete = async (id: string) => {
     // eslint-disable-next-line no-undef
     if (!confirm(t('confirmDelete'))) return
-    
+
     try {
       await deleteRSSSource(id)
-      setSources(sources.filter(s => s.id !== id))
+      setSources(sources.filter((s) => s.id !== id))
       toast({
         title: t('success'),
-        description: t('sourceDeleted')
+        description: t('sourceDeleted'),
       })
     } catch {
       toast({
         title: t('error'),
         description: t('deleteFailed'),
-        variant: 'destructive'
+        variant: 'destructive',
       })
     }
   }
@@ -64,11 +68,11 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
 
   const handleDragOver = (e: React.DragEvent, targetId: string) => {
     e.preventDefault()
-    
+
     if (!draggedItem || draggedItem === targetId) return
 
-    const draggedIndex = sources.findIndex(s => s.id === draggedItem)
-    const targetIndex = sources.findIndex(s => s.id === targetId)
+    const draggedIndex = sources.findIndex((s) => s.id === draggedItem)
+    const targetIndex = sources.findIndex((s) => s.id === targetId)
 
     if (draggedIndex === -1 || targetIndex === -1) return
 
@@ -83,17 +87,17 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
     if (!draggedItem) return
 
     try {
-      const sourceIds = sources.map(s => s.id)
+      const sourceIds = sources.map((s) => s.id)
       await reorderRSSSources(sourceIds)
       toast({
         title: t('success'),
-        description: t('orderUpdated')
+        description: t('orderUpdated'),
       })
     } catch {
       toast({
         title: t('error'),
         description: t('reorderFailed'),
-        variant: 'destructive'
+        variant: 'destructive',
       })
       // 重新加载以恢复原始顺序
       setSources(initialSources)
@@ -127,14 +131,14 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
         >
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
-              <div className="flex items-start gap-3 flex-1">
-                <GripVertical className="h-5 w-5 text-muted-foreground mt-1" />
+              <div className="flex flex-1 items-start gap-3">
+                <GripVertical className="mt-1 h-5 w-5 text-muted-foreground" />
                 <div className="flex-1">
-                  <CardTitle className="text-lg flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-lg">
                     {source.name}
                     {source.failureCount > 0 && (
                       <Badge variant="destructive" className="text-xs">
-                        <AlertCircle className="h-3 w-3 mr-1" />
+                        <AlertCircle className="mr-1 h-3 w-3" />
                         {source.failureCount} {t('failures')}
                       </Badge>
                     )}
@@ -170,7 +174,7 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
               ))}
             </div>
             {source.lastFetchedAt && (
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="mt-2 text-xs text-muted-foreground">
                 {t('lastFetched')}: {new Date(source.lastFetchedAt).toLocaleString()}
               </p>
             )}

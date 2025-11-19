@@ -3,7 +3,7 @@
 import { auth } from '@/lib/auth'
 import { getStorageItem, setStorageItem, StorageKeys } from '@/lib/storage'
 import { RSSSourceSchema, RSSSource } from '@/types/rss'
-import { revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 import {
   AuthError,
   NotFoundError,
@@ -11,7 +11,7 @@ import {
   logError,
   validateOrThrow,
 } from '@/lib/utils/error-handler'
-import { rateLimitByUser, rateLimitByAction, RateLimitTiers } from '@/lib/rate-limit'
+import { rateLimitByAction, RateLimitTiers } from '@/lib/rate-limit'
 import { sanitizeUrl, sanitizeString, sanitizeObject } from '@/lib/utils/input-validation'
 
 // 获取用户的 RSS 源列表
@@ -111,6 +111,8 @@ export async function addRSSSource(source: Omit<RSSSource, 'id' | 'order' | 'fai
     const key = StorageKeys.userRSSSources(session.user.id)
     await setStorageItem(key, sources)
 
+    revalidatePath('/rss')
+
     return validatedSource
   } catch (error) {
     logError(error, {
@@ -130,9 +132,10 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
       throw new AuthError('Please sign in to update RSS sources')
     }
 
-    // 速率限制：每分钟最多100次更新 (Relaxed)
-    const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.RELAXED,
+    // 速率限制：每分钟最多200次更新 (Relaxed +)
+    const rateLimitResult = await rateLimitByAction(session.user.id, 'update-rss', {
+      limit: 200,
+      window: 60,
     })
 
     if (!rateLimitResult.success) {
@@ -178,6 +181,7 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
 
     // 清除该源的缓存
     revalidateTag(`rss-${validatedSource.url}`)
+    revalidatePath('/rss')
 
     return validatedSource
   } catch (error) {
@@ -214,6 +218,7 @@ export async function deleteRSSSource(id: string) {
 
     // Clear cache for the deleted source
     revalidateTag(`rss-${sourceToDelete.url}`)
+    revalidatePath('/rss')
   } catch (error) {
     logError(error, {
       action: 'deleteRSSSource',
@@ -243,6 +248,7 @@ export async function reorderRSSSources(sourceIds: string[]) {
 
     const key = StorageKeys.userRSSSources(session.user.id)
     await setStorageItem(key, reordered)
+    revalidatePath('/rss')
     return reordered
   } catch (error) {
     logError(error, {
