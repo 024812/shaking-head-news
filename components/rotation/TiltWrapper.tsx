@@ -27,8 +27,8 @@ export function TiltWrapper({
   const effectiveMode = propMode ?? mode
   const effectiveInterval = propInterval ?? interval
 
-  // Disable rotation on settings page
-  const isSettingsPage = pathname === '/settings'
+  // Disable rotation on settings and RSS pages
+  const isSettingsPage = pathname === '/settings' || pathname === '/rss'
 
   // Check for prefers-reduced-motion
   useEffect(() => {

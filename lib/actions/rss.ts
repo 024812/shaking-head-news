@@ -130,9 +130,9 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
       throw new AuthError('Please sign in to update RSS sources')
     }
 
-    // 速率限制：每分钟最多30次更新
+    // 速率限制：每分钟最多100次更新 (Relaxed)
     const rateLimitResult = await rateLimitByUser(session.user.id, {
-      ...RateLimitTiers.STANDARD,
+      ...RateLimitTiers.RELAXED,
     })
 
     if (!rateLimitResult.success) {

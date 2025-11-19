@@ -176,7 +176,12 @@ function parseRSSFeed(xml: string, sourceUrl: string): NewsItem[] {
         // Handle Atom link object
         const url = typeof link === 'object' && link['@_href'] ? link['@_href'] : link
 
-        const description = item.description || item.summary || item.content || ''
+        let description = item.description || item.summary || item.content || ''
+        // Handle Atom content object
+        if (typeof description === 'object' && description['#text']) {
+          description = description['#text']
+        }
+
         const pubDate = item.pubDate || item.published || item.updated || new Date().toISOString()
         const guid = item.guid || item.id || url
 

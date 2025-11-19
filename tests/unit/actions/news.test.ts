@@ -193,12 +193,10 @@ describe('News Actions', () => {
     })
 
     it('should retry on fetch failure', async () => {
-      mockFetch
-        .mockRejectedValueOnce(new Error('Network error'))
-        .mockResolvedValueOnce({
-          ok: true,
-          text: async () => mockRSSXML,
-        })
+      mockFetch.mockRejectedValueOnce(new Error('Network error')).mockResolvedValueOnce({
+        ok: true,
+        text: async () => mockRSSXML,
+      })
 
       const result = await getRSSNews('https://example.com/rss.xml')
 
@@ -242,6 +240,37 @@ describe('News Actions', () => {
 
       expect(result[1].description).not.toContain('<p>')
       expect(result[1].description).toBe('Test description 2')
+    })
+
+    it('should parse V2EX Atom feed successfully', async () => {
+      const v2exXML = `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en" xml:base="https://www.v2ex.com/">
+  <title type="text">V2EX</title>
+  <entry>
+    <title>Test V2EX Topic</title>
+    <link href="https://www.v2ex.com/t/123456" rel="alternate" type="text/html" />
+    <content type="html">
+      &lt;p&gt;Test content&lt;/p&gt;
+    </content>
+    <updated>2025-11-19T04:17:38Z</updated>
+    <id>tag:v2ex.com,2025:topic:123456</id>
+    <author>
+      <name>testuser</name>
+    </author>
+  </entry>
+</feed>`
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        text: async () => v2exXML,
+      })
+
+      const result = await getRSSNews('https://v2ex.com/index.xml')
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Test V2EX Topic')
+      expect(result[0].url).toBe('https://www.v2ex.com/t/123456')
+      expect(result[0].description).toBe('Test content')
     })
   })
 
