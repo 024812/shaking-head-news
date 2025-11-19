@@ -186,6 +186,7 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
       id,
       updates,
     })
+    console.error('Error updating RSS source:', error)
     throw error
   }
 }
