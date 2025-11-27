@@ -11,16 +11,19 @@ test.describe('User Authentication and Settings Flow', () => {
     await expect(page.locator('text=登录以同步您的设置和偏好')).toBeVisible()
 
     // Check Google login button
-    const googleButton = page.locator('button[type="submit"]')
+    const googleButton = page.locator('button:has-text("Google")')
     await expect(googleButton).toBeVisible()
-    await expect(googleButton).toContainText('Google')
+
+    // Check Microsoft login button
+    const microsoftButton = page.locator('button:has-text("Microsoft")')
+    await expect(microsoftButton).toBeVisible()
   })
 
   test('should have continue without login link', async ({ page }) => {
     await page.goto('/login')
 
     // Check for "continue without login" link
-    const continueLink = page.locator('a[href="/"]')
+    const continueLink = page.locator('a[href="/"]').filter({ hasText: /继续浏览|无需登录/ })
     await expect(continueLink).toBeVisible()
     await expect(continueLink).toContainText(/继续浏览|无需登录/)
   })
@@ -29,7 +32,7 @@ test.describe('User Authentication and Settings Flow', () => {
     await page.goto('/login')
 
     // Click continue without login
-    await page.click('a[href="/"]')
+    await page.click('a[href="/"] >> text=/继续浏览|无需登录/')
 
     // Should be back on homepage
     await expect(page).toHaveURL('/')
@@ -82,7 +85,7 @@ test.describe('User Authentication and Settings Flow', () => {
     await expect(loginCard).toBeVisible()
 
     // Check that button is full width
-    const googleButton = page.locator('button[type="submit"]')
+    const googleButton = page.locator('button[type="submit"]').first()
     const buttonBox = await googleButton.boundingBox()
     const cardBox = await loginCard.boundingBox()
 
@@ -103,20 +106,20 @@ test.describe('User Authentication and Settings Flow', () => {
   test('should have proper form structure', async ({ page }) => {
     await page.goto('/login')
 
-    // Check that form exists
-    const form = page.locator('form')
-    await expect(form).toBeVisible()
+    // Check that forms exist
+    const forms = page.locator('form')
+    await expect(forms).toHaveCount(2)
 
-    // Check that submit button is inside form
-    const submitButton = form.locator('button[type="submit"]')
-    await expect(submitButton).toBeVisible()
+    // Check that submit buttons are inside forms
+    await expect(forms.first().locator('button[type="submit"]')).toBeVisible()
+    await expect(forms.last().locator('button[type="submit"]')).toBeVisible()
   })
 
   test('should have accessible login button', async ({ page }) => {
     await page.goto('/login')
 
-    const googleButton = page.locator('button[type="submit"]')
-    
+    const googleButton = page.locator('button:has-text("Google")')
+
     // Check button has visible text
     await expect(googleButton).toContainText('Google')
 
@@ -129,9 +132,9 @@ test.describe('User Authentication and Settings Flow', () => {
   test('should display Google icon in login button', async ({ page }) => {
     await page.goto('/login')
 
-    const googleButton = page.locator('button[type="submit"]')
+    const googleButton = page.locator('button:has-text("Google")')
     const svg = googleButton.locator('svg')
-    
+
     await expect(svg).toBeVisible()
   })
 
@@ -174,10 +177,10 @@ test.describe('Settings Page (Mock Auth)', () => {
   test('should show settings page structure when authenticated', async ({ page }) => {
     // This test assumes we can somehow authenticate
     // In production, you would set up proper auth mocking
-    
+
     // For now, we just verify the page exists and redirects properly
     await page.goto('/settings')
-    
+
     // Should redirect to login if not authenticated
     await page.waitForURL(/\/login/)
     await expect(page).toHaveURL(/\/login/)

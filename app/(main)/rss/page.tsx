@@ -5,7 +5,16 @@ import { AddRSSSourceDialog } from '@/components/rss/AddRSSSourceDialog'
 import { ExportOPMLButton } from '@/components/rss/ExportOPMLButton'
 import { Card, CardContent } from '@/components/ui/card'
 
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
+
 async function RSSContent() {
+  const session = await auth()
+
+  if (!session?.user) {
+    redirect('/login')
+  }
+
   const sources = await getRSSSources()
 
   return (
@@ -13,9 +22,7 @@ async function RSSContent() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">RSS 源管理</h2>
-          <p className="text-muted-foreground">
-            管理您的 RSS 订阅源，自定义新闻来源
-          </p>
+          <p className="text-muted-foreground">管理您的 RSS 订阅源，自定义新闻来源</p>
         </div>
         <div className="flex gap-2">
           <ExportOPMLButton />
@@ -33,12 +40,12 @@ function LoadingSkeleton() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-48 bg-muted animate-pulse rounded" />
-          <div className="h-4 w-64 bg-muted animate-pulse rounded" />
+          <div className="bg-muted h-8 w-48 animate-pulse rounded" />
+          <div className="bg-muted h-4 w-64 animate-pulse rounded" />
         </div>
         <div className="flex gap-2">
-          <div className="h-10 w-32 bg-muted animate-pulse rounded" />
-          <div className="h-10 w-32 bg-muted animate-pulse rounded" />
+          <div className="bg-muted h-10 w-32 animate-pulse rounded" />
+          <div className="bg-muted h-10 w-32 animate-pulse rounded" />
         </div>
       </div>
       <div className="space-y-4">
@@ -46,11 +53,11 @@ function LoadingSkeleton() {
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="space-y-3">
-                <div className="h-6 w-3/4 bg-muted animate-pulse rounded" />
-                <div className="h-4 w-full bg-muted animate-pulse rounded" />
+                <div className="bg-muted h-6 w-3/4 animate-pulse rounded" />
+                <div className="bg-muted h-4 w-full animate-pulse rounded" />
                 <div className="flex gap-2">
-                  <div className="h-6 w-16 bg-muted animate-pulse rounded" />
-                  <div className="h-6 w-16 bg-muted animate-pulse rounded" />
+                  <div className="bg-muted h-6 w-16 animate-pulse rounded" />
+                  <div className="bg-muted h-6 w-16 animate-pulse rounded" />
                 </div>
               </div>
             </CardContent>

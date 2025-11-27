@@ -1,0 +1,15 @@
+
+> shaking-head-news@2.0.0 test:e2e
+> playwright test tests/e2e/auth-and-settings.spec.ts --project=chromium -g " should display login page\
+
+[1A[2K[2m[WebServer] [22m [33m[1m⚠[22m[39m The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` or run `npx @next/codemod@latest next-experimental-turbo-to-turbopack .`
+
+[1A[2K[2m[WebServer] [22m[Storage] Redis not configured, using in-memory storage (data will not persist)
+
+SyntaxError: Invalid regular expression: /page\/gi: \ at end of pattern
+
+[1A[2K
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m

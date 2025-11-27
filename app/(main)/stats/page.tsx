@@ -44,13 +44,13 @@ function StatsLoadingSkeleton() {
  * 统计页面内容
  */
 async function StatsContent() {
+  const session = await auth()
+
+  if (!session?.user) {
+    redirect('/login')
+  }
+
   try {
-    const session = await auth()
-
-    if (!session?.user) {
-      redirect('/login')
-    }
-
     // 获取用户设置（获取每日目标）
     const settings = await getUserSettings()
     const dailyGoal = settings.dailyGoal || 30
@@ -67,8 +67,8 @@ async function StatsContent() {
       <Card>
         <CardContent className="pt-6">
           <div className="py-8 text-center">
-            <p className="mb-2 text-destructive">加载统计数据时出错</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-destructive mb-2">加载统计数据时出错</p>
+            <p className="text-muted-foreground text-sm">
               {error instanceof Error ? error.message : '请稍后重试'}
             </p>
           </div>
@@ -88,7 +88,7 @@ export default function StatsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">统计数据</h1>
-        <p className="mt-2 text-muted-foreground">查看您的颈椎运动统计和健康趋势</p>
+        <p className="text-muted-foreground mt-2">查看您的颈椎运动统计和健康趋势</p>
       </div>
 
       <Suspense fallback={<StatsLoadingSkeleton />}>
