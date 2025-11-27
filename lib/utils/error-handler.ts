@@ -112,7 +112,7 @@ export async function safeServerAction<T>(
 
     if (error instanceof z.ZodError) {
       return {
-        error: 'Validation failed: ' + error.issues.map(i => i.message).join(', '),
+        error: 'Validation failed: ' + error.issues.map((i) => i.message).join(', '),
         statusCode: 400,
       }
     }
@@ -157,10 +157,7 @@ export function getFormErrors<T extends z.ZodType>(
 /**
  * Validate data with Zod schema and throw ValidationError if invalid
  */
-export function validateOrThrow<T extends z.ZodType>(
-  schema: T,
-  data: unknown
-): z.infer<T> {
+export function validateOrThrow<T extends z.ZodType>(schema: T, data: unknown): z.infer<T> {
   const result = schema.safeParse(data)
 
   if (!result.success) {
@@ -178,14 +175,18 @@ export function validateOrThrow<T extends z.ZodType>(
 /**
  * Log error for monitoring (can be extended to send to Sentry, etc.)
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Context can contain any type of data for error logging
 export function logError(error: unknown, context?: Record<string, any>) {
   const errorInfo = {
     timestamp: new Date().toISOString(),
-    error: error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    } : error,
+    error:
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : error,
     context,
   }
 
@@ -235,12 +236,7 @@ export async function retryWithBackoff<T>(
     backoffFactor?: number
   } = {}
 ): Promise<T> {
-  const {
-    maxRetries = 3,
-    initialDelay = 1000,
-    maxDelay = 10000,
-    backoffFactor = 2,
-  } = options
+  const { maxRetries = 3, initialDelay = 1000, maxDelay = 10000, backoffFactor = 2 } = options
 
   let lastError: unknown
   let delay = initialDelay
@@ -266,7 +262,7 @@ export async function retryWithBackoff<T>(
       }
 
       // Wait before retrying
-      await new Promise(resolve => setTimeout(resolve, delay))
+      await new Promise((resolve) => setTimeout(resolve, delay))
 
       // Increase delay for next attempt
       delay = Math.min(delay * backoffFactor, maxDelay)

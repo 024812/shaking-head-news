@@ -1,19 +1,19 @@
 /**
  * Analytics Tracking Module
- * 
+ *
  * This module provides a unified interface for tracking user events and page views
  * across multiple analytics platforms (Google Analytics, Vercel Analytics, etc.)
- * 
+ *
  * Setup Instructions:
- * 
+ *
  * For Google Analytics:
  * 1. Add NEXT_PUBLIC_GA_ID to environment variables
  * 2. Add GA script to app/layout.tsx
- * 
+ *
  * For Vercel Analytics:
  * 1. Install: npm install @vercel/analytics
  * 2. Add <Analytics /> component to app/layout.tsx
- * 
+ *
  * @see https://vercel.com/docs/analytics
  * @see https://developers.google.com/analytics/devguides/collection/gtagjs
  */
@@ -44,7 +44,7 @@ export function isAnalyticsEnabled(): boolean {
 
 /**
  * Track a page view
- * 
+ *
  * @example
  * ```typescript
  * trackPageView({
@@ -60,7 +60,9 @@ export function trackPageView(event: PageViewEvent) {
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
       page_path: event.url,
       page_title: event.title,
@@ -74,7 +76,7 @@ export function trackPageView(event: PageViewEvent) {
 
 /**
  * Track a custom event
- * 
+ *
  * @example
  * ```typescript
  * trackEvent({
@@ -92,7 +94,9 @@ export function trackEvent(event: AnalyticsEvent) {
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('event', event.action, {
       event_category: event.category,
       event_label: event.label,
@@ -102,7 +106,9 @@ export function trackEvent(event: AnalyticsEvent) {
   }
 
   // Vercel Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- va is a global from external script
   if (typeof window !== 'undefined' && (window as any).va) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- va is a global from external script
     ;(window as any).va('track', event.action, {
       category: event.category,
       label: event.label,
@@ -181,7 +187,10 @@ export function trackRotation(angle: number, mode: 'fixed' | 'continuous') {
 /**
  * Track RSS source management
  */
-export function trackRSSAction(action: 'add' | 'remove' | 'enable' | 'disable' | 'export', sourceId?: string) {
+export function trackRSSAction(
+  action: 'add' | 'remove' | 'enable' | 'disable' | 'export',
+  sourceId?: string
+) {
   trackEvent({
     action,
     category: 'rss',
@@ -255,7 +264,9 @@ export function setUserProperties(properties: Record<string, string | number | b
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('set', 'user_properties', properties)
   }
 }
@@ -269,7 +280,9 @@ export function setUserId(userId: string | null) {
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
       user_id: userId,
     })
@@ -285,7 +298,9 @@ export function trackConversion(conversionId: string, value?: number) {
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('event', 'conversion', {
       send_to: conversionId,
       value: value,
@@ -303,7 +318,9 @@ export function trackTiming(category: string, variable: string, value: number, l
   }
 
   // Google Analytics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
   if (typeof window !== 'undefined' && (window as any).gtag) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     ;(window as any).gtag('event', 'timing_complete', {
       name: variable,
       value: Math.round(value),

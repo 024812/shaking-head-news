@@ -1,20 +1,20 @@
 /**
  * Logging Strategy Module
- * 
+ *
  * This module provides a structured logging system with different log levels
  * and output strategies based on the environment.
- * 
+ *
  * Features:
  * - Multiple log levels (debug, info, warn, error)
  * - Structured logging with context
  * - Environment-aware output
  * - Integration with error monitoring (Sentry)
  * - Performance logging
- * 
+ *
  * Usage:
  * ```typescript
  * import { logger } from '@/lib/logger'
- * 
+ *
  * logger.info('User logged in', { userId: '123' })
  * logger.error('Failed to fetch news', error, { source: 'api' })
  * ```
@@ -25,6 +25,7 @@ import { captureException, captureMessage, addBreadcrumb } from './sentry'
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 export interface LogContext {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Log context can contain any type of data
   [key: string]: any
 }
 
@@ -41,15 +42,16 @@ export interface LogEntry {
  */
 const config = {
   // Minimum log level to output
-  minLevel: (process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) || 
+  minLevel:
+    (process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ||
     (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
-  
+
   // Enable console output
   enableConsole: true,
-  
+
   // Enable Sentry integration
   enableSentry: process.env.NODE_ENV === 'production',
-  
+
   // Enable structured logging (JSON format)
   structured: process.env.NODE_ENV === 'production',
 }
@@ -81,19 +83,17 @@ function formatLogEntry(entry: LogEntry): string {
       message: entry.message,
       timestamp: entry.timestamp,
       context: entry.context,
-      error: entry.error ? {
-        name: entry.error.name,
-        message: entry.error.message,
-        stack: entry.error.stack,
-      } : undefined,
+      error: entry.error
+        ? {
+            name: entry.error.name,
+            message: entry.error.message,
+            stack: entry.error.stack,
+          }
+        : undefined,
     })
   }
 
-  const parts = [
-    `[${entry.timestamp}]`,
-    `[${entry.level.toUpperCase()}]`,
-    entry.message,
-  ]
+  const parts = [`[${entry.timestamp}]`, `[${entry.level.toUpperCase()}]`, entry.message]
 
   if (entry.context && Object.keys(entry.context).length > 0) {
     parts.push(JSON.stringify(entry.context))
@@ -303,23 +303,19 @@ export async function logExecutionTime<T>(
   context?: LogContext
 ): Promise<T> {
   const start = performance.now()
-  
+
   try {
     const result = await fn()
     const duration = performance.now() - start
-    
+
     logger.performance(name, Math.round(duration), 'ms')
-    
+
     return result
   } catch (error) {
     const duration = performance.now() - start
-    
-    logger.error(
-      `${name} failed after ${Math.round(duration)}ms`,
-      error as Error,
-      context
-    )
-    
+
+    logger.error(`${name} failed after ${Math.round(duration)}ms`, error as Error, context)
+
     throw error
   }
 }

@@ -52,21 +52,20 @@ export function AddRSSSourceDialog() {
         toast({
           title: t('error'),
           description: t('requiredFields'),
-          variant: 'destructive'
+          variant: 'destructive',
         })
         setLoading(false)
         return
       }
 
-      // 验证 URL 格式
+      // Validate URL format
       try {
-        // eslint-disable-next-line no-undef
         new URL(formData.url)
       } catch {
         toast({
           title: t('error'),
           description: t('invalidUrl'),
-          variant: 'destructive'
+          variant: 'destructive',
         })
         setLoading(false)
         return
@@ -75,8 +74,8 @@ export function AddRSSSourceDialog() {
       // 解析标签
       const tags = formData.tags
         .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0)
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0)
 
       await addRSSSource({
         name: formData.name.trim(),
@@ -89,7 +88,7 @@ export function AddRSSSourceDialog() {
 
       toast({
         title: t('success'),
-        description: t('sourceAdded')
+        description: t('sourceAdded'),
       })
 
       // 重置表单
@@ -107,7 +106,7 @@ export function AddRSSSourceDialog() {
       toast({
         title: t('error'),
         description: error instanceof Error ? error.message : t('addFailed'),
-        variant: 'destructive'
+        variant: 'destructive',
       })
     } finally {
       setLoading(false)
@@ -118,7 +117,7 @@ export function AddRSSSourceDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           {t('addSource')}
         </Button>
       </DialogTrigger>
@@ -126,9 +125,7 @@ export function AddRSSSourceDialog() {
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{t('addSource')}</DialogTitle>
-            <DialogDescription>
-              {t('addSourceDescription')}
-            </DialogDescription>
+            <DialogDescription>{t('addSourceDescription')}</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
@@ -170,7 +167,7 @@ export function AddRSSSourceDialog() {
               <Label htmlFor="language">{t('sourceLanguage')}</Label>
               <Select
                 value={formData.language}
-                onValueChange={(value: 'zh' | 'en') => 
+                onValueChange={(value: 'zh' | 'en') =>
                   setFormData({ ...formData, language: value })
                 }
               >
@@ -191,9 +188,7 @@ export function AddRSSSourceDialog() {
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 placeholder={t('sourceTagsPlaceholder')}
               />
-              <p className="text-xs text-muted-foreground">
-                {t('sourceTagsHint')}
-              </p>
+              <p className="text-muted-foreground text-xs">{t('sourceTagsHint')}</p>
             </div>
           </div>
           <DialogFooter>

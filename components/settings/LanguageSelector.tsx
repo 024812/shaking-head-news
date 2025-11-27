@@ -34,7 +34,6 @@ export function LanguageSelector({ currentLanguage }: LanguageSelectorProps) {
 
         // Set cookie for next-intl (client-side only)
         if (typeof document !== 'undefined') {
-          // eslint-disable-next-line no-undef
           document.cookie = `locale=${newLanguage}; path=/; max-age=31536000`
         }
 
@@ -46,7 +45,6 @@ export function LanguageSelector({ currentLanguage }: LanguageSelectorProps) {
         // Reload page to apply new language (client-side only)
         if (typeof window !== 'undefined') {
           setTimeout(() => {
-            // eslint-disable-next-line no-undef
             window.location.reload()
           }, 500)
         }
@@ -82,7 +80,7 @@ export function LanguageSelector({ currentLanguage }: LanguageSelectorProps) {
           <SelectItem value="en">{t('english')}</SelectItem>
         </SelectContent>
       </Select>
-      <p className="text-sm text-muted-foreground">{t('languageDescription')}</p>
+      <p className="text-muted-foreground text-sm">{t('languageDescription')}</p>
     </div>
   )
 }

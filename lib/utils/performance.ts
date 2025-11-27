@@ -23,7 +23,9 @@ export function reportWebVitals(metric: PerformanceMetric) {
   // Send to analytics in production
   if (process.env.NODE_ENV === 'production') {
     // Example: Send to Google Analytics
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
     if (typeof window !== 'undefined' && (window as any).gtag) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gtag is a global from external script
       ;(window as any).gtag('event', metric.name, {
         value: Math.round(metric.value),
         metric_id: metric.id,
@@ -34,7 +36,9 @@ export function reportWebVitals(metric: PerformanceMetric) {
     }
 
     // Example: Send to Vercel Analytics
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- va is a global from external script
     if (typeof window !== 'undefined' && (window as any).va) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- va is a global from external script
       ;(window as any).va('event', {
         name: metric.name,
         data: {
@@ -98,9 +102,7 @@ export function getPerformanceRating(
  */
 export function supportsPerformanceObserver(): boolean {
   return (
-    typeof window !== 'undefined' &&
-    'PerformanceObserver' in window &&
-    'PerformanceEntry' in window
+    typeof window !== 'undefined' && 'PerformanceObserver' in window && 'PerformanceEntry' in window
   )
 }
 
