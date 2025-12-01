@@ -1,9 +1,10 @@
 import Link from 'next/link'
-import { Newspaper, LogOut, User } from 'lucide-react'
+import { Newspaper, User } from 'lucide-react'
 import { ThemeToggle } from '@/components/settings/ThemeToggle'
 import { Button } from '@/components/ui/button'
 import { getTranslations } from 'next-intl/server'
-import { auth, signOut } from '@/lib/auth'
+import { auth } from '@/lib/auth'
+import { LogoutButton } from '@/components/auth/LogoutButton'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,19 +90,7 @@ export async function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <form
-                    action={async () => {
-                      'use server'
-                      await signOut({ redirectTo: '/' })
-                    }}
-                  >
-                    <button type="submit" className="flex w-full cursor-pointer items-center">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>{t('logout')}</span>
-                    </button>
-                  </form>
-                </DropdownMenuItem>
+                <LogoutButton />
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
