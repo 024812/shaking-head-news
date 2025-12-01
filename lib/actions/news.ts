@@ -127,13 +127,13 @@ export async function refreshNews(language?: 'zh' | 'en', source?: string) {
   try {
     if (source) {
       // Refresh specific source
-      revalidateTag(`news-${source}`)
+      revalidateTag(`news-${source}`, { expire: 0 })
     } else if (language) {
       // Refresh specific language
-      revalidateTag(`news-${language}`)
+      revalidateTag(`news-${language}`, { expire: 0 })
     } else {
       // Refresh all news
-      revalidateTag('news')
+      revalidateTag('news', { expire: 0 })
     }
 
     return { success: true }
@@ -382,7 +382,7 @@ export async function getRSSNews(rssUrl: string): Promise<NewsItem[]> {
  */
 export async function refreshRSSFeed(rssUrl: string) {
   try {
-    revalidateTag(`rss-${rssUrl}`)
+    revalidateTag(`rss-${rssUrl}`, { expire: 0 })
     return { success: true }
   } catch (error) {
     logError(error, {

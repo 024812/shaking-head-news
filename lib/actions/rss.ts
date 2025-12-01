@@ -180,7 +180,7 @@ export async function updateRSSSource(id: string, updates: Partial<RSSSource>) {
     await setStorageItem(key, sources)
 
     // 清除该源的缓存
-    revalidateTag(`rss-${validatedSource.url}`)
+    revalidateTag(`rss-${validatedSource.url}`, { expire: 0 })
     revalidatePath('/rss')
 
     return validatedSource
@@ -217,7 +217,7 @@ export async function deleteRSSSource(id: string) {
     await setStorageItem(key, filtered)
 
     // Clear cache for the deleted source
-    revalidateTag(`rss-${sourceToDelete.url}`)
+    revalidateTag(`rss-${sourceToDelete.url}`, { expire: 0 })
     revalidatePath('/rss')
   } catch (error) {
     logError(error, {

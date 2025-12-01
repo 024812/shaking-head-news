@@ -56,10 +56,6 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    // Enable Server Actions
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
     // Optimize package imports
     optimizePackageImports: [
       'lucide-react',
