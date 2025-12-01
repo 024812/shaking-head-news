@@ -30,7 +30,7 @@
 
 ## English Summary
 
-Shaking Head News is a modern web application that promotes neck health through gentle page rotation while browsing daily news. Built with Next.js 15 and React 19, it features customizable news sources, smart caching, user authentication, and two neck health modes to encourage cervical activity.
+Shaking Head News is a modern web application that promotes neck health through gentle page rotation while browsing daily news. Built with Next.js 16 and React 19, it features customizable news sources, smart caching, user authentication, and two neck health modes to encourage cervical activity.
 
 **Key Features:**
 
@@ -50,13 +50,14 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 > 现已升级为 Web 应用，无需安装浏览器扩展，直接访问即可使用！
 
-### 🆕 最近更新 (2025-01)
+### 🆕 最近更新 (2025-12)
 
+- ✅ **技术栈升级**: 升级至 Next.js 16、React 19.2、Tailwind CSS 4.1
+- ✅ **旋转角度优化**: 将最小旋转角度提升至 8-25 度，增强摇头效果
 - ✅ **CSS 加载修复**: 优化 PostCSS 配置，确保 Vercel 部署时样式正确加载
-- ✅ **设置持久化**: 使用 Google 稳定标识符，确保用户设置跨会话保留
+- ✅ **设置持久化**: 使用 Microsoft 稳定标识符，确保用户设置跨会话保留
 - ✅ **主题切换优化**: 设置页面主题选项现在可以正常工作
 - ✅ **旋转间隔调整**: 将旋转间隔范围从 5-300秒 优化为 5-60秒
-- ✅ **设置页面体验**: 进入设置页面时自动禁用页面旋转，避免干扰
 
 ---
 
@@ -79,7 +80,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 - **两种核心模式**:
   - **固定模式 (Fixed)**: 页面保持近乎固定，仅进行微小、不易察觉的转动，适合需要集中注意力的静态阅读
-  - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（5-60秒可调）自动转动，有效提醒和促进颈部活动
+  - **连续模式 (Continuous)**: 页面按用户设定的时间间隔（5-60秒可调）自动转动（8-25度），有效提醒和促进颈部活动
 - **动效与无障碍**:
   - **尊重系统偏好**: 自动检测并遵循操作系统的"减弱动态效果"设置
   - **手动控制**: 用户可随时暂停/继续页面旋转，或完全禁用旋转效果
@@ -122,13 +123,13 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 ### 核心框架
 
-- **[Next.js 15](https://nextjs.org/)** - React 框架，支持 App Router、Server Components 和 ISR
-- **[React 19](https://react.dev/)** - 最新的 React 版本
+- **[Next.js 16](https://nextjs.org/)** - React 框架，支持 App Router、Server Components 和 ISR
+- **[React 19.2](https://react.dev/)** - 最新的 React 版本
 - **[TypeScript 5.7+](https://www.typescriptlang.org/)** - 类型安全的 JavaScript
 
 ### UI 和样式
 
-- **[Tailwind CSS 4](https://tailwindcss.com/)** - 实用优先的 CSS 框架
+- **[Tailwind CSS 4.1](https://tailwindcss.com/)** - 实用优先的 CSS 框架
 - **[Shadcn/ui](https://ui.shadcn.com/)** - 高质量的 React 组件库
 - **[Radix UI](https://www.radix-ui.com/)** - 无障碍的 UI 组件基础
 - **[Framer Motion](https://www.framer.com/motion/)** - 强大的动画库
@@ -414,25 +415,21 @@ shaking-head-news/
 1. **Fork 本项目到你的 GitHub 账号**
 
 2. **在 Vercel 中导入项目**
-
    - 访问 [Vercel](https://vercel.com/)
    - 点击 "New Project"
    - 导入你的 GitHub 仓库
 
 3. **配置环境变量**
-
    - 在 Vercel 项目设置中添加所有必需的环境变量
    - 参考 `.env.example` 文件
 
 4. **添加 Upstash Redis**
-
    - 在 Vercel 项目设置中
    - 进入 "Storage" 标签
    - 添加 Upstash Redis
    - 环境变量会自动配置
 
 5. **配置 CI/CD**
-
    - 参考 [CI/CD 设置指南](.github/ACTIONS_SETUP.md)
    - 配置 GitHub Secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
    - 推送代码会自动触发 CI/CD 流程
@@ -669,7 +666,8 @@ try {
 
 ### 已完成 ✅
 
-- [x] Next.js 15 + React 19 迁移
+- [x] Next.js 16 + React 19.2 迁移
+- [x] Tailwind CSS 4.1 升级
 - [x] 用户认证和云同步（使用稳定的用户标识符）
 - [x] 多语言支持（中英文）
 - [x] RSS 源管理（OPML 导入/导出）
