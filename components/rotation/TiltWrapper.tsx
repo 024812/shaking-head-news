@@ -61,8 +61,8 @@ export function TiltWrapper({
 
     // Continuous mode: change angle at intervals
     const timer = setInterval(() => {
-      // Generate random angle with absolute value between 5 and 10 degrees
-      const angleMagnitude = Math.random() * 5 + 5 // 5 to 10
+      // Generate random angle with absolute value between 8 and 25 degrees
+      const angleMagnitude = Math.random() * 17 + 8 // 8 to 25
       const sign = Math.random() < 0.5 ? 1 : -1
       const newAngle = angleMagnitude * sign
       setAngle(newAngle)
