@@ -44,10 +44,7 @@
     to { height: 0; }
   }
 
-  /* Container configuration */
-  --container-center: true;
-  --container-padding: 2rem;
-  --container-2xl: 1400px;
+
 }
 
 @layer base {

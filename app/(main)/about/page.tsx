@@ -9,48 +9,48 @@ export default async function AboutPage() {
   const t = await getTranslations('home')
 
   return (
-    <div className="container py-8 md:py-12">
+    <div className="container mx-auto py-8 md:py-12">
       <div className="mx-auto max-w-4xl space-y-6 md:space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             {t('title')}
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">{t('subtitle')}</p>
+          <p className="text-muted-foreground mt-4 text-lg">{t('subtitle')}</p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.news.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.news.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.news.description')}</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.rotation.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.rotation.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.rotation.description')}</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.stats.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.stats.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.stats.description')}</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.i18n.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.i18n.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.i18n.description')}</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.sync.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.sync.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.sync.description')}</p>
           </div>
 
-          <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
             <h3 className="mb-2 text-xl font-semibold">{t('features.theme.title')}</h3>
-            <p className="text-sm text-muted-foreground">{t('features.theme.description')}</p>
+            <p className="text-muted-foreground text-sm">{t('features.theme.description')}</p>
           </div>
         </div>
 
-        <div className="space-y-6 rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+        <div className="bg-card text-card-foreground space-y-6 rounded-lg border p-6 shadow-sm">
           <div>
             <h2 className="mb-3 text-2xl font-semibold">项目背景</h2>
             <p className="text-muted-foreground">
@@ -61,18 +61,18 @@ export default async function AboutPage() {
           <div>
             <h2 className="mb-3 text-2xl font-semibold">技术栈</h2>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">Next.js 15</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">React 19</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">TypeScript</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">Tailwind CSS</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">Framer Motion</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">NextAuth.js</span>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm">Upstash Redis</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">Next.js 15</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">React 19</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">TypeScript</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">Tailwind CSS</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">Framer Motion</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">NextAuth.js</span>
+              <span className="bg-primary/10 rounded-full px-3 py-1 text-sm">Upstash Redis</span>
             </div>
           </div>
 
           <div className="border-t pt-6 text-center">
-            <p className="text-sm text-muted-foreground">{t('developmentNote')}</p>
+            <p className="text-muted-foreground text-sm">{t('developmentNote')}</p>
           </div>
         </div>
       </div>

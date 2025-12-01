@@ -128,3 +128,4 @@ Running 15 tests using 11 workers
   11 passed (44.5s)
 
 [36m  Serving HTML report at http://localhost:50018. Press Ctrl+C to quit.[39m
+npm error A complete log of this run can be found in: C:\Users\sli\AppData\Local\npm-cache\_logs\2025-11-27T07_22_50_567Z-debug-0.log

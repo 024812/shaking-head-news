@@ -20,8 +20,8 @@ export async function Header() {
   const tCommon = await getTranslations('common')
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
             <Newspaper className="h-6 w-6" />
@@ -29,27 +29,24 @@ export async function Header() {
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
-            <Link
-              href="/"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
+            <Link href="/" className="hover:text-primary text-sm font-medium transition-colors">
               {t('home')}
             </Link>
             <Link
               href="/stats"
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary text-sm font-medium transition-colors"
             >
               {t('stats')}
             </Link>
             <Link
               href="/settings"
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary text-sm font-medium transition-colors"
             >
               {t('settings')}
             </Link>
             <Link
               href="/about"
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="hover:text-primary text-sm font-medium transition-colors"
             >
               关于
             </Link>
@@ -58,7 +55,7 @@ export async function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          
+
           {session?.user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -74,10 +71,8 @@ export async function Header() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {session.user.name}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
+                    <p className="text-sm leading-none font-medium">{session.user.name}</p>
+                    <p className="text-muted-foreground text-xs leading-none">
                       {session.user.email}
                     </p>
                   </div>
@@ -101,7 +96,7 @@ export async function Header() {
                       await signOut({ redirectTo: '/' })
                     }}
                   >
-                    <button type="submit" className="flex w-full items-center cursor-pointer">
+                    <button type="submit" className="flex w-full cursor-pointer items-center">
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>{t('logout')}</span>
                     </button>

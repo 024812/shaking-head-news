@@ -237,3 +237,4 @@ Running 15 tests using 11 workers
     [chromium] › tests\e2e\auth-and-settings.spec.ts:177:3 › Settings Page (Mock Auth) › should show settings page structure when authenticated 
 
 [36m  Serving HTML report at http://localhost:52339. Press Ctrl+C to quit.[39m
+npm error A complete log of this run can be found in: C:\Users\sli\AppData\Local\npm-cache\_logs\2025-11-27T09_01_05_682Z-debug-0.log

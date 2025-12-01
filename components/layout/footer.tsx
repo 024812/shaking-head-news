@@ -2,9 +2,9 @@ import { Github, Heart } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background">
-      <div className="container py-6">
-        <div className="flex flex-col items-center justify-between gap-4 text-xs text-muted-foreground sm:flex-row">
+    <footer className="bg-background border-t">
+      <div className="container mx-auto py-6">
+        <div className="text-muted-foreground flex flex-col items-center justify-between gap-4 text-xs sm:flex-row">
           {/* 版权信息 */}
           <div className="flex items-center gap-1">
             <span>用</span>
@@ -14,7 +14,7 @@ export function Footer() {
               href="https://github.com/024812"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium hover:text-foreground"
+              className="hover:text-foreground font-medium"
             >
               024812
             </a>
@@ -27,7 +27,7 @@ export function Footer() {
             href="https://github.com/024812/shaking-head-news"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 transition-colors hover:text-foreground"
+            className="hover:text-foreground flex items-center gap-2 transition-colors"
             aria-label="GitHub"
           >
             <Github className="h-4 w-4" />
