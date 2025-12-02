@@ -115,14 +115,14 @@ export function TiltWrapper({
 
   // If user prefers reduced motion, render without animation
   if (prefersReducedMotion) {
-    return <div className="min-h-screen">{children}</div>
+    return <div className="h-screen overflow-x-hidden overflow-y-auto">{children}</div>
   }
 
   return (
     <motion.div
       animate={{ rotate: angle }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
-      className="min-h-screen"
+      className="h-screen overflow-x-hidden overflow-y-auto"
       data-testid="tilt-wrapper"
     >
       {children}
