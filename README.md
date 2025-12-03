@@ -36,7 +36,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 - 📰 Customizable news sources with RSS support
 - 🤸 Two rotation modes (Fixed/Continuous) for neck health
-- 🔐 Google OAuth authentication with cloud sync
+- 🔐 Google & Microsoft OAuth authentication with cloud sync
 - 🌍 Multi-language support (Chinese/English)
 - 📊 Statistics tracking and health reminders
 - 🎨 Modern UI with dark mode support
@@ -89,7 +89,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 ### 🔐 **用户认证与云同步**
 
-- **Google OAuth 登录**: 安全便捷的第三方登录
+- **Google & Microsoft OAuth 登录**: 支持多种安全便捷的第三方登录方式
 - **稳定的用户标识**: 使用 Google 提供的永久标识符，确保设置持久化
 - **云端设置同步**: 用户设置自动保存到 Upstash Redis，跨设备同步
 - **隐私保护**: 仅存储必要的用户设置，不收集个人信息
@@ -205,7 +205,13 @@ NEXTAUTH_URL=http://localhost:3000
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Microsoft Entra ID (Optional)
+AUTH_MICROSOFT_ENTRA_ID_ID=your-microsoft-client-id
+AUTH_MICROSOFT_ENTRA_ID_SECRET=your-microsoft-client-secret
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=your-microsoft-tenant-id
 
 # Upstash Redis (Vercel Marketplace Storage)
 UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
@@ -367,6 +373,18 @@ shaking-head-news/
    - 生产环境: `https://your-domain.com/api/auth/callback/google`
 6. 复制客户端 ID 和客户端密钥到 `.env.local`
 
+### Microsoft Entra ID 配置 (可选)
+
+1. 访问 [Azure Portal](https://portal.azure.com/)
+2. 搜索并进入 "Microsoft Entra ID"
+3. 点击 "App registrations" -> "New registration"
+4. 配置应用:
+   - Name: Shaking Head News
+   - Supported account types: Accounts in any organizational directory (Any Microsoft Entra ID tenant - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)
+   - Redirect URI: Web - `http://localhost:3000/api/auth/callback/microsoft-entra-id`
+5. 创建后，复制 "Application (client) ID" 和 "Directory (tenant) ID" 到 `.env.local`
+6. 在 "Certificates & secrets" 中创建新的 Client Secret，并复制 Value 到 `.env.local`
+
 ### Upstash Redis 配置
 
 1. 访问 [Upstash Console](https://console.upstash.com/)
@@ -445,6 +463,7 @@ shaking-head-news/
 2. 配置 DNS 记录指向 Vercel
 3. SSL 证书会自动配置
 4. 更新 Google OAuth 回调 URL
+5. 更新 Microsoft Entra ID 回调 URL (如果使用)
 
 ### 环境变量配置
 
@@ -455,7 +474,11 @@ NEXT_PUBLIC_APP_URL=https://your-domain.com
 NEXTAUTH_SECRET=your-secret-key
 NEXTAUTH_URL=https://your-domain.com
 GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
+AUTH_MICROSOFT_ENTRA_ID_ID=your-microsoft-id
+AUTH_MICROSOFT_ENTRA_ID_SECRET=your-microsoft-secret
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=your-microsoft-tenant-id
 UPSTASH_REDIS_REST_URL=your-upstash-url
 UPSTASH_REDIS_REST_TOKEN=your-upstash-token
 NEWS_API_BASE_URL=https://news.ravelloh.top

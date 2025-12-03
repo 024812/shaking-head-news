@@ -24,7 +24,30 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-### 3. 配置 Upstash Redis
+### 3. 配置 Microsoft Entra ID (可选)
+
+1. 访问 [Azure Portal](https://portal.azure.com/)
+2. 进入 **Microsoft Entra ID** 服务
+3. 在左侧菜单选择 **App registrations**，点击 **New registration**
+4. 填写注册信息：
+   - **Name**: Shaking Head News
+   - **Supported account types**: 选择 "Accounts in any organizational directory (Any Microsoft Entra ID tenant - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)" 以支持最广泛的用户
+   - **Redirect URI**: 选择 **Web**，填入 `http://localhost:3000/api/auth/callback/microsoft-entra-id` (生产环境替换为你的域名)
+5. 点击 **Register**
+6. 在概览页复制以下信息到 `.env.local`：
+   - **Application (client) ID** -> `AUTH_MICROSOFT_ENTRA_ID_ID`
+   - **Directory (tenant) ID** -> `AUTH_MICROSOFT_ENTRA_ID_TENANT_ID`
+7. 在左侧菜单选择 **Certificates & secrets**，点击 **New client secret**
+   - 添加描述和过期时间
+   - 复制 **Value** (注意不是 Secret ID) -> `AUTH_MICROSOFT_ENTRA_ID_SECRET`
+
+```bash
+AUTH_MICROSOFT_ENTRA_ID_ID=your-client-id
+AUTH_MICROSOFT_ENTRA_ID_SECRET=your-client-secret-value
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=your-tenant-id
+```
+
+### 4. 配置 Upstash Redis
 
 #### 方式一：通过 Vercel Marketplace（推荐）
 
@@ -45,7 +68,7 @@ UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-redis-token
 ```
 
-### 4. 配置 NextAuth Secret
+### 5. 配置 NextAuth Secret
 
 生成一个安全的密钥：
 
@@ -59,15 +82,17 @@ openssl rand -base64 32
 NEXTAUTH_SECRET=your-generated-secret
 ```
 
-### 5. 配置应用 URL
+### 6. 配置应用 URL
 
 开发环境：
+
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXTAUTH_URL=http://localhost:3000
 ```
 
 生产环境：
+
 ```bash
 NEXT_PUBLIC_APP_URL=https://your-domain.com
 NEXTAUTH_URL=https://your-domain.com
@@ -118,6 +143,7 @@ testRedis()
 ```
 
 运行测试：
+
 ```bash
 npx tsx scripts/test-redis.ts
 ```
@@ -126,7 +152,7 @@ npx tsx scripts/test-redis.ts
 
 1. 启动开发服务器：`npm run dev`
 2. 访问 `http://localhost:3000/login`
-3. 点击 "使用 Google 登录"
+3. 点击 "使用 Google 登录" 或 "使用 Microsoft 登录"
 4. 完成 OAuth 流程
 5. 检查是否成功重定向到首页
 
@@ -137,8 +163,18 @@ npx tsx scripts/test-redis.ts
 **错误：redirect_uri_mismatch**
 
 确保在 Google Cloud Console 中添加了正确的重定向 URI：
+
 - 开发：`http://localhost:3000/api/auth/callback/google`
 - 生产：`https://your-domain.com/api/auth/callback/google`
+
+### Microsoft Entra ID 错误
+
+**错误：AADSTS50011: The reply URL specified in the request does not match the reply URLs configured for the application**
+
+确保在 Azure Portal 的 App registration -> Authentication 中添加了正确的 Redirect URI：
+
+- 开发：`http://localhost:3000/api/auth/callback/microsoft-entra-id`
+- 生产：`https://your-domain.com/api/auth/callback/microsoft-entra-id`
 
 ### Redis 连接错误
 
@@ -160,7 +196,7 @@ npx tsx scripts/test-redis.ts
 2. 在 Vercel 中导入项目
 3. 配置环境变量（与 `.env.local` 相同）
 4. 通过 Vercel Marketplace 添加 Upstash Redis
-5. 更新 Google OAuth 重定向 URI 为生产域名
+5. 更新 Google/Microsoft OAuth 重定向 URI 为生产域名
 6. 部署
 
 ## 下一步
