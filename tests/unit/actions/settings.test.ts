@@ -42,6 +42,8 @@ describe('Settings Actions', () => {
     // Set default environment variables
     process.env.UPSTASH_REDIS_REST_URL = 'https://test.upstash.io'
     process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token'
+    // Reset rateLimitByUser mock to return success by default
+    vi.mocked(rateLimitByUser).mockResolvedValue({ success: true })
   })
 
   afterEach(() => {

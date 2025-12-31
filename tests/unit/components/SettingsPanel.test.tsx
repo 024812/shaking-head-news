@@ -76,7 +76,7 @@ describe('SettingsPanel', () => {
 
     // Check rotation interval display
     expect(screen.getByText('10s')).toBeInTheDocument()
-    
+
     // Check daily goal display
     expect(screen.getByText('30')).toBeInTheDocument()
   })
@@ -92,9 +92,9 @@ describe('SettingsPanel', () => {
     render(<SettingsPanel initialSettings={mockSettings} />)
 
     const animationSwitch = screen.getByRole('switch', { name: /animation/i })
-    
+
     expect(animationSwitch).toBeChecked()
-    
+
     fireEvent.click(animationSwitch)
 
     await waitFor(() => {
@@ -105,8 +105,8 @@ describe('SettingsPanel', () => {
   it('should call updateSettings when save button is clicked', async () => {
     render(<SettingsPanel initialSettings={mockSettings} />)
 
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    
+    const saveButton = screen.getByRole('button', { name: /保存/i })
+
     fireEvent.click(saveButton)
 
     await waitFor(() => {
@@ -117,8 +117,8 @@ describe('SettingsPanel', () => {
   it('should call resetSettings when reset button is clicked', async () => {
     render(<SettingsPanel initialSettings={mockSettings} />)
 
-    const resetButton = screen.getByRole('button', { name: /retry/i })
-    
+    const resetButton = screen.getByRole('button', { name: /重置/i })
+
     fireEvent.click(resetButton)
 
     await waitFor(() => {
@@ -143,9 +143,9 @@ describe('SettingsPanel', () => {
   it('should disable buttons while saving', async () => {
     render(<SettingsPanel initialSettings={mockSettings} />)
 
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    const resetButton = screen.getByRole('button', { name: /retry/i })
-    
+    const saveButton = screen.getByRole('button', { name: /保存/i })
+    const resetButton = screen.getByRole('button', { name: /重置/i })
+
     fireEvent.click(saveButton)
 
     // Buttons should be disabled during save
@@ -169,9 +169,9 @@ describe('SettingsPanel', () => {
     render(<SettingsPanel initialSettings={mockSettings} />)
 
     const notificationsSwitch = screen.getByRole('switch', { name: /notifications/i })
-    
+
     expect(notificationsSwitch).toBeChecked()
-    
+
     fireEvent.click(notificationsSwitch)
 
     await waitFor(() => {
