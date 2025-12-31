@@ -4,8 +4,7 @@ import { auth } from '@/lib/auth'
 import { getStorageItem, setStorageItem, StorageKeys } from '@/lib/storage'
 import { UserStatsSchema, RotationRecord, UserStats } from '@/types/stats'
 import { AuthError, logError, validateOrThrow } from '@/lib/utils/error-handler'
-// Temporarily disabled rate limiting for debugging
-// import { rateLimitByUser, RateLimitTiers } from '@/lib/rate-limit'
+import { rateLimitByUser, RateLimitTiers } from '@/lib/rate-limit'
 
 /**
  * 记录旋转动作
@@ -20,16 +19,15 @@ export async function recordRotation(angle: number, duration: number) {
       return null // 未登录用户不记录
     }
 
-    // 速率限制：暂时禁用以调试统计记录问题
-    // TODO: 重新启用速率限制
-    // const rateLimitResult = await rateLimitByUser(session.user.id, {
-    //   ...RateLimitTiers.RELAXED,
-    // })
+    // 速率限制：防止滥用
+    const rateLimitResult = await rateLimitByUser(session.user.id, {
+      ...RateLimitTiers.RELAXED,
+    })
 
-    // if (!rateLimitResult.success) {
-    //   console.warn('Rate limit exceeded for recordRotation')
-    //   return null
-    // }
+    if (!rateLimitResult.success) {
+      console.warn('Rate limit exceeded for recordRotation')
+      return null
+    }
 
     // 验证输入参数
     if (typeof angle !== 'number' || typeof duration !== 'number') {
@@ -104,15 +102,14 @@ export async function getStats(startDate: string, endDate: string) {
       throw new AuthError('Please sign in to view statistics')
     }
 
-    // 速率限制：暂时禁用以调试
-    // TODO: 重新启用合理的速率限制
-    // const rateLimitResult = await rateLimitByUser(session.user.id, {
-    //   ...RateLimitTiers.STANDARD,
-    // })
+    // 速率限制：防止滥用
+    const rateLimitResult = await rateLimitByUser(session.user.id, {
+      ...RateLimitTiers.STANDARD,
+    })
 
-    // if (!rateLimitResult.success) {
-    //   throw new Error('Too many requests. Please try again later.')
-    // }
+    if (!rateLimitResult.success) {
+      throw new Error('Too many requests. Please try again later.')
+    }
 
     // 验证日期格式
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/
