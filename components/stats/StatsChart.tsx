@@ -66,8 +66,8 @@ export function StatsChart({ data, type }: StatsChartProps) {
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
-          <p className="text-sm font-medium mb-2">{label}</p>
+        <div className="bg-background border-border rounded-lg border p-3 shadow-lg">
+          <p className="mb-2 text-sm font-medium">{label}</p>
           {payload.map((entry, index: number) => (
             <p key={index} className="text-xs" style={{ color: entry.color }}>
               {entry.name}: {entry.value}
@@ -86,19 +86,10 @@ export function StatsChart({ data, type }: StatsChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
-          <XAxis
-            dataKey="date"
-            stroke={colors.text}
-            fontSize={12}
-            tickLine={false}
-          />
+          <XAxis dataKey="date" stroke={colors.text} fontSize={12} tickLine={false} />
           <YAxis stroke={colors.text} fontSize={12} tickLine={false} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar
-            dataKey={t('rotationCount')}
-            fill={colors.primary}
-            radius={[4, 4, 0, 0]}
-          />
+          <Bar dataKey={t('rotationCount')} fill={colors.primary} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     )
@@ -109,12 +100,7 @@ export function StatsChart({ data, type }: StatsChartProps) {
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
-        <XAxis
-          dataKey="date"
-          stroke={colors.text}
-          fontSize={12}
-          tickLine={false}
-        />
+        <XAxis dataKey="date" stroke={colors.text} fontSize={12} tickLine={false} />
         <YAxis stroke={colors.text} fontSize={12} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         <Line

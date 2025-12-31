@@ -9,6 +9,7 @@ This directory contains components related to user settings management.
 A comprehensive settings panel that allows users to customize their experience.
 
 **Features:**
+
 - Language selection (Chinese/English)
 - Theme selection (Light/Dark/System)
 - Font size adjustment
@@ -20,6 +21,7 @@ A comprehensive settings panel that allows users to customize their experience.
 - Notification preferences
 
 **Usage:**
+
 ```tsx
 import { SettingsPanel } from '@/components/settings/SettingsPanel'
 import { getUserSettings } from '@/lib/actions/settings'
@@ -30,14 +32,17 @@ const settings = await getUserSettings()
 ```
 
 **Props:**
+
 - `initialSettings`: UserSettings - The initial settings to display
 
 **State Management:**
+
 - Uses local state for form values
 - Uses `useTransition` for pending states during save/reset
 - Syncs with Vercel Marketplace Storage via Server Actions
 
 **Server Actions:**
+
 - `updateSettings()` - Saves settings to storage
 - `resetSettings()` - Resets settings to defaults
 
@@ -46,12 +51,15 @@ const settings = await getUserSettings()
 Located in `lib/actions/settings.ts`:
 
 ### getUserSettings()
+
 Retrieves user settings from Vercel Marketplace Storage. Returns default settings for unauthenticated users.
 
 ### updateSettings(settings)
+
 Updates user settings in storage. Requires authentication.
 
 ### resetSettings()
+
 Resets user settings to default values. Requires authentication.
 
 ## Requirements Satisfied

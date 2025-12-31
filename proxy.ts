@@ -21,7 +21,7 @@ function getSecurityHeaders() {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "upgrade-insecure-requests",
+    'upgrade-insecure-requests',
   ]
   headers.set('Content-Security-Policy', cspDirectives.join('; '))
 
@@ -38,17 +38,11 @@ function getSecurityHeaders() {
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
 
   // Permissions Policy (formerly Feature Policy)
-  headers.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), interest-cohort=()'
-  )
+  headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()')
 
   // Strict Transport Security (HTTPS only)
   if (process.env.NODE_ENV === 'production') {
-    headers.set(
-      'Strict-Transport-Security',
-      'max-age=63072000; includeSubDomains; preload'
-    )
+    headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   }
 
   return headers
@@ -68,14 +62,8 @@ function setCorsHeaders(response: NextResponse, request: NextRequest) {
   if (origin && allowedOrigins.includes(origin)) {
     response.headers.set('Access-Control-Allow-Origin', origin)
     response.headers.set('Access-Control-Allow-Credentials', 'true')
-    response.headers.set(
-      'Access-Control-Allow-Methods',
-      'GET, POST, PUT, DELETE, OPTIONS'
-    )
-    response.headers.set(
-      'Access-Control-Allow-Headers',
-      'Content-Type, Authorization'
-    )
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   }
 
   return response
@@ -92,9 +80,7 @@ export async function proxy(request: NextRequest) {
 
   // 保护需要认证的路由
   const protectedPaths = ['/settings', '/stats', '/rss']
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  )
+  const isProtected = protectedPaths.some((path) => request.nextUrl.pathname.startsWith(path))
 
   if (isProtected && !session) {
     const loginUrl = new URL('/login', request.url)

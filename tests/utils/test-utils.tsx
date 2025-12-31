@@ -4,10 +4,7 @@ import { ReactElement } from 'react'
 /**
  * Custom render function that wraps components with common providers
  */
-export function renderWithProviders(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+export function renderWithProviders(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { ...options })
 }
 
@@ -119,8 +116,7 @@ export const mockUserStats = {
 /**
  * Wait for async operations to complete
  */
-export const waitForAsync = () =>
-  new Promise((resolve) => setTimeout(resolve, 0))
+export const waitForAsync = () => new Promise((resolve) => setTimeout(resolve, 0))
 
 /**
  * Create a mock fetch response

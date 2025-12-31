@@ -161,7 +161,7 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
             <p className="text-sm font-medium">
               {notificationsEnabled ? t('notificationsOn') : t('notificationsOff')}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {notificationsEnabled
                 ? t('notificationsOnDescription')
                 : t('notificationsOffDescription')}

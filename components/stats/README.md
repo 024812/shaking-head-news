@@ -5,7 +5,9 @@ This directory contains components for displaying user statistics and health rem
 ## Components
 
 ### StatsDisplay.tsx
+
 Main statistics display component that shows:
+
 - Today's rotation count and duration
 - Weekly statistics with average
 - Monthly statistics with average
@@ -15,7 +17,9 @@ Main statistics display component that shows:
 **Requirements**: 8.2, 8.5
 
 ### StatsChart.tsx
+
 Chart component using Recharts to visualize rotation data:
+
 - Bar chart for weekly data
 - Line chart for monthly data
 - Responsive design
@@ -25,7 +29,9 @@ Chart component using Recharts to visualize rotation data:
 **Requirements**: 8.5
 
 ### HealthReminder.tsx
+
 Health reminder component that:
+
 - Requests browser notification permissions
 - Checks for inactivity (2+ hours without rotation)
 - Sends browser notifications when needed
@@ -37,7 +43,9 @@ Health reminder component that:
 ## Server Actions
 
 ### lib/actions/stats.ts
+
 Server actions for statistics management:
+
 - `recordRotation(angle, duration)` - Records a rotation event
 - `getStats(startDate, endDate)` - Gets stats for a date range
 - `getTodayStats()` - Gets today's statistics
@@ -75,6 +83,7 @@ Server actions for statistics management:
 ## Usage
 
 ### In a Page
+
 ```tsx
 import { getSummaryStats } from '@/lib/actions/stats'
 import { getUserSettings } from '@/lib/actions/settings'
@@ -83,12 +92,13 @@ import { StatsDisplay } from '@/components/stats/StatsDisplay'
 export default async function StatsPage() {
   const settings = await getUserSettings()
   const stats = await getSummaryStats()
-  
+
   return <StatsDisplay initialStats={stats} dailyGoal={settings.dailyGoal} />
 }
 ```
 
 ### Recording Rotations
+
 ```tsx
 import { recordRotation } from '@/lib/actions/stats'
 
@@ -113,12 +123,14 @@ All text is internationalized using next-intl. Keys are in `messages/[locale].js
 ## Browser Compatibility
 
 ### Notification API
+
 - Supported in all modern browsers
 - Requires user permission
 - Gracefully degrades if not supported
 - Shows appropriate error messages
 
 ### Recharts
+
 - Works in all modern browsers
 - Responsive design
 - Theme-aware (light/dark mode)
@@ -134,6 +146,7 @@ All text is internationalized using next-intl. Keys are in `messages/[locale].js
 ## Testing
 
 Test coverage includes:
+
 - Server action unit tests
 - Component rendering tests
 - Notification permission flow
