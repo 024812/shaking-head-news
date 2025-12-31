@@ -1,6 +1,7 @@
 # UI/UX Features Guide
 
 ## Overview
+
 This guide explains how to use and customize the UI/UX enhancement features implemented in Task 12.
 
 ## Features
@@ -10,12 +11,14 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 **Location**: Settings Page → Theme Section → Font Size
 
 **Options**:
+
 - **Small** (14px): Compact text for users who prefer more content on screen
 - **Medium** (16px): Default size, optimal for most users
 - **Large** (18px): Easier reading for users who prefer larger text
 - **XLarge** (20px): Maximum readability for accessibility needs
 
 **How it works**:
+
 - Changes apply instantly when you select a new size
 - Affects all text throughout the application
 - Headings scale proportionally
@@ -23,6 +26,7 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 - Syncs to server when you click "Save"
 
 **CSS Classes Applied**:
+
 ```css
 .font-size-small   /* 14px base */
 .font-size-medium  /* 16px base */
@@ -35,10 +39,12 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 **Location**: Settings Page → Theme Section → Layout Mode
 
 **Options**:
+
 - **Normal**: Standard spacing for comfortable reading
 - **Compact**: Reduced spacing (~50%) to fit more content on screen
 
 **How it works**:
+
 - Changes apply instantly when you select a new mode
 - Reduces spacing between elements, gaps, and padding
 - Useful for users with larger screens or who want to see more content
@@ -46,6 +52,7 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 - Syncs to server when you click "Save"
 
 **CSS Classes Applied**:
+
 ```css
 .layout-normal   /* Default spacing */
 .layout-compact  /* 50% reduced spacing */
@@ -56,17 +63,20 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 **Location**: Header (top right corner)
 
 **Options**:
+
 - **Light Mode**: Light background with dark text
 - **Dark Mode**: Dark background with light text
 - **System**: Follows your operating system preference
 
 **How it works**:
+
 - Click the sun/moon icon to toggle between light and dark
 - Changes apply instantly with smooth transition
 - Persists across sessions
 - Can also be changed in Settings Page
 
 **Icons**:
+
 - 🌙 Moon icon = Currently in light mode (click to switch to dark)
 - ☀️ Sun icon = Currently in dark mode (click to switch to light)
 
@@ -77,21 +87,25 @@ This guide explains how to use and customize the UI/UX enhancement features impl
 **Features**:
 
 #### Pause/Resume Button
+
 - **Pause**: Stops the page rotation animation
 - **Resume**: Restarts the page rotation animation
 - Icon changes based on state (Play ▶️ / Pause ⏸️)
 
 #### Rotation Mode
+
 - **Fixed Mode**: Page stays at a fixed angle (minimal movement)
 - **Continuous Mode**: Page rotates at regular intervals
 
 #### Rotation Speed Slider
+
 - **Range**: 5 to 300 seconds
 - **Default**: 10 seconds
 - **Only visible in Continuous Mode**
 - Adjusts how often the page rotates to a new angle
 
 **How it works**:
+
 - Changes apply instantly
 - Settings persist across sessions
 - Respects `prefers-reduced-motion` accessibility setting
@@ -106,11 +120,11 @@ import { useUIStore } from '@/lib/stores/ui-store'
 
 function MyComponent() {
   const { fontSize, layoutMode, setFontSize, setLayoutMode } = useUIStore()
-  
+
   // Read current values
-  console.log(fontSize)    // 'small' | 'medium' | 'large' | 'xlarge'
-  console.log(layoutMode)  // 'normal' | 'compact'
-  
+  console.log(fontSize) // 'small' | 'medium' | 'large' | 'xlarge'
+  console.log(layoutMode) // 'normal' | 'compact'
+
   // Update values
   setFontSize('large')
   setLayoutMode('compact')
@@ -122,9 +136,7 @@ function MyComponent() {
 The UIWrapper component automatically applies classes to the entire app:
 
 ```tsx
-<div className="font-size-{fontSize} layout-{layoutMode}">
-  {/* Your app content */}
-</div>
+<div className="font-size-{fontSize} layout-{layoutMode}">{/* Your app content */}</div>
 ```
 
 You can target these in your CSS:
@@ -146,6 +158,7 @@ You can target these in your CSS:
 To add a new UI preference:
 
 1. **Update the UI Store** (`lib/stores/ui-store.ts`):
+
 ```typescript
 interface UIState {
   // ... existing properties
@@ -168,6 +181,7 @@ export const useUIStore = create<UIState>()(
 ```
 
 2. **Add CSS Classes** (`app/globals.css`):
+
 ```css
 .my-setting-value1 {
   /* styles */
@@ -179,6 +193,7 @@ export const useUIStore = create<UIState>()(
 ```
 
 3. **Update UIWrapper** (`components/layout/UIWrapper.tsx`):
+
 ```tsx
 const { fontSize, layoutMode, myNewSetting } = useUIStore()
 
@@ -190,6 +205,7 @@ return (
 ```
 
 4. **Add to Settings Panel** (`components/settings/SettingsPanel.tsx`):
+
 ```tsx
 const { setMyNewSetting } = useUIStore()
 
@@ -199,21 +215,25 @@ const { setMyNewSetting } = useUIStore()
 ## Accessibility Considerations
 
 ### Font Size
+
 - Provides accessibility for users with visual impairments
 - Scales all text proportionally
 - Maintains readability at all sizes
 
 ### Layout Mode
+
 - Compact mode may be harder for some users to read
 - Normal mode recommended for accessibility
 - Users can choose based on their needs
 
 ### Theme Toggle
+
 - High contrast in both light and dark modes
 - Respects system preferences
 - Smooth transitions avoid jarring changes
 
 ### Rotation Controls
+
 - Respects `prefers-reduced-motion` media query
 - Animations can be completely disabled
 - Pause button provides immediate control
@@ -221,24 +241,28 @@ const { setMyNewSetting } = useUIStore()
 ## Troubleshooting
 
 ### Font size not changing
+
 1. Check browser console for errors
 2. Verify localStorage is enabled
 3. Try clearing browser cache
 4. Check if custom CSS is overriding styles
 
 ### Layout mode not applying
+
 1. Verify the setting is saved
 2. Check if component styles use `!important`
 3. Try refreshing the page
 4. Check browser developer tools for applied classes
 
 ### Theme not persisting
+
 1. Check if cookies are enabled
 2. Verify next-themes is properly configured
 3. Check localStorage for theme preference
 4. Try clearing site data and re-selecting theme
 
 ### Rotation not working
+
 1. Check if animations are enabled in settings
 2. Verify browser supports CSS transforms
 3. Check if `prefers-reduced-motion` is enabled
@@ -255,12 +279,14 @@ const { setMyNewSetting } = useUIStore()
 ## Browser Support
 
 All features work in modern browsers:
+
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+
 - Opera 76+
 
 Graceful degradation for older browsers:
+
 - Font size falls back to browser default
 - Layout mode falls back to normal
 - Theme falls back to light mode

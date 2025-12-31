@@ -93,7 +93,7 @@ describe('Button', () => {
   it('should call onClick when clicked', async () => {
     const onClick = vi.fn()
     const { user } = render(<Button onClick={onClick}>Click me</Button>)
-    
+
     await user.click(screen.getByText('Click me'))
     expect(onClick).toHaveBeenCalledTimes(1)
   })
@@ -112,15 +112,15 @@ import { updateSettings } from '@/lib/actions/settings'
 // Mock dependencies
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn().mockResolvedValue({
-    user: { id: 'test-user-id' }
-  })
+    user: { id: 'test-user-id' },
+  }),
 }))
 
 vi.mock('@/lib/storage', () => ({
   storage: {
     get: vi.fn(),
     set: vi.fn(),
-  }
+  },
 }))
 
 describe('updateSettings', () => {
@@ -131,7 +131,7 @@ describe('updateSettings', () => {
   it('should update user settings', async () => {
     const settings = { language: 'en' }
     await updateSettings(settings)
-    
+
     expect(storage.set).toHaveBeenCalled()
   })
 })
@@ -148,10 +148,10 @@ import { test, expect } from '@playwright/test'
 test.describe('News Browsing', () => {
   test('should display news on homepage', async ({ page }) => {
     await page.goto('/')
-    
+
     // Wait for news to load
     await page.waitForSelector('[data-testid="news-list"]')
-    
+
     // Check if news items are displayed
     const newsItems = await page.locator('[data-testid="news-item"]').count()
     expect(newsItems).toBeGreaterThan(0)
@@ -159,13 +159,13 @@ test.describe('News Browsing', () => {
 
   test('should refresh news when clicking refresh button', async ({ page }) => {
     await page.goto('/')
-    
+
     // Click refresh button
     await page.click('[data-testid="refresh-button"]')
-    
+
     // Wait for loading state
     await page.waitForSelector('[data-testid="loading"]')
-    
+
     // Wait for news to reload
     await page.waitForSelector('[data-testid="news-list"]')
   })
@@ -189,6 +189,7 @@ The `tests/utils/test-utils.tsx` file provides helpful utilities:
 ### Mocking Next.js Features
 
 The setup file automatically mocks:
+
 - `next/navigation` (useRouter, usePathname, etc.)
 - `next-intl` (useTranslations, useLocale)
 - `next-themes` (useTheme)
@@ -204,7 +205,7 @@ vi.mock('@/lib/storage', () => ({
     get: vi.fn(),
     set: vi.fn(),
     del: vi.fn(),
-  }
+  },
 }))
 ```
 

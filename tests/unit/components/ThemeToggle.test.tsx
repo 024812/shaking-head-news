@@ -100,7 +100,7 @@ describe('ThemeToggle', () => {
 
     // Mock useState to simulate not mounted
     const { container } = render(<ThemeToggle />)
-    
+
     // Initially should render something
     expect(container.querySelector('button')).toBeInTheDocument()
   })
@@ -181,7 +181,7 @@ describe('ThemeToggle', () => {
     })
 
     const button = screen.getByRole('button')
-    
+
     fireEvent.click(button)
     expect(mockSetTheme).toHaveBeenCalledWith('dark')
 

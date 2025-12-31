@@ -93,20 +93,28 @@ test.describe('Complete User Journey', () => {
     await page.goto('/')
 
     // Interact with rotation controls if available
-    const pauseButton = page.locator('button[aria-label*="暂停"], button[aria-label*="Pause"], button:has-text("暂停"), button:has-text("Pause")').first()
-    
+    const pauseButton = page
+      .locator(
+        'button[aria-label*="暂停"], button[aria-label*="Pause"], button:has-text("暂停"), button:has-text("Pause")'
+      )
+      .first()
+
     const pauseVisible = await pauseButton.isVisible().catch(() => false)
     if (pauseVisible) {
       await pauseButton.click()
-      
+
       // Navigate away
       await page.goto('/login')
-      
+
       // Come back
       await page.goto('/')
-      
+
       // State should be preserved (play button visible)
-      const playButton = page.locator('button[aria-label*="播放"], button[aria-label*="Play"], button:has-text("播放"), button:has-text("Play")').first()
+      const playButton = page
+        .locator(
+          'button[aria-label*="播放"], button[aria-label*="Play"], button:has-text("播放"), button:has-text("Play")'
+        )
+        .first()
       await expect(playButton).toBeVisible({ timeout: 2000 })
     }
   })
@@ -130,11 +138,11 @@ test.describe('Complete User Journey', () => {
 
   test('should handle page reload gracefully', async ({ page }) => {
     await page.goto('/')
-    
+
     // Reload page
     await page.reload()
     await page.waitForLoadState('networkidle')
-    
+
     // Content should still be visible
     const heading = page.locator('h1')
     await expect(heading).toBeVisible()
@@ -148,10 +156,10 @@ test.describe('Complete User Journey', () => {
     await page.goto('/settings')
     await page.waitForURL(/\/login/)
     await page.goto('/')
-    
+
     // Should end up on home page
     await expect(page).toHaveURL('/')
-    
+
     // Content should be visible
     const heading = page.locator('h1')
     await expect(heading).toBeVisible()
@@ -185,15 +193,15 @@ test.describe('Complete User Journey', () => {
 
   test('should handle keyboard navigation throughout app', async ({ page }) => {
     await page.goto('/')
-    
+
     // Tab through interactive elements
     for (let i = 0; i < 10; i++) {
       await page.keyboard.press('Tab')
     }
-    
+
     // Should be able to activate focused element
     await page.keyboard.press('Enter')
-    
+
     // Page should still be functional
     await page.waitForLoadState('networkidle')
     const url = page.url()
@@ -202,20 +210,23 @@ test.describe('Complete User Journey', () => {
 
   test('should display proper error page for 404', async ({ page }) => {
     await page.goto('/this-page-does-not-exist')
-    
+
     // Should show 404 page or redirect
     await page.waitForLoadState('networkidle')
-    
-    const has404 = await page.locator('text=/404|Not Found|找不到/i').isVisible().catch(() => false)
+
+    const has404 = await page
+      .locator('text=/404|Not Found|找不到/i')
+      .isVisible()
+      .catch(() => false)
     const isHome = page.url().endsWith('/')
-    
+
     // Should either show 404 or redirect to home
     expect(has404 || isHome).toBe(true)
   })
 
   test('should maintain performance during navigation', async ({ page }) => {
     const navigationTimes: number[] = []
-    
+
     // Measure navigation times
     for (let i = 0; i < 3; i++) {
       const startTime = Date.now()
@@ -224,7 +235,7 @@ test.describe('Complete User Journey', () => {
       const endTime = Date.now()
       navigationTimes.push(endTime - startTime)
     }
-    
+
     // Average navigation time should be reasonable (< 5 seconds)
     const avgTime = navigationTimes.reduce((a, b) => a + b, 0) / navigationTimes.length
     expect(avgTime).toBeLessThan(5000)
@@ -232,16 +243,19 @@ test.describe('Complete User Journey', () => {
 
   test('should handle concurrent user interactions', async ({ page }) => {
     await page.goto('/')
-    
+
     // Perform multiple actions quickly
     const actions = [
-      page.locator('a[href="/settings"]').click().catch(() => {}),
+      page
+        .locator('a[href="/settings"]')
+        .click()
+        .catch(() => {}),
       page.keyboard.press('Tab'),
       page.keyboard.press('Tab'),
     ]
-    
+
     await Promise.all(actions)
-    
+
     // Page should still be functional
     await page.waitForLoadState('networkidle')
     const url = page.url()
@@ -250,16 +264,16 @@ test.describe('Complete User Journey', () => {
 
   test('should preserve scroll position on navigation', async ({ page }) => {
     await page.goto('/')
-    
+
     // Scroll down
     await page.evaluate(() => window.scrollTo(0, 500))
     const scrollY = await page.evaluate(() => window.scrollY)
     expect(scrollY).toBeGreaterThan(0)
-    
+
     // Navigate away and back
     await page.goto('/login')
     await page.goto('/')
-    
+
     // Scroll position might reset (expected behavior)
     // Just verify page loaded correctly
     const heading = page.locator('h1')
@@ -294,16 +308,24 @@ test.describe('User Journey - Mobile', () => {
 
   test('should handle touch interactions on mobile', async ({ page }) => {
     await page.goto('/')
-    
+
     // Tap on rotation controls
-    const pauseButton = page.locator('button[aria-label*="暂停"], button[aria-label*="Pause"], button:has-text("暂停"), button:has-text("Pause")').first()
-    
+    const pauseButton = page
+      .locator(
+        'button[aria-label*="暂停"], button[aria-label*="Pause"], button:has-text("暂停"), button:has-text("Pause")'
+      )
+      .first()
+
     const pauseVisible = await pauseButton.isVisible().catch(() => false)
     if (pauseVisible) {
       await pauseButton.tap()
-      
+
       // Play button should appear
-      const playButton = page.locator('button[aria-label*="播放"], button[aria-label*="Play"], button:has-text("播放"), button:has-text("Play")').first()
+      const playButton = page
+        .locator(
+          'button[aria-label*="播放"], button[aria-label*="Play"], button:has-text("播放"), button:has-text("Play")'
+        )
+        .first()
       await expect(playButton).toBeVisible({ timeout: 2000 })
     }
   })

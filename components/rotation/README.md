@@ -11,6 +11,7 @@
 包装器组件，为其子元素添加旋转动画效果。
 
 **特性：**
+
 - 支持固定模式和连续模式
 - 自动检测 `prefers-reduced-motion` 并禁用动画
 - 使用 Framer Motion 实现平滑过渡
@@ -33,6 +34,7 @@ export default function Page() {
 ```
 
 **Props：**
+
 - `children`: React.ReactNode - 要包装的内容
 - `mode?`: 'fixed' | 'continuous' - 旋转模式（可选，默认使用 store 中的值）
 - `interval?`: number - 旋转间隔（秒）（可选，默认使用 store 中的值）
@@ -42,6 +44,7 @@ export default function Page() {
 旋转控制面板，允许用户控制旋转行为。
 
 **特性：**
+
 - 暂停/继续旋转
 - 切换旋转模式（固定/连续）
 - 调整旋转间隔（5-300 秒）
@@ -68,12 +71,14 @@ export default function SettingsPage() {
 Zustand store，管理旋转状态。
 
 **状态：**
+
 - `angle`: number - 当前旋转角度
 - `isPaused`: boolean - 是否暂停
 - `mode`: 'fixed' | 'continuous' - 旋转模式
 - `interval`: number - 旋转间隔（秒）
 
 **操作：**
+
 - `setAngle(angle: number)`: 设置旋转角度
 - `togglePause()`: 切换暂停状态
 - `setMode(mode: 'fixed' | 'continuous')`: 设置旋转模式
@@ -87,13 +92,11 @@ import { useRotationStore } from '@/lib/stores/rotation-store'
 
 function MyComponent() {
   const { angle, isPaused, togglePause } = useRotationStore()
-  
+
   return (
     <div>
       <p>当前角度: {angle}°</p>
-      <button onClick={togglePause}>
-        {isPaused ? '继续' : '暂停'}
-      </button>
+      <button onClick={togglePause}>{isPaused ? '继续' : '暂停'}</button>
     </div>
   )
 }
@@ -112,6 +115,7 @@ function MyComponent() {
 ## 无障碍支持
 
 系统自动检测用户的 `prefers-reduced-motion` 设置：
+
 - 如果用户启用了减少动画，所有旋转动画将被禁用
 - 页面将以正常方式显示，不会有任何旋转效果
 

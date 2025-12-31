@@ -177,7 +177,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="xlarge">{t('xlarge')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">{t('fontSizeDescription')}</p>
+            <p className="text-muted-foreground text-sm">{t('fontSizeDescription')}</p>
           </div>
 
           <div className="space-y-2">
@@ -194,7 +194,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="compact">{t('compact')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">{t('layoutDescription')}</p>
+            <p className="text-muted-foreground text-sm">{t('layoutDescription')}</p>
           </div>
         </CardContent>
       </Card>
@@ -211,7 +211,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>RSS 订阅管理</Label>
-              <p className="text-sm text-muted-foreground">添加或移除自定义 RSS 新闻源</p>
+              <p className="text-muted-foreground text-sm">添加或移除自定义 RSS 新闻源</p>
             </div>
             <Button variant="outline" asChild>
               <a href="/rss">管理订阅</a>
@@ -242,13 +242,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <SelectItem value="continuous">{t('continuous')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">{t('rotationModeDescription')}</p>
+            <p className="text-muted-foreground text-sm">{t('rotationModeDescription')}</p>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="rotationInterval">{t('interval')}</Label>
-              <span className="text-sm text-muted-foreground">{settings.rotationInterval}s</span>
+              <span className="text-muted-foreground text-sm">{settings.rotationInterval}s</span>
             </div>
             <Slider
               id="rotationInterval"
@@ -259,13 +259,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               step={5}
               className="w-full"
             />
-            <p className="text-sm text-muted-foreground">{t('intervalDescription')}</p>
+            <p className="text-muted-foreground text-sm">{t('intervalDescription')}</p>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="animationEnabled">{t('animation')}</Label>
-              <p className="text-sm text-muted-foreground">{t('animationDescription')}</p>
+              <p className="text-muted-foreground text-sm">{t('animationDescription')}</p>
             </div>
             <Switch
               id="animationEnabled"
@@ -286,7 +286,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="dailyGoal">{t('dailyGoal')}</Label>
-              <span className="text-sm text-muted-foreground">{settings.dailyGoal}</span>
+              <span className="text-muted-foreground text-sm">{settings.dailyGoal}</span>
             </div>
             <Slider
               id="dailyGoal"
@@ -297,13 +297,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               step={5}
               className="w-full"
             />
-            <p className="text-sm text-muted-foreground">{t('dailyGoalDescription')}</p>
+            <p className="text-muted-foreground text-sm">{t('dailyGoalDescription')}</p>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="notificationsEnabled">{t('notifications')}</Label>
-              <p className="text-sm text-muted-foreground">{t('notificationsDescription')}</p>
+              <p className="text-muted-foreground text-sm">{t('notificationsDescription')}</p>
             </div>
             <Switch
               id="notificationsEnabled"

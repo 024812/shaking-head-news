@@ -1,14 +1,14 @@
 /**
  * Sentry Server Configuration
- * 
+ *
  * This file configures Sentry for server-side error tracking.
  * It will be automatically loaded by Next.js when Sentry is installed.
- * 
+ *
  * To enable Sentry:
  * 1. Install: npm install @sentry/nextjs
  * 2. Run: npx @sentry/wizard@latest -i nextjs
  * 3. Add SENTRY_DSN to your environment variables
- * 
+ *
  * @see https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 

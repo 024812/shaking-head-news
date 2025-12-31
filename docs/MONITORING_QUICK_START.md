@@ -49,7 +49,7 @@ import { trackEvent, trackNewsRefresh } from '@/lib/analytics'
 trackEvent({
   action: 'click',
   category: 'button',
-  label: 'refresh'
+  label: 'refresh',
 })
 
 // Track specific action
@@ -93,7 +93,7 @@ import { trackError } from '@/lib/analytics'
 
 export async function myAction() {
   const actionLogger = logger.child({ action: 'myAction' })
-  
+
   try {
     actionLogger.info('Starting action')
     // Your code here
@@ -123,7 +123,7 @@ export function MyComponent() {
       label: 'my_button'
     })
   }
-  
+
   return <button onClick={handleClick}>Click Me</button>
 }
 ```
@@ -142,7 +142,7 @@ export function ErrorBoundary({ error, reset }) {
     captureException(error)
     logger.error('Error boundary caught error', error)
   }, [error])
-  
+
   return <div>Error occurred</div>
 }
 ```
@@ -150,14 +150,17 @@ export function ErrorBoundary({ error, reset }) {
 ## 📈 Monitoring Dashboards
 
 ### Sentry
+
 - URL: https://sentry.io/
 - View: Errors, Performance, Releases
 
 ### Google Analytics
+
 - URL: https://analytics.google.com/
 - View: Users, Events, Conversions
 
 ### Vercel Analytics
+
 - URL: https://vercel.com/dashboard/analytics
 - View: Page Views, Web Vitals
 
@@ -175,6 +178,7 @@ console.log('Vercel:', window.va ? 'Active' : 'Inactive')
 ### View Logs in Development
 
 All logs appear in the browser console with the format:
+
 ```
 [timestamp] [LEVEL] message {context}
 ```
@@ -191,21 +195,25 @@ captureMessage('Test error from development', 'error')
 ## 📚 Full Documentation
 
 For complete documentation, see:
+
 - [MONITORING_AND_LOGGING.md](.kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md)
 
 ## 🆘 Troubleshooting
 
 ### Sentry Not Working
+
 1. Check `NEXT_PUBLIC_SENTRY_DSN` is set
 2. Uncomment code in `sentry.*.config.ts` files
 3. Verify Sentry is installed: `npm list @sentry/nextjs`
 
 ### Analytics Not Tracking
+
 1. Check `NEXT_PUBLIC_GA_ID` is set correctly
 2. Verify GA script is in `app/layout.tsx`
 3. Disable ad blockers for testing
 
 ### Logs Not Appearing
+
 1. Check `NEXT_PUBLIC_LOG_LEVEL` setting
 2. Verify log level (debug < info < warn < error)
 3. Check browser console filters

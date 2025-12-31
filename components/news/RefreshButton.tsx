@@ -19,13 +19,13 @@ export function RefreshButton({ language, source }: RefreshButtonProps) {
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    
+
     try {
       await refreshNews(language, source)
-      
+
       // Refresh the page to show new data
       router.refresh()
-      
+
       toast({
         title: '刷新成功',
         description: '新闻内容已更新',
@@ -49,7 +49,7 @@ export function RefreshButton({ language, source }: RefreshButtonProps) {
       size="sm"
       data-testid="refresh-button"
     >
-      <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+      <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
       {isRefreshing ? '刷新中...' : '刷新'}
     </Button>
   )

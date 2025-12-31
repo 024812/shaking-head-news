@@ -7,7 +7,9 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 ## Test Files Created
 
 ### 1. `news-browsing.spec.ts` ✅
+
 **Coverage**: News browsing flow
+
 - Homepage display and layout (title, subtitle, features)
 - Feature cards rendering (6 cards with titles and descriptions)
 - Header and footer visibility
@@ -21,7 +23,9 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 **Tests**: 11 test cases
 
 ### 2. `auth-and-settings.spec.ts` ✅
+
 **Coverage**: User authentication and settings flow
+
 - Login page display and structure
 - Google OAuth button
 - Continue without login functionality
@@ -36,7 +40,9 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 **Tests**: 15 test cases
 
 ### 3. `rotation.spec.ts` ✅
+
 **Coverage**: Page rotation functionality
+
 - Rotation controls display
 - Pause/play button functionality
 - Toggle rotation state
@@ -54,7 +60,9 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 **Tests**: 14 test cases
 
 ### 4. `rss-management.spec.ts` ✅
+
 **Coverage**: RSS source management flow
+
 - RSS page access control (redirect to login)
 - Navigation from home to RSS
 - Login page link back to home
@@ -75,7 +83,9 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 **Tests**: 14 test cases
 
 ### 5. `user-journey.spec.ts` ✅
+
 **Coverage**: Complete user journeys
+
 - Full browsing session flow
 - Multi-page navigation
 - Browser back/forward navigation
@@ -106,6 +116,7 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 ## Test Scenarios Covered
 
 ### ✅ News Browsing Flow
+
 - Homepage rendering
 - Feature display
 - Navigation
@@ -113,6 +124,7 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 - Accessibility
 
 ### ✅ User Authentication Flow
+
 - Login page
 - OAuth integration
 - Protected routes
@@ -120,12 +132,14 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 - Session management
 
 ### ✅ Settings Management
+
 - Settings page access
 - Form structure
 - Mobile responsiveness
 - Authentication requirements
 
 ### ✅ Page Rotation Functionality
+
 - Rotation controls
 - Pause/play toggle
 - Mode selection
@@ -134,6 +148,7 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 - Accessibility features
 
 ### ✅ RSS Source Management
+
 - Access control
 - Navigation
 - Expected features (documented)
@@ -141,6 +156,7 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 - Mobile support
 
 ### ✅ Complete User Journeys
+
 - End-to-end flows
 - Cross-page navigation
 - State management
@@ -150,17 +166,20 @@ Comprehensive E2E tests have been implemented for the Shaking Head News applicat
 ## Running the Tests
 
 ### Prerequisites
+
 ```bash
 # Install Playwright browsers (required first time)
 npx playwright install
 ```
 
 ### Run All Tests
+
 ```bash
 npm run test:e2e
 ```
 
 ### Run Specific Test File
+
 ```bash
 npx playwright test tests/e2e/news-browsing.spec.ts
 npx playwright test tests/e2e/auth-and-settings.spec.ts
@@ -170,11 +189,13 @@ npx playwright test tests/e2e/user-journey.spec.ts
 ```
 
 ### Run in Headed Mode
+
 ```bash
 npx playwright test --headed
 ```
 
 ### Run for Specific Browser
+
 ```bash
 npx playwright test --project=chromium
 npx playwright test --project=firefox
@@ -184,11 +205,13 @@ npx playwright test --project="Mobile Safari"
 ```
 
 ### Debug Tests
+
 ```bash
 npx playwright test --debug
 ```
 
 ### View Test Report
+
 ```bash
 npx playwright show-report
 ```
@@ -196,6 +219,7 @@ npx playwright show-report
 ## Test Configuration
 
 Tests are configured in `playwright.config.ts`:
+
 - **Base URL**: `http://localhost:3000`
 - **Browsers**: Chromium, Firefox, WebKit, Mobile Chrome, Mobile Safari
 - **Automatic dev server**: Starts before tests
@@ -206,30 +230,35 @@ Tests are configured in `playwright.config.ts`:
 ## Key Features
 
 ### 1. Comprehensive Coverage
+
 - All major user flows tested
 - Multiple browsers and devices
 - Accessibility checks
 - Error handling
 
 ### 2. Realistic Scenarios
+
 - Actual user interactions
 - Navigation flows
 - State persistence
 - Performance metrics
 
 ### 3. Mobile Testing
+
 - Touch interactions
 - Responsive layouts
 - Mobile-specific features
 - Touch target sizes
 
 ### 4. Accessibility
+
 - Keyboard navigation
 - ARIA attributes
 - Heading hierarchy
 - Alt text verification
 
 ### 5. Error Handling
+
 - Invalid URLs
 - 404 pages
 - Console errors
@@ -267,36 +296,42 @@ Example setup is documented in `tests/e2e/README.md`.
 This implementation satisfies the following requirements from task 17.3:
 
 ✅ **测试新闻浏览流程** (Test news browsing flow)
+
 - Homepage display
 - Feature cards
 - Navigation
 - Responsive design
 
 ✅ **测试用户登录和设置保存流程** (Test user login and settings flow)
+
 - Login page
 - OAuth button
 - Protected routes
 - Settings access
 
 ✅ **测试页面旋转功能** (Test page rotation functionality)
+
 - Rotation controls
 - Pause/play
 - Mode selection
 - State persistence
 
 ✅ **测试 RSS 源管理流程** (Test RSS source management flow)
+
 - RSS page access
 - Navigation
 - Expected features
 - Error handling
 
 ✅ **需求: 9.5, 9.6** (Requirements 9.5, 9.6)
+
 - E2E testing with Playwright
 - Key user flow coverage
 
 ## Conclusion
 
 All E2E tests have been successfully implemented covering:
+
 - 5 comprehensive test files
 - 71 test cases
 - 355+ total test executions (across all browsers)

@@ -112,11 +112,13 @@ Go to: `https://github.com/[YOUR_USERNAME]/[YOUR_REPO]/settings/branches`
 - [ ] Enable the following:
 
 #### Pull Request Requirements
+
 - [ ] ✅ Require a pull request before merging
   - [ ] Require approvals: 1
   - [ ] Dismiss stale pull request approvals when new commits are pushed
 
 #### Status Checks
+
 - [ ] ✅ Require status checks to pass before merging
   - [ ] ✅ Require branches to be up to date before merging
   - [ ] Add required status checks:
@@ -126,6 +128,7 @@ Go to: `https://github.com/[YOUR_USERNAME]/[YOUR_REPO]/settings/branches`
     - [ ] `Build Application`
 
 #### Additional Settings
+
 - [ ] ✅ Require conversation resolution before merging
 - [ ] ✅ Do not allow bypassing the above settings
 - [ ] ✅ Restrict who can push to matching branches (optional)
@@ -221,21 +224,25 @@ git push origin test/ci-pipeline
 ### Common Issues
 
 #### Pipeline fails with "VERCEL_TOKEN not found"
+
 - [ ] Verify secret is added correctly
 - [ ] Check secret name matches exactly
 - [ ] Regenerate token if expired
 
 #### Build fails with environment variable errors
+
 - [ ] Check Vercel environment variables
 - [ ] Ensure all required variables are set
 - [ ] Verify variable names match
 
 #### E2E tests timeout
+
 - [ ] Increase timeout in `playwright.config.ts`
 - [ ] Check preview deployment is accessible
 - [ ] Review Playwright logs in artifacts
 
 #### Coverage upload fails
+
 - [ ] Verify `CODECOV_TOKEN` is correct
 - [ ] Check Codecov service status
 - [ ] Review Codecov documentation
