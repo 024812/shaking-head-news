@@ -110,7 +110,7 @@ test.describe('News Browsing Flow', () => {
     // Check for alt text on images (if any)
     const images = page.locator('img')
     const imageCount = await images.count()
-    
+
     for (let i = 0; i < imageCount; i++) {
       const img = images.nth(i)
       const alt = await img.getAttribute('alt')
@@ -120,7 +120,7 @@ test.describe('News Browsing Flow', () => {
 
   test('should load without console errors', async ({ page }) => {
     const errors: string[] = []
-    
+
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
         errors.push(msg.text())

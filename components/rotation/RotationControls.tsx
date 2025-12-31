@@ -74,7 +74,7 @@ export function RotationControls() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="interval-slider">{tSettings('interval')}</Label>
-              <span className="text-sm text-muted-foreground">{interval}s</span>
+              <span className="text-muted-foreground text-sm">{interval}s</span>
             </div>
             <Slider
               id="interval-slider"

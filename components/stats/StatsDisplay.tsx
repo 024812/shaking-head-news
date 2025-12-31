@@ -67,21 +67,21 @@ export function StatsDisplay({ initialStats, dailyGoal }: StatsDisplayProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('today')}</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <Activity className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.today.count}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('rotationCount')} · {formatDuration(stats.today.duration)}
             </p>
             <div className="mt-2">
-              <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+              <div className="bg-secondary h-2 w-full overflow-hidden rounded-full">
                 <div
-                  className="h-full bg-primary transition-all"
+                  className="bg-primary h-full transition-all"
                   style={{ width: `${todayProgress}%` }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-xs">
                 {t('goal')}: {dailyGoal}
               </p>
             </div>
@@ -92,14 +92,14 @@ export function StatsDisplay({ initialStats, dailyGoal }: StatsDisplayProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('week')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.week.count}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('rotationCount')} · {formatDuration(stats.week.duration)}
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-xs">
               {t('average')}: {Math.round(stats.week.count / 7)} {t('perDay')}
             </p>
           </CardContent>
@@ -109,14 +109,14 @@ export function StatsDisplay({ initialStats, dailyGoal }: StatsDisplayProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('month')}</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.month.count}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('rotationCount')} · {formatDuration(stats.month.duration)}
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-xs">
               {t('average')}: {Math.round(stats.month.count / 30)} {t('perDay')}
             </p>
           </CardContent>
@@ -126,16 +126,14 @@ export function StatsDisplay({ initialStats, dailyGoal }: StatsDisplayProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('totalDuration')}</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.round(stats.month.duration / 60)}
-            </div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold">{Math.round(stats.month.duration / 60)}</div>
+            <p className="text-muted-foreground text-xs">
               {t('minutes')} · {t('thisMonth')}
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-xs">
               {t('dailyAverage')}: {Math.round(stats.month.duration / 30 / 60)} {t('minutes')}
             </p>
           </CardContent>

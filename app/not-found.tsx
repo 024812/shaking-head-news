@@ -11,17 +11,15 @@ export default function NotFound() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6 text-center">
         <div className="flex justify-center">
-          <div className="rounded-full bg-muted p-4">
-            <FileQuestion className="h-12 w-12 text-muted-foreground" />
+          <div className="bg-muted rounded-full p-4">
+            <FileQuestion className="text-muted-foreground h-12 w-12" />
           </div>
         </div>
 
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">404</h1>
           <h2 className="text-2xl font-semibold">页面未找到</h2>
-          <p className="text-muted-foreground">
-            抱歉，您访问的页面不存在或已被移除
-          </p>
+          <p className="text-muted-foreground">抱歉，您访问的页面不存在或已被移除</p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">

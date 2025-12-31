@@ -20,7 +20,7 @@ export function NewsList({ news }: NewsListProps) {
 
   return (
     <div
-      className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent max-h-[600px] divide-y divide-border overflow-y-auto pr-2"
+      className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent divide-border max-h-[600px] divide-y overflow-y-auto pr-2"
       data-testid="news-list"
     >
       {news.map((item) => (

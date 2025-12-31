@@ -23,7 +23,7 @@ export default async function SettingsPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">设置</h1>
-        <p className="mt-2 text-muted-foreground">自定义您的阅读体验和偏好设置</p>
+        <p className="text-muted-foreground mt-2">自定义您的阅读体验和偏好设置</p>
       </div>
 
       <SettingsPanel initialSettings={settings} />

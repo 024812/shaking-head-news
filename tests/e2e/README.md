@@ -5,7 +5,9 @@ This directory contains end-to-end tests for the Shaking Head News application u
 ## Test Files
 
 ### 1. `news-browsing.spec.ts`
+
 Tests the news browsing functionality:
+
 - Homepage display and layout
 - Feature cards rendering
 - Navigation functionality
@@ -14,7 +16,9 @@ Tests the news browsing functionality:
 - Error handling
 
 ### 2. `auth-and-settings.spec.ts`
+
 Tests user authentication and settings flow:
+
 - Login page display and functionality
 - Protected route access
 - Redirect behavior
@@ -23,7 +27,9 @@ Tests user authentication and settings flow:
 - Mobile responsiveness
 
 ### 3. `rotation.spec.ts`
+
 Tests page rotation functionality:
+
 - Rotation controls display
 - Pause/play functionality
 - Mode selection (fixed/continuous)
@@ -33,7 +39,9 @@ Tests page rotation functionality:
 - Keyboard accessibility
 
 ### 4. `rss-management.spec.ts`
+
 Tests RSS source management:
+
 - RSS page access control
 - Navigation behavior
 - Expected features (documented for authenticated users)
@@ -41,7 +49,9 @@ Tests RSS source management:
 - Mobile responsiveness
 
 ### 5. `user-journey.spec.ts`
+
 Tests complete user journeys:
+
 - Full browsing sessions
 - Multi-page navigation
 - Browser back/forward
@@ -53,26 +63,31 @@ Tests complete user journeys:
 ## Running Tests
 
 ### Run all E2E tests
+
 ```bash
 npm run test:e2e
 ```
 
 ### Run specific test file
+
 ```bash
 npx playwright test tests/e2e/news-browsing.spec.ts
 ```
 
 ### Run tests in headed mode (see browser)
+
 ```bash
 npx playwright test --headed
 ```
 
 ### Run tests in debug mode
+
 ```bash
 npx playwright test --debug
 ```
 
 ### Run tests for specific browser
+
 ```bash
 npx playwright test --project=chromium
 npx playwright test --project=firefox
@@ -80,6 +95,7 @@ npx playwright test --project=webkit
 ```
 
 ### Run tests for mobile
+
 ```bash
 npx playwright test --project="Mobile Chrome"
 npx playwright test --project="Mobile Safari"
@@ -88,6 +104,7 @@ npx playwright test --project="Mobile Safari"
 ## Test Configuration
 
 Tests are configured in `playwright.config.ts`:
+
 - Base URL: `http://localhost:3000` (configurable via `PLAYWRIGHT_TEST_BASE_URL`)
 - Browsers: Chromium, Firefox, WebKit
 - Mobile devices: Pixel 5, iPhone 12
@@ -98,6 +115,7 @@ Tests are configured in `playwright.config.ts`:
 ## Writing New Tests
 
 ### Basic Test Structure
+
 ```typescript
 import { test, expect } from '@playwright/test'
 
@@ -109,10 +127,10 @@ test.describe('Feature Name', () => {
   test('should do something', async ({ page }) => {
     // Arrange
     const element = page.locator('selector')
-    
+
     // Act
     await element.click()
-    
+
     // Assert
     await expect(element).toBeVisible()
   })
@@ -122,16 +140,19 @@ test.describe('Feature Name', () => {
 ### Best Practices
 
 1. **Use data-testid for stable selectors**
+
    ```typescript
    const button = page.locator('[data-testid="submit-button"]')
    ```
 
 2. **Wait for network idle when needed**
+
    ```typescript
    await page.waitForLoadState('networkidle')
    ```
 
 3. **Use proper assertions**
+
    ```typescript
    await expect(element).toBeVisible()
    await expect(element).toHaveText('Expected text')
@@ -139,6 +160,7 @@ test.describe('Feature Name', () => {
    ```
 
 4. **Handle conditional elements**
+
    ```typescript
    const isVisible = await element.isVisible().catch(() => false)
    if (isVisible) {
@@ -147,10 +169,11 @@ test.describe('Feature Name', () => {
    ```
 
 5. **Test accessibility**
+
    ```typescript
    // Check keyboard navigation
    await page.keyboard.press('Tab')
-   
+
    // Check ARIA attributes
    await expect(button).toHaveAttribute('aria-label', 'Submit')
    ```
@@ -160,18 +183,20 @@ test.describe('Feature Name', () => {
 Currently, tests verify redirect behavior for protected routes. To test authenticated flows:
 
 1. **Option 1: Use Playwright's authentication**
+
    ```typescript
    test.use({
-     storageState: 'auth.json'
+     storageState: 'auth.json',
    })
    ```
 
 2. **Option 2: Mock authentication**
+
    ```typescript
-   await page.route('**/api/auth/**', route => {
+   await page.route('**/api/auth/**', (route) => {
      route.fulfill({
        status: 200,
-       body: JSON.stringify({ user: { id: '1', name: 'Test User' } })
+       body: JSON.stringify({ user: { id: '1', name: 'Test User' } }),
      })
    })
    ```
@@ -187,21 +212,25 @@ Currently, tests verify redirect behavior for protected routes. To test authenti
 ## Debugging Tests
 
 ### View test report
+
 ```bash
 npx playwright show-report
 ```
 
 ### Generate trace
+
 ```bash
 npx playwright test --trace on
 ```
 
 ### View trace
+
 ```bash
 npx playwright show-trace trace.zip
 ```
 
 ### Use Playwright Inspector
+
 ```bash
 npx playwright test --debug
 ```
@@ -209,6 +238,7 @@ npx playwright test --debug
 ## CI/CD Integration
 
 Tests are configured to run in CI with:
+
 - Retry on failure (2 retries)
 - Single worker (no parallel execution)
 - HTML reporter
@@ -217,6 +247,7 @@ Tests are configured to run in CI with:
 ## Coverage
 
 Current E2E test coverage includes:
+
 - ✅ News browsing flow
 - ✅ User authentication flow
 - ✅ Settings page access

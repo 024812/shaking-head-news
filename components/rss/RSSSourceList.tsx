@@ -110,7 +110,7 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">{t('noSources')}</p>
+          <p className="text-muted-foreground text-center">{t('noSources')}</p>
         </CardContent>
       </Card>
     )
@@ -132,7 +132,7 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex flex-1 items-start gap-3">
-                <GripVertical className="mt-1 h-5 w-5 text-muted-foreground" />
+                <GripVertical className="text-muted-foreground mt-1 h-5 w-5" />
                 <div className="flex-1">
                   <CardTitle className="flex items-center gap-2 text-lg">
                     {source.name}
@@ -174,7 +174,7 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
               ))}
             </div>
             {source.lastFetchedAt && (
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-2 text-xs">
                 {t('lastFetched')}: {new Date(source.lastFetchedAt).toLocaleString()}
               </p>
             )}
