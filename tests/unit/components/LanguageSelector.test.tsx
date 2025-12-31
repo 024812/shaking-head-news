@@ -1,8 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { LanguageSelector } from '@/components/settings/LanguageSelector'
 import * as settingsActions from '@/lib/actions/settings'
-import { afterEach } from 'node:test'
 
 // Mock next-intl
 vi.mock('next-intl', () => ({
