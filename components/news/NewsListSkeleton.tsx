@@ -17,8 +17,8 @@ export function NewsListSkeleton() {
           </CardHeader>
           <CardContent>
             <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full mt-2" />
-            <Skeleton className="h-4 w-2/3 mt-2" />
+            <Skeleton className="mt-2 h-4 w-full" />
+            <Skeleton className="mt-2 h-4 w-2/3" />
           </CardContent>
         </Card>
       ))}

@@ -19,10 +19,10 @@ Go to: `https://github.com/YOUR_USERNAME/YOUR_REPO/settings/secrets/actions`
 
 Add these 3 secrets:
 
-| Name | Value |
-|------|-------|
-| `VERCEL_TOKEN` | Your Vercel token |
-| `VERCEL_ORG_ID` | Your Vercel org ID |
+| Name                | Value                  |
+| ------------------- | ---------------------- |
+| `VERCEL_TOKEN`      | Your Vercel token      |
+| `VERCEL_ORG_ID`     | Your Vercel org ID     |
 | `VERCEL_PROJECT_ID` | Your Vercel project ID |
 
 ### Step 3: Test the Pipeline (2 minutes)
@@ -71,6 +71,7 @@ git push origin feature/my-feature
 ```
 
 The pipeline will:
+
 - Run all checks
 - Deploy a preview
 - Comment the preview URL on your PR
@@ -86,6 +87,7 @@ git push origin main
 ```
 
 The pipeline will:
+
 - Run all checks
 - Deploy to production
 - Update your live site
@@ -93,15 +95,19 @@ The pipeline will:
 ## 🔧 Troubleshooting
 
 ### "VERCEL_TOKEN not found"
+
 → Add the secret in GitHub repository settings
 
 ### Build fails with env var errors
+
 → Check Vercel project settings → Environment Variables
 
 ### Tests timeout
+
 → Check if preview deployment is accessible
 
 ### Coverage upload fails
+
 → Add `CODECOV_TOKEN` secret (optional)
 
 ## 📚 Full Documentation

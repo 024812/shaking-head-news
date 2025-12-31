@@ -11,7 +11,7 @@ export const DynamicSettingsPanel = dynamic(
   {
     loading: () => (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
       </div>
     ),
     ssr: false, // Settings panel is client-only
@@ -24,7 +24,7 @@ export const DynamicStatsChart = dynamic(
   {
     loading: () => (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
       </div>
     ),
     ssr: false, // Charts are client-only
@@ -37,7 +37,7 @@ export const DynamicRSSSourceList = dynamic(
   {
     loading: () => (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
       </div>
     ),
     ssr: false,

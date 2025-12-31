@@ -28,12 +28,10 @@ export function OptimizedImage({
   if (error) {
     return (
       <div
-        className={`flex items-center justify-center bg-muted ${className || ''}`}
-        style={
-          width && height ? { width: `${width}px`, height: `${height}px` } : undefined
-        }
+        className={`bg-muted flex items-center justify-center ${className || ''}`}
+        style={width && height ? { width: `${width}px`, height: `${height}px` } : undefined}
       >
-        <span className="text-xs text-muted-foreground">Image unavailable</span>
+        <span className="text-muted-foreground text-xs">Image unavailable</span>
       </div>
     )
   }
