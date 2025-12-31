@@ -15,7 +15,6 @@
     "web app"
   ],
   "author": "024812 <024812@users.noreply.github.com>",
-
   "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/024812/shaking-head-news/issues"
@@ -60,7 +59,7 @@
     "fast-xml-parser": "^5.3.2",
     "framer-motion": "^12.23.25",
     "lucide-react": "^0.556.0",
-    "next": "^16.0.7",
+    "next": "16.0.10",
     "next-auth": "^5.0.0-beta.25",
     "next-intl": "^4.5.6",
     "next-themes": "^0.4.4",
