@@ -52,6 +52,7 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-switch": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.4",
+    "@swc/helpers": "^0.5.18",
     "@tailwindcss/postcss": "^4.1.17",
     "@upstash/redis": "^1.28.0",
     "class-variance-authority": "^0.7.1",
