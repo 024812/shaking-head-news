@@ -24,7 +24,7 @@
 
 ### 技术架构
 
-应用使用 Next.js 15 的 Server Actions 作为主要的 API 接口：
+应用使用 Next.js 16 的 Server Actions 作为主要的 API 接口：
 
 - **Server Actions**: 服务端函数，用于数据变更和获取
 - **ISR (Incremental Static Regeneration)**: 用于缓存和优化数据获取
