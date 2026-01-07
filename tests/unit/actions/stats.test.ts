@@ -25,8 +25,12 @@ vi.mock('@/lib/storage', () => ({
 }))
 
 vi.mock('@/lib/rate-limit', () => ({
-  rateLimitByUser: vi.fn().mockResolvedValue({ success: true }),
-  rateLimitByAction: vi.fn().mockResolvedValue({ success: true }),
+  rateLimitByUser: vi
+    .fn()
+    .mockResolvedValue({ success: true, remaining: 99, reset: Date.now() + 60000 }),
+  rateLimitByAction: vi
+    .fn()
+    .mockResolvedValue({ success: true, remaining: 99, reset: Date.now() + 60000 }),
   RateLimitTiers: {
     STANDARD: { limit: 30, window: 60 },
     RELAXED: { limit: 100, window: 60 },
@@ -46,6 +50,12 @@ import { rateLimitByUser } from '@/lib/rate-limit'
 describe('Stats Actions', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Reset the rate limit mock to return success by default
+    vi.mocked(rateLimitByUser).mockResolvedValue({
+      success: true,
+      remaining: 99,
+      reset: Date.now() + 60000,
+    })
     process.env.UPSTASH_REDIS_REST_URL = 'https://test.upstash.io'
     process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token'
   })
@@ -117,15 +127,18 @@ describe('Stats Actions', () => {
         user: { id: 'test-user-id', name: 'Test User', email: 'test@example.com' },
         expires: new Date().toISOString(),
       })
-      vi.mocked(rateLimitByUser).mockResolvedValue({ success: false })
+      vi.mocked(rateLimitByUser).mockResolvedValue({
+        success: false,
+        remaining: 0,
+        reset: Date.now() + 60000,
+      })
       vi.mocked(getStorageItem).mockResolvedValue(null)
       vi.mocked(setStorageItem).mockResolvedValue(undefined)
 
       const result = await recordRotation(5, 30)
 
-      // Since rate limiting is disabled, it should still record
-      expect(result).not.toBeNull()
-      expect(result?.rotationCount).toBe(1)
+      // Since rate limiting returns false, it should return null
+      expect(result).toBeNull()
     })
 
     it('should validate angle range', async () => {
@@ -194,17 +207,20 @@ describe('Stats Actions', () => {
     })
 
     it('should return empty array when rate limit would normally block (rate limit disabled)', async () => {
-      // Rate limiting is currently disabled in the implementation for debugging
+      // Rate limiting is enabled in the implementation
       vi.mocked(auth).mockResolvedValue({
         user: { id: 'test-user-id', name: 'Test User', email: 'test@example.com' },
         expires: new Date().toISOString(),
       })
-      vi.mocked(rateLimitByUser).mockResolvedValue({ success: false })
+      vi.mocked(rateLimitByUser).mockResolvedValue({
+        success: false,
+        remaining: 0,
+        reset: Date.now() + 60000,
+      })
       vi.mocked(getStorageItem).mockResolvedValue(null)
 
-      // Since rate limiting is disabled, it should return empty array (no stats)
-      const result = await getStats('2024-01-01', '2024-01-07')
-      expect(result).toEqual([])
+      // Since rate limiting returns false, it should throw an error
+      await expect(getStats('2024-01-01', '2024-01-07')).rejects.toThrow('Too many requests')
     })
 
     it('should validate date format', async () => {

@@ -57,6 +57,8 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
+    // Enable Turbopack file system cache for faster dev builds
+    turbopackFileSystemCacheForDev: true,
     // Optimize package imports
     optimizePackageImports: [
       'lucide-react',

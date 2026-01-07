@@ -34,6 +34,13 @@ export const metadata: Metadata = {
   keywords: ['news', 'health', 'cervical spondylosis', 'neck exercise', '新闻', '颈椎健康'],
   authors: [{ name: '024812', url: 'https://github.com/024812' }],
   creator: '024812',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/favicon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'zh_CN',

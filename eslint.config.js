@@ -86,7 +86,6 @@ export default [
       'out/**',
       'dist/**',
       'build/**',
-      'src/**',
       'public/**',
       '*.config.js',
       '*.config.ts',

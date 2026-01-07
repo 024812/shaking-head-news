@@ -113,7 +113,7 @@ if (Prompt-YesNo "Do you want to set up Google Analytics?") {
         Write-Host ""
         Write-Host "Next steps:" -ForegroundColor Yellow
         Write-Host "  1. Add the GA script to app/layout.tsx" -ForegroundColor White
-        Write-Host "  2. See .kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md for details" -ForegroundColor White
+        Write-Host "  2. See docs/MONITORING_QUICK_START.md for details" -ForegroundColor White
     }
 } else {
     Write-Host "⏭️  Skipping Google Analytics setup" -ForegroundColor Gray
@@ -141,7 +141,7 @@ if (Prompt-YesNo "Do you want to set up Vercel Analytics?") {
     Write-Host "Next steps:" -ForegroundColor Yellow
     Write-Host "  1. Add <Analytics /> component to app/layout.tsx" -ForegroundColor White
     Write-Host "  2. Enable Analytics in your Vercel project dashboard" -ForegroundColor White
-    Write-Host "  3. See .kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md for details" -ForegroundColor White
+    Write-Host "  3. See docs/MONITORING_QUICK_START.md for details" -ForegroundColor White
 } else {
     Write-Host "⏭️  Skipping Vercel Analytics setup" -ForegroundColor Gray
 }
@@ -179,7 +179,7 @@ Write-Host "✅ Setup Complete!" -ForegroundColor Green
 Write-Host "=================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "📚 Documentation:" -ForegroundColor Yellow
-Write-Host "  - Full guide: .kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md" -ForegroundColor White
+Write-Host "  - Full guide: docs/MONITORING_QUICK_START.md" -ForegroundColor White
 Write-Host "  - Environment variables: .env.example" -ForegroundColor White
 Write-Host ""
 Write-Host "🔧 Configuration files created:" -ForegroundColor Yellow

@@ -112,7 +112,6 @@ The pipeline will:
 
 ## 📚 Full Documentation
 
-- [Complete Setup Guide](.kiro/specs/tech-stack-upgrade/CI_CD_SETUP.md)
 - [Detailed Checklist](ACTIONS_SETUP.md)
 - [Workflow File](workflows/ci.yml)
 
@@ -125,7 +124,7 @@ The pipeline will:
 
 ## 🆘 Need Help?
 
-1. Check the [troubleshooting guide](CI_CD_SETUP.md#troubleshooting)
+1. Check the [troubleshooting guide](ACTIONS_SETUP.md#troubleshooting)
 2. Review [GitHub Actions logs](../../actions)
 3. Check [Vercel deployment logs](https://vercel.com/dashboard)
 4. Open an issue in the repository

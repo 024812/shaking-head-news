@@ -249,7 +249,6 @@ git push origin test/ci-pipeline
 
 ## 9. Documentation
 
-- [ ] Read [CI/CD Setup Guide](.kiro/specs/tech-stack-upgrade/CI_CD_SETUP.md)
 - [ ] Review [GitHub Actions Workflow](.github/workflows/ci.yml)
 - [ ] Bookmark [Vercel Documentation](https://vercel.com/docs)
 - [ ] Bookmark [GitHub Actions Documentation](https://docs.github.com/en/actions)

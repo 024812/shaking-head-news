@@ -231,7 +231,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 Write-Host "✅ CI/CD workflow file created: .github/workflows/ci.yml" -ForegroundColor Green
-Write-Host "📚 Documentation created: .kiro/specs/tech-stack-upgrade/CI_CD_SETUP.md" -ForegroundColor Green
+Write-Host "📚 Documentation: .github/ACTIONS_SETUP.md" -ForegroundColor Green
 Write-Host ""
 
 Write-Host "Next steps:" -ForegroundColor Yellow
@@ -243,7 +243,7 @@ Write-Host "  5. Test the pipeline with a PR" -ForegroundColor White
 Write-Host ""
 
 Write-Host "For detailed instructions, see:" -ForegroundColor Cyan
-Write-Host "  .kiro/specs/tech-stack-upgrade/CI_CD_SETUP.md" -ForegroundColor Gray
+Write-Host "  .github/ACTIONS_SETUP.md" -ForegroundColor Gray
 Write-Host ""
 
 Write-Host "========================================" -ForegroundColor Cyan

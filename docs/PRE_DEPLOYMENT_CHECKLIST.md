@@ -3,9 +3,9 @@
 ## 项目状态概览
 
 **项目名称**: 摇头看新闻 (Shaking Head News)  
-**技术栈**: Next.js 15 + React 19 + TypeScript  
-**检查日期**: 2025-11-12  
-**当前状态**: 准备部署到 Vercel
+**技术栈**: Next.js 16.1 + React 19.2 + TypeScript  
+**检查日期**: 2025-01-07  
+**当前状态**: 生产运行中
 
 ---
 
@@ -212,10 +212,10 @@ NEWS_API_BASE_URL=https://news.ravelloh.top
 
 ```json
 {
-  "next": "^15.0.3",
-  "react": "^19.0.0",
-  "react-dom": "^19.0.0",
-  "typescript": "^5.6.3"
+  "next": "^16.1.1",
+  "react": "^19.2.3",
+  "react-dom": "^19.2.3",
+  "typescript": "^5.7.3"
 }
 ```
 
@@ -337,14 +337,13 @@ Install Command: npm install
 
 ### 已有文档
 
-- ✅ `.kiro/specs/tech-stack-upgrade/requirements.md` - 需求文档
-- ✅ `.kiro/specs/tech-stack-upgrade/design.md` - 设计文档
-- ✅ `.kiro/specs/tech-stack-upgrade/tasks.md` - 任务列表
+- ✅ `.kiro/specs/project-upgrade/requirements.md` - 需求文档
+- ✅ `.kiro/specs/project-upgrade/design.md` - 设计文档
+- ✅ `.kiro/specs/project-upgrade/tasks.md` - 任务列表
 - ✅ `docs/SETUP.md` - 设置指南
-- ✅ `docs/MIGRATION_CLEANUP.md` - 迁移清理指南
 - ✅ `docs/PERFORMANCE_GUIDE.md` - 性能指南
-- ✅ `docs/BROWSER_CACHE_CLEANUP.md` - 缓存清理指南
-- ✅ `.kiro/specs/tech-stack-upgrade/SECURITY_IMPLEMENTATION.md` - 安全实施指南
+- ✅ `docs/MONITORING_QUICK_START.md` - 监控快速开始
+- ✅ `docs/PROJECT_STATUS.md` - 项目状态
 - ✅ 各组件的 README.md 文件
 
 ### 需要更新的文档
