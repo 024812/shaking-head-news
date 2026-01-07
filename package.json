@@ -22,7 +22,7 @@
   "homepage": "https://github.com/024812/shaking-head-news",
   "type": "module",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky || true",
     "dev": "next dev --turbo",
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
@@ -104,7 +104,7 @@
     "vitest": "^4.0.15"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "20.x"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
