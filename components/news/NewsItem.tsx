@@ -1,5 +1,4 @@
 import { NewsItem as NewsItemType } from '@/types/news'
-import { cn } from '@/lib/utils'
 
 interface NewsItemProps {
   item: NewsItemType
