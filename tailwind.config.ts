@@ -17,6 +17,18 @@ const config: Config = {
       },
     },
     extend: {
+      // Font family with Noto Sans SC for Chinese character support
+      fontFamily: {
+        sans: [
+          'var(--font-inter)',
+          'var(--font-noto-sans-sc)',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'sans-serif',
+        ],
+      },
       // Colors are now defined in globals.css @theme block
       // Keeping minimal extensions for backwards compatibility
       fontSize: {

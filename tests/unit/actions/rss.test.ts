@@ -52,24 +52,25 @@ vi.mock('@/lib/utils/input-validation', () => ({
 
 import { auth } from '@/lib/auth'
 import { getStorageItem, setStorageItem } from '@/lib/storage'
-import { revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 import { rateLimitByUser, rateLimitByAction } from '@/lib/rate-limit'
 
 // Mock global fetch
 const mockFetch = vi.fn()
 global.fetch = mockFetch as any
 
-// Mock crypto.randomUUID
+// Mock crypto.randomUUID using vi.stubGlobal
 vi.stubGlobal('crypto', {
+  ...globalThis.crypto,
   randomUUID: vi.fn(() => 'test-uuid'),
 })
 
 describe('RSS Actions', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Reset rate limit mocks to return success by default
-    vi.mocked(rateLimitByUser).mockResolvedValue({ success: true })
-    vi.mocked(rateLimitByAction).mockResolvedValue({ success: true })
+    // Reset rate limit mocks to default success state
+    vi.mocked(rateLimitByUser).mockResolvedValue({ success: true, remaining: 10, reset: Date.now() + 60000 })
+    vi.mocked(rateLimitByAction).mockResolvedValue({ success: true, remaining: 10, reset: Date.now() + 60000 })
   })
 
   afterEach(() => {
@@ -255,7 +256,7 @@ describe('RSS Actions', () => {
         user: { id: 'test-user-id', name: 'Test User', email: 'test@example.com' },
         expires: new Date().toISOString(),
       })
-      vi.mocked(rateLimitByAction).mockResolvedValue({ success: false })
+      vi.mocked(rateLimitByAction).mockResolvedValue({ success: false, remaining: 0, reset: Date.now() + 60000 })
 
       await expect(updateRSSSource('1', { name: 'Updated' })).rejects.toThrow('Too many requests')
     })

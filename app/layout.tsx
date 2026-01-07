@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Noto_Sans_SC } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Header } from '@/components/layout/header'
@@ -17,6 +17,14 @@ const inter = Inter({
   display: 'swap',
   preload: true,
   variable: '--font-inter',
+})
+
+const notoSansSC = Noto_Sans_SC({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  preload: false, // Don't preload to avoid blocking render
+  variable: '--font-noto-sans-sc',
 })
 
 export const metadata: Metadata = {
@@ -60,7 +68,7 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://news.ravelloh.top" />
         <link rel="preconnect" href="https://news.ravelloh.top" crossOrigin="anonymous" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${notoSansSC.variable} font-sans`}>
         <WebVitals />
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider
