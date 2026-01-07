@@ -194,9 +194,9 @@ captureMessage('Test error from development', 'error')
 
 ## 📚 Full Documentation
 
-For complete documentation, see:
+## 📚 Full Documentation
 
-- [MONITORING_AND_LOGGING.md](.kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md)
+For complete documentation, see the monitoring setup in `lib/sentry.ts`, `lib/analytics.ts`, and `lib/logger.ts`.
 
 ## 🆘 Troubleshooting
 

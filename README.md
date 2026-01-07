@@ -169,7 +169,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 
 ### 环境要求
 
-- **Node.js**: 20.0.0 或更高版本
+- **Node.js**: 24.x 或更高版本
 - **npm**: 10.0.0 或更高版本
 
 ### 安装步骤
@@ -341,16 +341,17 @@ shaking-head-news/
 │   └── images/                   # 图片
 ├── docs/                         # 文档
 │   ├── SETUP.md                  # 设置指南
-│   ├── MIGRATION_CLEANUP.md      # 迁移清理指南
 │   ├── PERFORMANCE_GUIDE.md      # 性能指南
-│   └── PRE_DEPLOYMENT_CHECKLIST.md # 部署前检查清单
+│   ├── PRE_DEPLOYMENT_CHECKLIST.md # 部署前检查清单
+│   ├── MONITORING_QUICK_START.md # 监控快速开始
+│   └── PROJECT_STATUS.md         # 项目状态
 ├── .kiro/                        # Kiro AI 规范文档
 │   └── specs/                    # 技术规范
-│       └── tech-stack-upgrade/   # 技术栈升级规范
-│           ├── requirements.md   # 需求文档
-│           ├── design.md         # 设计文档
-│           ├── tasks.md          # 任务列表
-│           └── SECURITY_IMPLEMENTATION.md # 安全实施指南
+│       ├── project-upgrade/      # 项目升级规范
+│       │   ├── requirements.md   # 需求文档
+│       │   ├── design.md         # 设计文档
+│       │   └── tasks.md          # 任务列表
+│       └── ui-theme-optimization/ # UI 主题优化规范
 ├── next.config.js                # Next.js 配置
 ├── tailwind.config.ts            # Tailwind CSS 配置
 ├── tsconfig.json                 # TypeScript 配置
@@ -422,7 +423,7 @@ shaking-head-news/
 - **不追踪**: 不使用第三方追踪工具
 - **可删除**: 用户可随时删除自己的数据
 
-详细的安全实施文档请参考：[SECURITY_IMPLEMENTATION.md](.kiro/specs/tech-stack-upgrade/SECURITY_IMPLEMENTATION.md)
+详细的安全实施文档请参考项目的安全配置和 CSP headers 实现。
 
 ---
 
@@ -583,7 +584,6 @@ try {
 ### 文档
 
 - **快速开始**: [MONITORING_QUICK_START.md](docs/MONITORING_QUICK_START.md)
-- **完整文档**: [MONITORING_AND_LOGGING.md](.kiro/specs/tech-stack-upgrade/MONITORING_AND_LOGGING.md)
 
 ### 性能指标
 
@@ -701,13 +701,10 @@ try {
 ## 📚 **相关文档**
 
 - [设置指南](docs/SETUP.md)
-- [迁移清理指南](docs/MIGRATION_CLEANUP.md)
 - [性能指南](docs/PERFORMANCE_GUIDE.md)
 - [部署前检查清单](docs/PRE_DEPLOYMENT_CHECKLIST.md)
-- [安全实施指南](.kiro/specs/tech-stack-upgrade/SECURITY_IMPLEMENTATION.md)
-- [需求文档](.kiro/specs/tech-stack-upgrade/requirements.md)
-- [设计文档](.kiro/specs/tech-stack-upgrade/design.md)
-- [任务列表](.kiro/specs/tech-stack-upgrade/tasks.md)
+- [监控快速开始](docs/MONITORING_QUICK_START.md)
+- [项目状态](docs/PROJECT_STATUS.md)
 
 ---
 

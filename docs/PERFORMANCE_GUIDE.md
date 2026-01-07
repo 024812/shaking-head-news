@@ -230,4 +230,4 @@ Extend `lib/utils/performance.ts` to send metrics to your analytics platform.
 
 ## Need Help?
 
-Check the detailed implementation guide: `.kiro/specs/tech-stack-upgrade/PERFORMANCE_OPTIMIZATION.md`
+Check the performance utilities in `lib/utils/performance.ts` and the Next.js configuration in `next.config.js`.
