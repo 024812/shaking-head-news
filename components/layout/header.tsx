@@ -21,33 +21,36 @@ export async function Header() {
   const tCommon = await getTranslations('common')
 
   return (
-    <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md transition-colors duration-200">
       <div className="container mx-auto flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Newspaper className="h-6 w-6" />
+          <Link href="/" className="flex items-center gap-2 transition-opacity duration-200 hover:opacity-80">
+            <Newspaper className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">{tCommon('appName')}</span>
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
-            <Link href="/" className="hover:text-primary text-sm font-medium transition-colors">
+            <Link 
+              href="/" 
+              className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+            >
               {t('home')}
             </Link>
             <Link
               href="/stats"
-              className="hover:text-primary text-sm font-medium transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
             >
               {t('stats')}
             </Link>
             <Link
               href="/settings"
-              className="hover:text-primary text-sm font-medium transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
             >
               {t('settings')}
             </Link>
             <Link
               href="/about"
-              className="hover:text-primary text-sm font-medium transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
             >
               关于
             </Link>

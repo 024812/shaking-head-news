@@ -2,7 +2,7 @@ import { Github, Heart } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-background border-t">
+    <footer className="bg-background/80 backdrop-blur-sm border-t border-border transition-colors duration-200">
       <div className="container mx-auto py-6">
         <div className="text-muted-foreground flex flex-col items-center justify-between gap-4 text-xs sm:flex-row">
           {/* 版权信息 */}
@@ -14,7 +14,7 @@ export function Footer() {
               href="https://oheng.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-foreground font-medium"
+              className="hover:text-primary font-medium transition-colors duration-200"
             >
               oheng
             </a>
@@ -28,7 +28,7 @@ export function Footer() {
               href="https://beian.miit.gov.cn/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-primary transition-colors duration-200"
             >
               沪ICP备2022000575号
             </a>
@@ -36,7 +36,7 @@ export function Footer() {
               href="https://github.com/024812/shaking-head-news"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-foreground flex items-center gap-2 transition-colors"
+              className="hover:text-primary flex items-center gap-2 transition-colors duration-200"
               aria-label="GitHub"
             >
               <Github className="h-4 w-4" />
