@@ -1,11 +1,11 @@
 import { Suspense } from 'react'
-import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import { getSummaryStats } from '@/lib/actions/stats'
 import { getUserSettings } from '@/lib/actions/settings'
 import { StatsDisplay } from '@/components/stats/StatsDisplay'
+import { BlurredStats } from '@/components/stats/BlurredStats'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getUserTier } from '@/lib/tier-server'
 
 /**
  * 统计页面加载骨架屏
@@ -42,14 +42,20 @@ function StatsLoadingSkeleton() {
 
 /**
  * 统计页面内容
+ * 根据用户层级显示不同内容：
+ * - Guest: 显示模糊统计 + 登录提示
+ * - Member: 显示模糊预览 + 升级提示
+ * - Pro: 显示完整统计
  */
 async function StatsContent() {
-  const session = await auth()
+  const { features } = await getUserTier()
 
-  if (!session?.user) {
-    redirect('/login')
+  // Guest 和 Member 用户显示模糊统计
+  if (!features.statsFullEnabled) {
+    return <BlurredStats />
   }
 
+  // Pro 用户显示完整统计
   try {
     // 获取用户设置（获取每日目标）
     const settings = await getUserSettings()

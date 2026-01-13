@@ -13,6 +13,49 @@ import {
 } from '@/lib/utils/error-handler'
 import { rateLimitByAction, RateLimitTiers } from '@/lib/rate-limit'
 import { sanitizeUrl, sanitizeString, sanitizeObject } from '@/lib/utils/input-validation'
+import { getUserTier } from '@/lib/tier-server'
+
+// 默认 RSS 源（Guest 用户可见）
+const DEFAULT_RSS_SOURCES: RSSSource[] = [
+  {
+    id: 'default-1',
+    name: '新浪新闻',
+    url: 'https://rss.sina.com.cn/news/china/focus15.xml',
+    description: '新浪新闻焦点',
+    language: 'zh',
+    enabled: true,
+    tags: ['新闻', '中国'],
+    order: 0,
+    failureCount: 0,
+  },
+  {
+    id: 'default-2',
+    name: 'BBC News',
+    url: 'https://feeds.bbci.co.uk/news/rss.xml',
+    description: 'BBC World News',
+    language: 'en',
+    enabled: true,
+    tags: ['news', 'world'],
+    order: 1,
+    failureCount: 0,
+  },
+  {
+    id: 'default-3',
+    name: '36氪',
+    url: 'https://36kr.com/feed',
+    description: '36氪科技新闻',
+    language: 'zh',
+    enabled: true,
+    tags: ['科技', '创业'],
+    order: 2,
+    failureCount: 0,
+  },
+]
+
+// 获取默认 RSS 源（Guest 用户）
+export async function getDefaultRSSSources(): Promise<RSSSource[]> {
+  return DEFAULT_RSS_SOURCES
+}
 
 // 获取用户的 RSS 源列表
 export async function getRSSSources(): Promise<RSSSource[]> {
@@ -300,4 +343,135 @@ export async function exportOPML() {
     })
     throw error
   }
+}
+
+
+// 导入 OPML (Pro only)
+export async function importOPML(opmlContent: string): Promise<{ imported: number; skipped: number }> {
+  try {
+    const session = await auth()
+
+    if (!session?.user?.id) {
+      throw new AuthError('Please sign in to import RSS sources')
+    }
+
+    // 检查 Pro 权限
+    const { features } = await getUserTier()
+    if (!features.opmlImportExportEnabled) {
+      throw new AuthError('OPML import requires Pro subscription')
+    }
+
+    // 速率限制
+    const rateLimitResult = await rateLimitByAction(session.user.id, 'import-opml', {
+      ...RateLimitTiers.STRICT,
+    })
+
+    if (!rateLimitResult.success) {
+      throw new Error('Too many import attempts. Please try again later.')
+    }
+
+    // 解析 OPML
+    const sources = parseOPML(opmlContent)
+    
+    if (sources.length === 0) {
+      throw new ValidationError('No valid RSS sources found in OPML file')
+    }
+
+    // 获取现有源
+    const existingSources = await getRSSSources()
+    const existingUrls = new Set(existingSources.map(s => s.url.toLowerCase()))
+
+    // 限制总数
+    const maxSources = 50
+    const availableSlots = maxSources - existingSources.length
+
+    if (availableSlots <= 0) {
+      throw new ValidationError('Maximum number of RSS sources (50) reached')
+    }
+
+    // 过滤重复并限制数量
+    const newSources: RSSSource[] = []
+    let skipped = 0
+
+    for (const source of sources) {
+      if (newSources.length >= availableSlots) {
+        skipped++
+        continue
+      }
+
+      if (existingUrls.has(source.url.toLowerCase())) {
+        skipped++
+        continue
+      }
+
+      newSources.push({
+        ...source,
+        id: globalThis.crypto.randomUUID(),
+        order: existingSources.length + newSources.length,
+        failureCount: 0,
+      })
+    }
+
+    // 保存
+    const allSources = [...existingSources, ...newSources]
+    const key = StorageKeys.userRSSSources(session.user.id)
+    await setStorageItem(key, allSources)
+
+    revalidatePath('/rss')
+
+    return {
+      imported: newSources.length,
+      skipped,
+    }
+  } catch (error) {
+    logError(error, {
+      action: 'importOPML',
+    })
+    throw error
+  }
+}
+
+// 解析 OPML 内容
+function parseOPML(content: string): Omit<RSSSource, 'id' | 'order' | 'failureCount'>[] {
+  const sources: Omit<RSSSource, 'id' | 'order' | 'failureCount'>[] = []
+
+  // 简单的正则解析 outline 元素
+  const outlineRegex = /<outline[^>]*>/gi
+  const matches = content.match(outlineRegex) || []
+
+  for (const match of matches) {
+    // 提取属性
+    const xmlUrl = extractAttribute(match, 'xmlUrl') || extractAttribute(match, 'xmlurl')
+    const text = extractAttribute(match, 'text') || extractAttribute(match, 'title')
+    const type = extractAttribute(match, 'type')
+
+    // 只处理 RSS 类型的 outline
+    if (!xmlUrl || (type && type.toLowerCase() !== 'rss')) {
+      continue
+    }
+
+    // 验证 URL
+    const sanitizedUrl = sanitizeUrl(xmlUrl)
+    if (!sanitizedUrl) {
+      continue
+    }
+
+    sources.push({
+      name: sanitizeString(text || new URL(sanitizedUrl).hostname, { maxLength: 200 }),
+      url: sanitizedUrl,
+      description: '',
+      language: 'zh', // 默认中文
+      enabled: true,
+      tags: [],
+    })
+  }
+
+  return sources
+}
+
+// 提取 XML 属性值
+function extractAttribute(element: string, attrName: string): string | null {
+  const regex = new RegExp(`${attrName}\\s*=\\s*["']([^"']*)["']`, 'i')
+  const match = element.match(regex)
+  return match ? match[1] : null
 }

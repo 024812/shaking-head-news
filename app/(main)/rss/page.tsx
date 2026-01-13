@@ -1,31 +1,90 @@
 import { Suspense } from 'react'
-import { getRSSSources } from '@/lib/actions/rss'
+import { getRSSSources, getDefaultRSSSources } from '@/lib/actions/rss'
 import { RSSSourceList } from '@/components/rss/RSSSourceList'
 import { AddRSSSourceDialog } from '@/components/rss/AddRSSSourceDialog'
 import { ExportOPMLButton } from '@/components/rss/ExportOPMLButton'
+import { ImportOPMLButton } from '@/components/rss/ImportOPMLButton'
 import { Card, CardContent } from '@/components/ui/card'
-
-import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
+import { getUserTier } from '@/lib/tier-server'
+import { LockedFeature } from '@/components/tier/LockedFeature'
+import { TierFeatureServer } from '@/components/tier/TierFeatureServer'
+import { Badge } from '@/components/ui/badge'
+import { Sparkles } from 'lucide-react'
 
 async function RSSContent() {
-  const session = await auth()
+  const { tier, features } = await getUserTier()
+  const t = await getTranslations('rss')
+  const tTier = await getTranslations('tier')
 
-  if (!session?.user) {
-    redirect('/login')
+  const isGuest = tier === 'guest'
+  const isPro = tier === 'pro'
+
+  // Guest 用户显示默认源（只读）
+  if (isGuest) {
+    const defaultSources = await getDefaultRSSSources()
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
+            <p className="text-muted-foreground">{t('addSourceDescription')}</p>
+          </div>
+        </div>
+
+        {/* 登录提示 */}
+        <LockedFeature
+          featureName="customRssEnabled"
+          requiredTier="member"
+          description={tTier('loginToUnlockDescription')}
+        />
+
+        {/* 默认源列表（只读） */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">默认新闻源</h3>
+          {defaultSources.map((source) => (
+            <Card key={source.id} className="opacity-75">
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-medium">{source.name}</h4>
+                    <p className="text-sm text-muted-foreground">{source.description || source.url}</p>
+                  </div>
+                  <Badge variant="outline">{source.language === 'zh' ? '中文' : 'English'}</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
   }
 
+  // Member/Pro 用户可以管理自定义源
   const sources = await getRSSSources()
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">RSS 源管理</h2>
-          <p className="text-muted-foreground">管理您的 RSS 订阅源，自定义新闻来源</p>
+          <h2 className="text-2xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-muted-foreground">{t('addSourceDescription')}</p>
         </div>
         <div className="flex gap-2">
-          <ExportOPMLButton />
+          {/* OPML 功能仅 Pro 可用 */}
+          <TierFeatureServer feature="opmlImportExportEnabled">
+            <ImportOPMLButton />
+            <ExportOPMLButton />
+          </TierFeatureServer>
+          
+          {/* Pro 提示 */}
+          {!isPro && features.customRssEnabled && (
+            <Badge variant="outline" className="gap-1 text-muted-foreground">
+              <Sparkles className="h-3 w-3" />
+              OPML 需要 Pro
+            </Badge>
+          )}
+          
           <AddRSSSourceDialog />
         </div>
       </div>
