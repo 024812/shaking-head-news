@@ -11,6 +11,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { WebVitals } from './web-vitals'
+import { SessionProvider } from '@/components/auth/SessionProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -77,25 +78,27 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} ${notoSansSC.variable} font-sans`}>
         <WebVitals />
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <UIWrapper>
-              <TiltWrapper>
-                <div className="flex min-h-screen flex-col">
-                  <Header />
-                  <main className="flex-1">{children}</main>
-                  <Footer />
-                </div>
-              </TiltWrapper>
-            </UIWrapper>
-            <Toaster />
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <UIWrapper>
+                <TiltWrapper>
+                  <div className="flex min-h-screen flex-col">
+                    <Header />
+                    <main className="flex-1">{children}</main>
+                    <Footer />
+                  </div>
+                </TiltWrapper>
+              </UIWrapper>
+              <Toaster />
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   )
