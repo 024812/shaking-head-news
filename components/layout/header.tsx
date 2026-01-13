@@ -32,50 +32,53 @@ export async function Header() {
     <>
       {/* Guest 升级提示 Banner */}
       {isGuest && (
-        <div className="bg-primary/10 border-b border-primary/20 px-4 py-2 text-center text-sm">
+        <div className="bg-primary/10 border-primary/20 border-b px-4 py-2 text-center text-sm">
           <span className="text-muted-foreground">{tTier('guestBanner')}</span>
-          <Link href="/features" className="ml-2 font-medium text-primary hover:underline">
+          <Link href="/features" className="text-primary ml-2 font-medium hover:underline">
             {tTier('viewFeatures')}
           </Link>
         </div>
       )}
 
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md transition-colors duration-200">
-        <div className="container mx-auto flex h-16 items-center justify-between">
+      <header className="border-border bg-background/80 sticky top-0 z-50 mx-4 mt-4 rounded-2xl border shadow-lg backdrop-blur-md transition-all duration-200">
+        <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 transition-opacity duration-200 hover:opacity-80">
-              <Newspaper className="h-6 w-6 text-primary" />
+            <Link
+              href="/"
+              className="flex items-center gap-2 transition-opacity duration-200 hover:opacity-80"
+            >
+              <Newspaper className="text-primary h-6 w-6" />
               <span className="text-xl font-bold">{tCommon('appName')}</span>
             </Link>
 
             <nav className="hidden items-center gap-6 md:flex">
-              <Link 
-                href="/" 
-                className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+              <Link
+                href="/"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
                 {t('home')}
               </Link>
               <Link
                 href="/stats"
-                className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
                 {t('stats')}
               </Link>
               <Link
                 href="/settings"
-                className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
                 {t('settings')}
               </Link>
               <Link
                 href="/features"
-                className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
                 {t('features')}
               </Link>
               <Link
                 href="/about"
-                className="text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
                 关于
               </Link>
@@ -97,7 +100,10 @@ export async function Header() {
                     </Avatar>
                     {/* 用户徽章 */}
                     {isPro ? (
-                      <Badge variant="default" className="gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white">
+                      <Badge
+                        variant="default"
+                        className="gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                      >
                         <Sparkles className="h-3 w-3" />
                         Pro
                       </Badge>
@@ -115,7 +121,10 @@ export async function Header() {
                       <div className="flex items-center gap-2">
                         <p className="text-sm leading-none font-medium">{session.user.name}</p>
                         {isPro && (
-                          <Badge variant="default" className="h-5 gap-0.5 bg-gradient-to-r from-amber-500 to-orange-500 px-1.5 text-[10px] text-white">
+                          <Badge
+                            variant="default"
+                            className="h-5 gap-0.5 bg-gradient-to-r from-amber-500 to-orange-500 px-1.5 text-[10px] text-white"
+                          >
                             <Sparkles className="h-2.5 w-2.5" />
                             Pro
                           </Badge>
