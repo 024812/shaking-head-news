@@ -73,7 +73,9 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const { setFontSize, setLayoutMode } = useUIStore()
   const { setMode: setRotationMode, setInterval: setRotationInterval } = useRotationStore()
   const { setTheme } = useTheme()
-  const { isGuest, isMember, isPro, features, togglePro } = useUserTier()
+  const { isGuest, isMember, isPro, features, togglePro, isTogglingPro } = useUserTier({
+    initialIsPro: initialSettings.isPro ?? false,
+  })
 
   // Sync UI store, rotation store, and theme with settings on mount and when settings change
   useEffect(() => {
@@ -499,13 +501,15 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           <CardContent>
             <Button 
               onClick={togglePro}
+              disabled={isTogglingPro}
               variant={isPro ? 'outline' : 'default'}
               className={isPro ? '' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'}
             >
+              {isTogglingPro && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isPro ? '取消 Pro（测试）' : '一键解锁 Pro（测试）'}
             </Button>
             <p className="text-xs text-muted-foreground mt-2">
-              * 这是临时测试功能，正式版将通过订阅系统解锁
+              * 这是临时测试功能，Pro 状态已保存到云端
             </p>
           </CardContent>
         </Card>

@@ -160,3 +160,57 @@ export async function resetSettings(): Promise<{
     }
   }
 }
+
+
+/**
+ * 切换 Pro 状态（临时测试用）
+ * 将 Pro 状态存储在云端
+ */
+export async function toggleProStatus(): Promise<{
+  success: boolean
+  error?: string
+  isPro?: boolean
+}> {
+  try {
+    const session = await auth()
+
+    if (!session?.user?.id) {
+      throw new AuthError('Please sign in to toggle Pro status')
+    }
+
+    // 获取当前设置
+    const currentSettings = await getUserSettings()
+
+    // 切换 Pro 状态
+    const newIsPro = !currentSettings.isPro
+
+    // 更新设置
+    const newSettings = {
+      ...currentSettings,
+      isPro: newIsPro,
+    }
+
+    // 存储到云端
+    await setStorageItem(StorageKeys.userSettings(session.user.id), newSettings)
+
+    // 重新验证相关页面
+    revalidatePath('/')
+    revalidatePath('/settings')
+    revalidatePath('/stats')
+    revalidatePath('/rss')
+
+    return {
+      success: true,
+      isPro: newIsPro,
+    }
+  } catch (error) {
+    logError(error, {
+      action: 'toggleProStatus',
+    })
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to toggle Pro status',
+    }
+  }
+}

@@ -6,16 +6,14 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useTransition } from 'react'
 import {
   UserTier,
   FeatureConfig,
   getFeaturesForTier,
   isFeatureEnabled,
 } from '@/lib/config/features'
-
-// 用于存储 Pro 状态的 key
-const PRO_STATUS_KEY = 'user_pro_status'
+import { toggleProStatus } from '@/lib/actions/settings'
 
 export interface UseUserTierReturn {
   /** 用户层级 */
@@ -42,39 +40,37 @@ export interface UseUserTierReturn {
   /** 检查特定功能是否可用 */
   hasFeature: (feature: keyof FeatureConfig) => boolean
   /** 切换 Pro 状态（临时测试用） */
-  togglePro: () => void
+  togglePro: () => Promise<void>
+  /** 是否正在切换 Pro 状态 */
+  isTogglingPro: boolean
+}
+
+interface UseUserTierProps {
+  /** 初始 Pro 状态（从服务端传入） */
+  initialIsPro?: boolean
 }
 
 /**
  * 获取用户层级和功能配置
  */
-export function useUserTier(): UseUserTierReturn {
+export function useUserTier(props?: UseUserTierProps): UseUserTierReturn {
   const { data: session, status } = useSession()
-  const [isProEnabled, setIsProEnabled] = useState(false)
+  const [isProEnabled, setIsProEnabled] = useState(props?.initialIsPro ?? false)
+  const [isPending, startTransition] = useTransition()
 
-  // 从 localStorage 读取 Pro 状态
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(PRO_STATUS_KEY)
-      setIsProEnabled(stored === 'true')
-    }
-  }, [])
-
-  // 切换 Pro 状态
-  const togglePro = useCallback(() => {
-    const newValue = !isProEnabled
-    setIsProEnabled(newValue)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(PRO_STATUS_KEY, String(newValue))
-    }
-    // 刷新页面以应用新状态
-    window.location.reload()
-  }, [isProEnabled])
+  // 切换 Pro 状态（调用 Server Action）
+  const togglePro = async () => {
+    startTransition(async () => {
+      const result = await toggleProStatus()
+      if (result.success && result.isPro !== undefined) {
+        setIsProEnabled(result.isPro)
+      }
+    })
+  }
 
   // 判断用户层级
   let tier: UserTier = 'guest'
   if (session) {
-    // 检查是否有 Pro 订阅（从 localStorage 读取临时状态）
     tier = isProEnabled ? 'pro' : 'member'
   }
 
@@ -109,5 +105,6 @@ export function useUserTier(): UseUserTierReturn {
     user,
     hasFeature,
     togglePro,
+    isTogglingPro: isPending,
   }
 }
