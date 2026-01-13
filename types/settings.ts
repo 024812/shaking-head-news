@@ -13,6 +13,8 @@ export const UserSettingsSchema = z.object({
   notificationsEnabled: z.boolean(),
   newsSources: z.array(z.string()),
   activeSource: z.string().optional(),
+  // Pro 订阅状态（临时测试用）
+  isPro: z.boolean().optional(),
 })
 
 export type UserSettings = z.infer<typeof UserSettingsSchema>
@@ -29,4 +31,5 @@ export const defaultSettings: Omit<UserSettings, 'userId'> = {
   notificationsEnabled: true,
   newsSources: ['everydaynews'],
   activeSource: 'everydaynews',
+  isPro: false,
 }
