@@ -64,8 +64,15 @@ export async function isAuthenticated(): Promise<boolean> {
 
 /**
  * 检查用户是否有 Pro 订阅
+ * 从用户设置中读取 isPro 状态
  */
 export async function hasProSubscription(): Promise<boolean> {
   const user = await getCurrentUser()
-  return user?.subscription === 'pro'
+  if (!user) return false
+
+  // 从用户设置中读取 isPro 状态
+  const { getStorageItem, StorageKeys } = await import('@/lib/storage')
+  const settings = await getStorageItem<{ isPro?: boolean }>(StorageKeys.userSettings(user.id))
+
+  return settings?.isPro === true
 }

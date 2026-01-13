@@ -64,6 +64,8 @@ export function useUserTier(props?: UseUserTierProps): UseUserTierReturn {
       const result = await toggleProStatus()
       if (result.success && result.isPro !== undefined) {
         setIsProEnabled(result.isPro)
+        // 刷新页面以更新所有服务端组件（Header、RSS 页面等）
+        window.location.reload()
       }
     })
   }
