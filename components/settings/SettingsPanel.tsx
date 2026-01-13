@@ -73,7 +73,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const { setFontSize, setLayoutMode } = useUIStore()
   const { setMode: setRotationMode, setInterval: setRotationInterval } = useRotationStore()
   const { setTheme } = useTheme()
-  const { isGuest, isMember, features } = useUserTier()
+  const { isGuest, isMember, isPro, features, togglePro } = useUserTier()
 
   // Sync UI store, rotation store, and theme with settings on mount and when settings change
   useEffect(() => {
@@ -481,6 +481,34 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
       {/* Guest 用户升级提示 */}
       {isGuest && (
         <UpgradePrompt variant="inline" className="my-4" />
+      )}
+
+      {/* Pro 解锁按钮（临时测试用） */}
+      {!isGuest && (
+        <Card className={isPro ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/20' : ''}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {isPro ? '🎉 Pro 已激活' : '⭐ Pro 功能'}
+            </CardTitle>
+            <CardDescription>
+              {isPro 
+                ? '您已解锁所有 Pro 功能，包括关闭广告、完整统计、健康提醒等'
+                : '解锁 Pro 功能：关闭广告、完整统计、健康提醒、OPML 导入导出等'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={togglePro}
+              variant={isPro ? 'outline' : 'default'}
+              className={isPro ? '' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'}
+            >
+              {isPro ? '取消 Pro（测试）' : '一键解锁 Pro（测试）'}
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2">
+              * 这是临时测试功能，正式版将通过订阅系统解锁
+            </p>
+          </CardContent>
+        </Card>
       )}
 
       {/* 操作按钮 - 仅登录用户可保存 */}
