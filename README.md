@@ -7,13 +7,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/024812/shaking-head-news/actions/workflows/ci.yml">
-    <img src="https://github.com/024812/shaking-head-news/actions/workflows/ci.yml/badge.svg" alt="CI/CD Status" />
+  <a href="https://github.com/ohengcom/shaking-head-news/actions/workflows/ci.yml">
+    <img src="https://github.com/ohengcom/shaking-head-news/actions/workflows/ci.yml/badge.svg" alt="CI/CD Status" />
   </a>
-  <a href="https://codecov.io/gh/024812/shaking-head-news">
-    <img src="https://codecov.io/gh/024812/shaking-head-news/branch/main/graph/badge.svg" alt="Code Coverage" />
+  <a href="https://codecov.io/gh/ohengcom/shaking-head-news">
+    <img src="https://codecov.io/gh/ohengcom/shaking-head-news/branch/main/graph/badge.svg" alt="Code Coverage" />
   </a>
-  <a href="https://github.com/024812/shaking-head-news/blob/main/LICENSE">
+  <a href="https://github.com/ohengcom/shaking-head-news/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MPL--2.0-blue.svg" alt="License" />
   </a>
 </p>
@@ -177,7 +177,7 @@ Shaking Head News is a modern web application that promotes neck health through 
 1. **克隆项目**
 
 ```bash
-git clone https://github.com/024812/shaking-head-news.git
+git clone https://github.com/ohengcom/shaking-head-news.git
 cd shaking-head-news
 ```
 
@@ -664,10 +664,10 @@ try {
 
 ## 📞 **联系方式**
 
-- **作者**: 024812
-- **Email**: 024812@users.noreply.github.com
-- **GitHub**: [@024812](https://github.com/024812)
-- **项目主页**: [https://github.com/024812/shaking-head-news](https://github.com/024812/shaking-head-news)
+- **作者**: ohengcom
+- **Email**: ohengcom@users.noreply.github.com
+- **GitHub**: [@ohengcom](https://github.com/ohengcom)
+- **项目主页**: [https://github.com/ohengcom/shaking-head-news](https://github.com/ohengcom/shaking-head-news)
 
 ---
 
@@ -710,4 +710,4 @@ try {
 
 **把摇头叹息变成健康摇头，让看新闻成为一种颈椎运动！** 📰🤸‍♂️
 
-<p align="center">Made with ❤️ by 024812</p>
+<p align="center">Made with ❤️ by ohengcom</p>
