@@ -51,12 +51,12 @@ function LockedSettingItem({
       <div className="flex items-center justify-between">
         <Label className="flex items-center gap-2">
           {label}
-          <Lock className="h-3 w-3 text-muted-foreground" />
+          <Lock className="text-muted-foreground h-3 w-3" />
         </Label>
-        <span className="text-sm text-muted-foreground">{value}</span>
+        <span className="text-muted-foreground text-sm">{value}</span>
       </div>
-      {description && <p className="text-sm text-muted-foreground">{description}</p>}
-      <p className="text-xs text-muted-foreground">
+      {description && <p className="text-muted-foreground text-sm">{description}</p>}
+      <p className="text-muted-foreground text-xs">
         {requiredTier === 'member' ? t('loginToUnlock') : t('upgradeToUnlock')}
       </p>
     </div>
@@ -236,7 +236,9 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               <Label htmlFor="layoutMode">{t('layout')}</Label>
               <Select
                 value={settings.layoutMode}
-                onValueChange={(value) => updateSetting('layoutMode', value as 'normal' | 'compact')}
+                onValueChange={(value) =>
+                  updateSetting('layoutMode', value as 'normal' | 'compact')
+                }
               >
                 <SelectTrigger id="layoutMode">
                   <SelectValue />
@@ -284,7 +286,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     RSS 订阅管理
-                    <Lock className="h-3 w-3 text-muted-foreground" />
+                    <Lock className="text-muted-foreground h-3 w-3" />
                   </Label>
                   <p className="text-muted-foreground text-sm">添加或移除自定义 RSS 新闻源</p>
                 </div>
@@ -292,7 +294,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                   管理订阅
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">{tTier('loginToUnlock')}</p>
+              <p className="text-muted-foreground text-xs">{tTier('loginToUnlock')}</p>
             </div>
           )}
         </CardContent>
@@ -385,9 +387,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="adsEnabled">显示广告</Label>
-                <p className="text-muted-foreground text-sm">
-                  关闭后将不再显示广告
-                </p>
+                <p className="text-muted-foreground text-sm">关闭后将不再显示广告</p>
               </div>
               <Switch
                 id="adsEnabled"
@@ -403,12 +403,10 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               <div className="space-y-0.5">
                 <Label className="flex items-center gap-2">
                   关闭广告
-                  <Lock className="h-3 w-3 text-muted-foreground" />
+                  <Lock className="text-muted-foreground h-3 w-3" />
                 </Label>
                 <p className="text-muted-foreground text-sm">
-                  {isMember
-                    ? '升级到 Pro 可关闭广告'
-                    : '登录后升级到 Pro 可关闭广告'}
+                  {isMember ? '升级到 Pro 可关闭广告' : '登录后升级到 Pro 可关闭广告'}
                 </p>
               </div>
               <Switch disabled checked={true} />
@@ -469,10 +467,10 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               <div className="space-y-0.5">
                 <Label className="flex items-center gap-2">
                   {t('notifications')}
-                  <Lock className="h-3 w-3 text-muted-foreground" />
+                  <Lock className="text-muted-foreground h-3 w-3" />
                 </Label>
                 <p className="text-muted-foreground text-sm">{t('notificationsDescription')}</p>
-                <p className="text-xs text-muted-foreground">{tTier('upgradeToUnlock')}</p>
+                <p className="text-muted-foreground text-xs">{tTier('upgradeToUnlock')}</p>
               </div>
               <Switch disabled checked={false} />
             </div>
@@ -481,9 +479,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
       </Card>
 
       {/* Guest 用户升级提示 */}
-      {isGuest && (
-        <UpgradePrompt variant="inline" className="my-4" />
-      )}
+      {isGuest && <UpgradePrompt variant="inline" className="my-4" />}
 
       {/* Pro 解锁按钮（临时测试用） */}
       {!isGuest && (
@@ -493,24 +489,25 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               {isPro ? '🎉 Pro 已激活' : '⭐ Pro 功能'}
             </CardTitle>
             <CardDescription>
-              {isPro 
+              {isPro
                 ? '您已解锁所有 Pro 功能，包括关闭广告、完整统计、健康提醒等'
                 : '解锁 Pro 功能：关闭广告、完整统计、健康提醒、OPML 导入导出等'}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button 
+            <Button
               onClick={togglePro}
               disabled={isTogglingPro}
               variant={isPro ? 'outline' : 'default'}
-              className={isPro ? '' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'}
+              className={
+                isPro
+                  ? ''
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+              }
             >
               {isTogglingPro && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isPro ? '取消 Pro（测试）' : '一键解锁 Pro（测试）'}
             </Button>
-            <p className="text-xs text-muted-foreground mt-2">
-              * 这是临时测试功能，Pro 状态已保存到云端
-            </p>
           </CardContent>
         </Card>
       )}
@@ -529,10 +526,8 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           </Button>
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-4 text-center">
-          <p className="text-sm text-muted-foreground">
-            {tTier('loginToUnlockDescription')}
-          </p>
+        <div className="border-muted-foreground/30 bg-muted/30 rounded-lg border border-dashed p-4 text-center">
+          <p className="text-muted-foreground text-sm">{tTier('loginToUnlockDescription')}</p>
         </div>
       )}
     </div>
