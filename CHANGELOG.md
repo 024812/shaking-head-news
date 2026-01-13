@@ -5,6 +5,20 @@ All notable changes to Shaking Head News will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-01-13
+
+### Changed
+
+- **Repository Migration**: Migrated repository from `024812` to `ohengcom` organization
+- **Pro Feature**: Pro status now stored in cloud database (Upstash Redis) instead of localStorage
+- **Pro Unlock**: Added one-click Pro unlock button in settings for testing
+
+### Fixed
+
+- **Pro Status Sync**: Fixed Pro status not updating across all server components (Header, RSS page, Stats page)
+- **BlurredStats**: Fixed stats page showing guest content for Pro users by passing server tier to component
+- **SessionProvider**: Added SessionProvider to fix useSession hook errors
+
 ## [2.1.0] - 2025-12-01
 
 ### Changed

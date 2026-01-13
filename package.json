@@ -1,10 +1,10 @@
 {
   "name": "shaking-head-news",
   "description": "Shake your head while watching the news - A modern web app with daily news and neck health features",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/024812/shaking-head-news.git"
+    "url": "git+https://github.com/ohengcom/shaking-head-news.git"
   },
   "keywords": [
     "nextjs",
@@ -14,12 +14,12 @@
     "cervical spondylosis",
     "web app"
   ],
-  "author": "024812 <024812@users.noreply.github.com>",
+  "author": "ohengcom <ohengcom@users.noreply.github.com>",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/024812/shaking-head-news/issues"
+    "url": "https://github.com/ohengcom/shaking-head-news/issues"
   },
-  "homepage": "https://github.com/024812/shaking-head-news",
+  "homepage": "https://github.com/ohengcom/shaking-head-news",
   "type": "module",
   "scripts": {
     "prepare": "husky || true",
