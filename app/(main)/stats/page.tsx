@@ -48,11 +48,11 @@ function StatsLoadingSkeleton() {
  * - Pro: 显示完整统计
  */
 async function StatsContent() {
-  const { features } = await getUserTier()
+  const { tier, features } = await getUserTier()
 
   // Guest 和 Member 用户显示模糊统计
   if (!features.statsFullEnabled) {
-    return <BlurredStats />
+    return <BlurredStats tier={tier} />
   }
 
   // Pro 用户显示完整统计

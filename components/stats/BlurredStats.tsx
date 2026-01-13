@@ -20,13 +20,19 @@ import { cn } from '@/lib/utils'
 
 interface BlurredStatsProps {
   className?: string
+  /** 服务端传入的用户层级 */
+  tier?: 'guest' | 'member' | 'pro'
 }
 
 /**
  * 模糊统计组件
  */
-export function BlurredStats({ className }: BlurredStatsProps) {
-  const { isGuest, isMember } = useUserTier()
+export function BlurredStats({ className, tier: serverTier }: BlurredStatsProps) {
+  const { isGuest: clientIsGuest, isMember: clientIsMember } = useUserTier()
+
+  // 优先使用服务端传入的 tier
+  const isGuest = serverTier ? serverTier === 'guest' : clientIsGuest
+  const isMember = serverTier ? serverTier === 'member' : clientIsMember
 
   // Guest 用户显示登录提示
   if (isGuest) {
@@ -59,25 +65,23 @@ function GuestStatsOverlay() {
   return (
     <div className="relative">
       {/* 模糊背景 */}
-      <div className="pointer-events-none select-none blur-md opacity-50">
+      <div className="pointer-events-none opacity-50 blur-md select-none">
         <StatsPlaceholder />
       </div>
 
       {/* 登录提示遮罩 */}
-      <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+      <div className="bg-background/80 absolute inset-0 flex items-center justify-center backdrop-blur-sm">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-            <Lock className="h-8 w-8 text-muted-foreground" />
+          <div className="bg-muted flex h-16 w-16 items-center justify-center rounded-full">
+            <Lock className="text-muted-foreground h-8 w-8" />
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">查看统计数据</h3>
-            <p className="text-sm text-muted-foreground max-w-xs">
+            <p className="text-muted-foreground max-w-xs text-sm">
               {tTier('loginToUnlockDescription')}
             </p>
           </div>
-          <Button onClick={() => signIn()}>
-            {tTier('loginButton')}
-          </Button>
+          <Button onClick={() => signIn()}>{tTier('loginButton')}</Button>
         </div>
       </div>
     </div>
@@ -98,46 +102,46 @@ function MemberStatsPreview() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('today')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">{t('rotationCount')}</p>
+            <p className="text-muted-foreground text-xs">{t('rotationCount')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('week')}</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">{t('average')}</p>
+            <p className="text-muted-foreground text-xs">{t('average')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('goal')}</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">{t('goalProgress')}</p>
+            <p className="text-muted-foreground text-xs">{t('goalProgress')}</p>
           </CardContent>
         </Card>
       </div>
 
       {/* 详细图表（模糊 + 升级提示） */}
       <div className="relative">
-        <div className="pointer-events-none select-none blur-md opacity-50">
+        <div className="pointer-events-none opacity-50 blur-md select-none">
           <Card>
             <CardHeader>
               <CardTitle>{t('weeklyTrend')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[200px] flex items-center justify-center bg-muted/30 rounded">
+              <div className="bg-muted/30 flex h-[200px] items-center justify-center rounded">
                 <div className="text-muted-foreground">图表预览</div>
               </div>
             </CardContent>
@@ -145,14 +149,12 @@ function MemberStatsPreview() {
         </div>
 
         {/* 升级提示遮罩 */}
-        <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px] rounded-lg">
-          <div className="flex flex-col items-center gap-3 text-center p-4">
-            <Lock className="h-6 w-6 text-muted-foreground" />
+        <div className="bg-background/60 absolute inset-0 flex items-center justify-center rounded-lg backdrop-blur-[2px]">
+          <div className="flex flex-col items-center gap-3 p-4 text-center">
+            <Lock className="text-muted-foreground h-6 w-6" />
             <div className="space-y-1">
               <p className="font-medium">完整统计数据</p>
-              <p className="text-sm text-muted-foreground">
-                升级到 Pro 查看详细图表和历史数据
-              </p>
+              <p className="text-muted-foreground text-sm">升级到 Pro 查看详细图表和历史数据</p>
             </div>
             <Button variant="outline" size="sm">
               {tTier('upgradeButton')}
@@ -174,11 +176,11 @@ function StatsPlaceholder() {
         {[1, 2, 3].map((i) => (
           <Card key={i}>
             <CardHeader className="pb-2">
-              <div className="h-4 w-20 bg-muted rounded" />
+              <div className="bg-muted h-4 w-20 rounded" />
             </CardHeader>
             <CardContent>
-              <div className="h-8 w-16 bg-muted rounded mb-2" />
-              <div className="h-3 w-24 bg-muted rounded" />
+              <div className="bg-muted mb-2 h-8 w-16 rounded" />
+              <div className="bg-muted h-3 w-24 rounded" />
             </CardContent>
           </Card>
         ))}
@@ -186,10 +188,10 @@ function StatsPlaceholder() {
 
       <Card>
         <CardHeader>
-          <div className="h-5 w-32 bg-muted rounded" />
+          <div className="bg-muted h-5 w-32 rounded" />
         </CardHeader>
         <CardContent>
-          <div className="h-[200px] bg-muted/30 rounded" />
+          <div className="bg-muted/30 h-[200px] rounded" />
         </CardContent>
       </Card>
     </div>
