@@ -22,5 +22,6 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
   "stylelint.validate": ["vue"],
-  "kiroAgent.configureMCP": "Disabled"
+  "kiroAgent.configureMCP": "Enabled",
+  "typescript.autoClosingTags": false
 }
