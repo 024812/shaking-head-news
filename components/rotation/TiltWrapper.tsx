@@ -74,41 +74,10 @@ export function TiltWrapper({
 
       // Only record if there's a significant angle change (lowered threshold to 0.5 degrees)
       if (Math.abs(newAngle - previousAngle.current) > 0.5) {
-        console.log('[TiltWrapper] Recording rotation:', { newAngle, duration })
-        recordRotation(newAngle, duration)
-          .then((result) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if (result && (result as any).error) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const err = (result as any).error
-              console.warn(`[TiltWrapper] Record failed: ${err}`, result)
-
-              if (err === 'UNAUTHORIZED') {
-                console.warn(
-                  '[TiltWrapper] User session missing. Cookies might be blocked or expired.'
-                )
-              }
-            } else if (result) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const stats = result as any
-              console.log('[TiltWrapper] Record SUCCESS:', {
-                count: stats.rotationCount,
-                totalDuration: stats.totalDuration,
-              })
-            } else {
-              console.warn('[TiltWrapper] Record returned unexpected null/undefined')
-            }
-          })
-          .catch((error) => {
-            console.error('[TiltWrapper] Failed to record rotation:', error)
-          })
-        previousAngle.current = newAngle
-      } else {
-        console.log('[TiltWrapper] Skipping record - angle change too small:', {
-          newAngle,
-          previousAngle: previousAngle.current,
-          diff: Math.abs(newAngle - previousAngle.current),
+        recordRotation(newAngle, duration).catch(() => {
+          // Silent failure
         })
+        previousAngle.current = newAngle
       }
     }, effectiveInterval * 1000)
 
