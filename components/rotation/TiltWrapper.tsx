@@ -77,15 +77,26 @@ export function TiltWrapper({
         console.log('[TiltWrapper] Recording rotation:', { newAngle, duration })
         recordRotation(newAngle, duration)
           .then((result) => {
-            if (result === null) {
-              console.warn(
-                '[TiltWrapper] Record returned null - user may not be logged in or error occurred'
-              )
-            } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (result && (result as any).error) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const err = (result as any).error
+              console.warn(`[TiltWrapper] Record failed: ${err}`, result)
+
+              if (err === 'UNAUTHORIZED') {
+                console.warn(
+                  '[TiltWrapper] User session missing. Cookies might be blocked or expired.'
+                )
+              }
+            } else if (result) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const stats = result as any
               console.log('[TiltWrapper] Record SUCCESS:', {
-                count: result.rotationCount,
-                totalDuration: result.totalDuration,
+                count: stats.rotationCount,
+                totalDuration: stats.totalDuration,
               })
+            } else {
+              console.warn('[TiltWrapper] Record returned unexpected null/undefined')
             }
           })
           .catch((error) => {
