@@ -107,6 +107,7 @@ export default function StatsPage() {
 /**
  * 页面元数据
  */
+export const dynamic = 'force-dynamic'
 export const metadata = {
   title: '统计数据 - 摇头看新闻',
   description: '查看您的颈椎运动统计和健康趋势',

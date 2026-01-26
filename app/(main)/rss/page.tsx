@@ -48,7 +48,9 @@ async function RSSContent() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h4 className="font-medium">{source.name}</h4>
-                    <p className="text-sm text-muted-foreground">{source.description || source.url}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {source.description || source.url}
+                    </p>
                   </div>
                   <Badge variant="outline">{source.language === 'zh' ? '中文' : 'English'}</Badge>
                 </div>
@@ -76,15 +78,15 @@ async function RSSContent() {
             <ImportOPMLButton />
             <ExportOPMLButton />
           </TierFeatureServer>
-          
+
           {/* Pro 提示 */}
           {!isPro && features.customRssEnabled && (
-            <Badge variant="outline" className="gap-1 text-muted-foreground">
+            <Badge variant="outline" className="text-muted-foreground gap-1">
               <Sparkles className="h-3 w-3" />
               OPML 需要 Pro
             </Badge>
           )}
-          
+
           <AddRSSSourceDialog />
         </div>
       </div>
@@ -137,6 +139,7 @@ export default function RSSPage() {
   )
 }
 
+export const dynamic = 'force-dynamic'
 export const metadata = {
   title: 'RSS 源管理 - 摇头看新闻',
   description: '管理您的 RSS 订阅源，自定义新闻来源',
