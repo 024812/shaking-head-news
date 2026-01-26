@@ -253,6 +253,16 @@ function parseRSSFeed(xml: string, sourceUrl: string): NewsItem[] {
         const pubDate = item.pubDate || item.published || item.updated || new Date().toISOString()
         const guid = item.guid || item.id || url
 
+        // Ensure description is a string
+        if (typeof description !== 'string') {
+          // Try to handle other object formats or fallback to empty string
+          if (typeof description === 'number') {
+            description = String(description)
+          } else {
+            description = ''
+          }
+        }
+
         // Try to extract image
         let imageUrl: string | undefined
         if (item.enclosure && item.enclosure['@_type']?.startsWith('image')) {
