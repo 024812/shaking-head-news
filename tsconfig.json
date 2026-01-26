@@ -36,7 +36,7 @@
     "lib/**/*.tsx",
     "types/**/*.ts",
     "config/**/*.ts",
-    "middleware.ts",
+    "proxy.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
