@@ -74,15 +74,14 @@ function setCorsHeaders(response: NextResponse, request: NextRequest) {
   return response
 }
 
-export default auth(async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Handle preflight requests
   if (request.method === 'OPTIONS') {
     const response = new NextResponse(null, { status: 204 })
     return setCorsHeaders(response, request)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const session = (request as any).auth
+  const session = await auth()
 
   // 保护需要认证的路由
   const protectedPaths = ['/settings', '/stats', '/rss']
@@ -109,7 +108,7 @@ export default auth(async function proxy(request: NextRequest) {
   }
 
   return response
-})
+}
 
 export const config = {
   matcher: [
@@ -124,3 +123,5 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
+
+export default proxy
