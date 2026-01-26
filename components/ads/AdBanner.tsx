@@ -23,6 +23,8 @@ interface AdBannerProps {
   className?: string
   /** 广告单元 ID (Google AdSense) */
   adSlot?: string
+  /** 初始 Pro 状态 (用于服务端渲染) */
+  initialIsPro?: boolean
 }
 
 /**
@@ -34,8 +36,9 @@ export function AdBanner({
   size = 'medium',
   className,
   adSlot,
+  initialIsPro,
 }: AdBannerProps) {
-  const { isPro, features } = useUserTier()
+  const { isPro, features } = useUserTier({ initialIsPro })
   const [adsEnabled, setAdsEnabled] = useState(true)
   const [isClient, setIsClient] = useState(false)
 

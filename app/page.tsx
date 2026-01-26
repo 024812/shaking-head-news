@@ -18,8 +18,14 @@ function HomePageSkeleton() {
 }
 
 import { AdBanner } from '@/components/ads/AdBanner'
+import { auth } from '@/lib/auth'
+import { getUserSettings } from '@/lib/actions/settings'
 
 export default async function HomePage() {
+  const session = await auth()
+  const settings = session?.user ? await getUserSettings() : null
+  const isPro = settings?.isPro ?? false
+
   return (
     <div className="container mx-auto py-8">
       {/* 3-column layout: Sidebar (Left) - Main Content - Sidebar (Right) */}
@@ -27,7 +33,12 @@ export default async function HomePage() {
       <div className="grid grid-cols-1 gap-24 xl:grid-cols-[200px_1fr_200px]">
         {/* Left Sidebar Ad - Vertically Centered */}
         <aside className="sticky top-0 hidden h-screen flex-col justify-center xl:flex">
-          <AdBanner position="sidebar" size="large" className="min-h-[600px] w-full" />
+          <AdBanner
+            position="sidebar"
+            size="large"
+            className="min-h-[600px] w-full"
+            initialIsPro={isPro}
+          />
         </aside>
 
         {/* Main Content */}
@@ -39,7 +50,12 @@ export default async function HomePage() {
 
         {/* Right Sidebar Ad - Vertically Centered */}
         <aside className="sticky top-0 hidden h-screen flex-col justify-center xl:flex">
-          <AdBanner position="sidebar" size="large" className="min-h-[600px] w-full" />
+          <AdBanner
+            position="sidebar"
+            size="large"
+            className="min-h-[600px] w-full"
+            initialIsPro={isPro}
+          />
         </aside>
       </div>
     </div>
