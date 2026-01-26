@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto py-8">
       {/* 3-column layout: Sidebar (Left) - Main Content - Sidebar (Right) */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[200px_1fr_200px]">
+      <div className="grid grid-cols-1 gap-12 xl:grid-cols-[200px_1fr_200px]">
         {/* Left Sidebar Ad */}
         <aside className="hidden h-fit xl:sticky xl:top-24 xl:block">
           <AdBanner position="sidebar" size="large" className="min-h-[600px] w-full" />

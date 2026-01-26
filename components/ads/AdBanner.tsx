@@ -46,17 +46,24 @@ export function AdBanner({
 
   // Pro 用户可以关闭广告
   useEffect(() => {
-    if (isPro && features.adsDisableable) {
-      // 从用户设置中获取广告偏好
-      // 这里简化处理，实际应该从设置中读取
-      const savedPreference = localStorage.getItem('adsEnabled')
-      if (savedPreference !== null) {
-        setAdsEnabled(savedPreference === 'true')
+    const checkAdsPreference = () => {
+      if (isPro && features.adsDisableable) {
+        // 从用户设置中获取广告偏好
+        const savedPreference = localStorage.getItem('adsEnabled')
+        if (savedPreference !== null) {
+          setAdsEnabled(savedPreference === 'true')
+        }
+      } else {
+        // Guest 和 Member 强制显示广告
+        setAdsEnabled(true)
       }
-    } else {
-      // Guest 和 Member 强制显示广告
-      setAdsEnabled(true)
     }
+
+    checkAdsPreference()
+
+    // Listen for setting changes
+    window.addEventListener('ads-preference-changed', checkAdsPreference)
+    return () => window.removeEventListener('ads-preference-changed', checkAdsPreference)
   }, [isPro, features.adsDisableable])
 
   // 如果 Pro 用户关闭了广告，不渲染
@@ -75,7 +82,7 @@ export function AdBanner({
   return (
     <div
       className={cn(
-        'ad-banner overflow-hidden rounded-lg border border-border/50 bg-muted/30',
+        'ad-banner border-border/50 bg-muted/30 overflow-hidden rounded-lg border',
         adDimensions.containerClass,
         className
       )}
@@ -86,10 +93,7 @@ export function AdBanner({
       {process.env.NODE_ENV === 'development' ? (
         <AdPlaceholder position={position} size={size} />
       ) : (
-        <GoogleAdSense
-          adSlot={adSlot || getDefaultAdSlot(position)}
-          style={adDimensions.style}
-        />
+        <GoogleAdSense adSlot={adSlot || getDefaultAdSlot(position)} style={adDimensions.style} />
       )}
     </div>
   )
@@ -107,12 +111,15 @@ function AdPlaceholder({
   size: string
   className?: string
 }) {
-  const dimensions = getAdDimensions(position as AdBannerProps['position'], size as AdBannerProps['size'])
+  const dimensions = getAdDimensions(
+    position as AdBannerProps['position'],
+    size as AdBannerProps['size']
+  )
 
   return (
     <div
       className={cn(
-        'flex items-center justify-center bg-gradient-to-br from-muted/50 to-muted text-muted-foreground',
+        'from-muted/50 to-muted text-muted-foreground flex items-center justify-center bg-gradient-to-br',
         dimensions.containerClass,
         className
       )}
@@ -131,18 +138,15 @@ function AdPlaceholder({
 /**
  * Google AdSense 组件
  */
-function GoogleAdSense({
-  adSlot,
-  style,
-}: {
-  adSlot: string
-  style: React.CSSProperties
-}) {
+function GoogleAdSense({ adSlot, style }: { adSlot: string; style: React.CSSProperties }) {
   useEffect(() => {
     try {
       // 加载 AdSense 脚本
-      if (typeof window !== 'undefined' && (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle) {
-        ((window as unknown as { adsbygoogle: unknown[] }).adsbygoogle).push({})
+      if (
+        typeof window !== 'undefined' &&
+        (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle
+      ) {
+        ;(window as unknown as { adsbygoogle: unknown[] }).adsbygoogle.push({})
       }
     } catch (error) {
       console.error('AdSense error:', error)
