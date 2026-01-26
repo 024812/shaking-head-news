@@ -23,9 +23,10 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto py-8">
       {/* 3-column layout: Sidebar (Left) - Main Content - Sidebar (Right) */}
-      <div className="grid grid-cols-1 gap-12 xl:grid-cols-[200px_1fr_200px]">
-        {/* Left Sidebar Ad */}
-        <aside className="hidden h-fit xl:sticky xl:top-24 xl:block">
+      {/* 3-column layout: Sidebar (Left) - Main Content - Sidebar (Right) */}
+      <div className="grid grid-cols-1 gap-24 xl:grid-cols-[200px_1fr_200px]">
+        {/* Left Sidebar Ad - Vertically Centered */}
+        <aside className="sticky top-0 hidden h-screen flex-col justify-center xl:flex">
           <AdBanner position="sidebar" size="large" className="min-h-[600px] w-full" />
         </aside>
 
@@ -36,8 +37,8 @@ export default async function HomePage() {
           </Suspense>
         </div>
 
-        {/* Right Sidebar Ad */}
-        <aside className="hidden h-fit xl:sticky xl:top-24 xl:block">
+        {/* Right Sidebar Ad - Vertically Centered */}
+        <aside className="sticky top-0 hidden h-screen flex-col justify-center xl:flex">
           <AdBanner position="sidebar" size="large" className="min-h-[600px] w-full" />
         </aside>
       </div>
