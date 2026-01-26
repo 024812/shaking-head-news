@@ -12,7 +12,6 @@ import { getMessages } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { WebVitals } from './web-vitals'
 import { SessionProvider } from '@/components/auth/SessionProvider'
-import Script from 'next/script'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -69,6 +68,14 @@ export default async function RootLayout({
         {/* DNS Prefetch and Preconnect for external domains */}
         <link rel="dns-prefetch" href="https://news.ravelloh.top" />
         <link rel="preconnect" href="https://news.ravelloh.top" crossOrigin="anonymous" />
+        {/* Google AdSense - Native script tag to avoid data-nscript warning */}
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className={`${inter.variable} ${notoSansSC.variable} font-sans`}>
         <WebVitals />
@@ -94,14 +101,6 @@ export default async function RootLayout({
           </NextIntlClientProvider>
         </SessionProvider>
         {/* Google AdSense */}
-        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
       </body>
     </html>
   )
