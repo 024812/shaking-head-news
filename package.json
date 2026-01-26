@@ -102,7 +102,7 @@
     "vitest": "^4.0.16"
   },
   "engines": {
-    "node": "24.x"
+    "node": ">=22.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
