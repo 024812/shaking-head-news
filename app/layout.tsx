@@ -12,6 +12,7 @@ import { getMessages } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { WebVitals } from './web-vitals'
 import { SessionProvider } from '@/components/auth/SessionProvider'
+import Script from 'next/script'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -99,6 +100,15 @@ export default async function RootLayout({
             </ThemeProvider>
           </NextIntlClientProvider>
         </SessionProvider>
+        {/* Google AdSense */}
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   )
