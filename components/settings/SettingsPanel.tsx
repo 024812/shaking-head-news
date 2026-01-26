@@ -77,6 +77,17 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
     initialIsPro: initialSettings.isPro ?? false,
   })
 
+  // Local state for client-side settings
+  const [localAdsEnabled, setLocalAdsEnabled] = useState(true)
+
+  // Initialize local settings from localStorage
+  useEffect(() => {
+    const savedAds = localStorage.getItem('adsEnabled')
+    if (savedAds !== null) {
+      setLocalAdsEnabled(savedAds === 'true')
+    }
+  }, [])
+
   // Sync UI store, rotation store, and theme with settings on mount and when settings change
   useEffect(() => {
     setFontSize(settings.fontSize)
@@ -391,10 +402,18 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
               </div>
               <Switch
                 id="adsEnabled"
-                checked={true} // TODO: 从设置中读取
+                checked={localAdsEnabled}
                 onCheckedChange={(checked) => {
-                  // TODO: 保存广告偏好
+                  setLocalAdsEnabled(checked)
                   localStorage.setItem('adsEnabled', String(checked))
+                  // Dispatch event for immediate UI update
+                  // eslint-disable-next-line no-undef
+                  window.dispatchEvent(new Event('ads-preference-changed'))
+
+                  toast({
+                    title: t('saveSuccess'),
+                    description: checked ? '广告已开启' : '广告已关闭',
+                  })
                 }}
               />
             </div>
