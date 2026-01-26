@@ -5,6 +5,30 @@ All notable changes to Shaking Head News will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-01-26
+
+### Added
+
+- **Ad Settings**: Pro users can now toggle advertising banners in the settings page (persisted via localStorage)
+- **Ad layout**: Implemented sticky, vertically centered sidebars for better ad visibility and user experience
+
+### Changed
+
+- **Rate Limiting**: Relaxed strict rate limits (Std: 300/min, Relaxed: 1000/min) to prevent false positives for active users
+- **Layout**: Increased desktop layout spacing (gap-24) to improve visual separation between content and sidebars
+- **Project Structure**: Renamed `proxy.ts` to `middleware.ts` within documentation (conceptual) but kept file as `proxy.ts` for Next.js 16 compatibility
+- **Cleanup**: Removed redundant machine-specific configuration files and documentation
+
+### Fixed
+
+- **RSS Parsing**: Added strict type safety to V2EX RSS feed parsing to prevent `l.match` crashes
+- **AdSense**: Fixed CSP errors and script loading issues by determining Pro status server-side
+- **AdSense**: Fixed ad banners persisting after being disabled in settings by hydrating initial Pro status
+
+### Removed
+
+- Redundant duplicate configuration files (`*-CNSHNSLI01*`)
+
 ## [2.1.1] - 2026-01-13
 
 ### Changed
