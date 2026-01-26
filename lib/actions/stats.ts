@@ -16,7 +16,8 @@ export async function recordRotation(angle: number, duration: number) {
     const session = await auth()
 
     if (!session?.user?.id) {
-      return null // 未登录用户不记录
+      console.error('[recordRotation] No session found')
+      return { error: 'UNAUTHORIZED' }
     }
 
     // 速率限制：防止滥用
@@ -26,7 +27,7 @@ export async function recordRotation(angle: number, duration: number) {
 
     if (!rateLimitResult.success) {
       console.warn('Rate limit exceeded for recordRotation')
-      return null
+      return { error: 'RATE_LIMIT' }
     }
 
     // 验证输入参数
@@ -82,10 +83,12 @@ export async function recordRotation(angle: number, duration: number) {
   } catch (error) {
     logError(error, {
       action: 'recordRotation',
-      angle,
       duration,
     })
-    return null
+    return {
+      error: 'INTERNAL_ERROR',
+      details: error instanceof Error ? error.message : String(error),
+    }
   }
 }
 
