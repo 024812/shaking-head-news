@@ -105,25 +105,25 @@ export const RateLimitTiers = {
    * Strict rate limit for sensitive operations (e.g., login, password reset)
    * 5 requests per 15 minutes
    */
-  STRICT: { limit: 5, window: 900 },
+  STRICT: { limit: 50, window: 900 },
 
   /**
    * Standard rate limit for authenticated operations
-   * 30 requests per minute
+   * 300 requests per minute
    */
-  STANDARD: { limit: 30, window: 60 },
+  STANDARD: { limit: 300, window: 60 },
 
   /**
    * Relaxed rate limit for read operations
-   * 100 requests per minute
+   * 1000 requests per minute
    */
-  RELAXED: { limit: 100, window: 60 },
+  RELAXED: { limit: 1000, window: 60 },
 
   /**
    * Very relaxed rate limit for public endpoints
-   * 300 requests per 5 minutes
+   * 3000 requests per 5 minutes
    */
-  PUBLIC: { limit: 300, window: 300 },
+  PUBLIC: { limit: 3000, window: 300 },
 } as const
 
 /**
