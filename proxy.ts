@@ -11,12 +11,12 @@ function getSecurityHeaders() {
   // Content Security Policy (CSP)
   const cspDirectives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://www.googletagmanager.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.google.com",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https: blob:",
+    "img-src 'self' data: https: blob: https://pagead2.googlesyndication.com",
     "font-src 'self' data:",
-    "connect-src 'self' https://news.ravelloh.top https://accounts.google.com https://*.upstash.io",
-    "frame-src 'self' https://accounts.google.com",
+    "connect-src 'self' https://news.ravelloh.top https://accounts.google.com https://*.upstash.io https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+    "frame-src 'self' https://accounts.google.com https://googleads.g.doubleclick.net https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -53,13 +53,18 @@ function getSecurityHeaders() {
  */
 function setCorsHeaders(response: NextResponse, request: NextRequest) {
   const origin = request.headers.get('origin')
-  const allowedOrigins = [
-    process.env.NEXT_PUBLIC_APP_URL,
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ].filter(Boolean)
+  const host = request.headers.get('host')
 
-  if (origin && allowedOrigins.includes(origin)) {
+  // 动态允许同源请求和特定域名的请求
+  // Dynamically allow same-origin requests and specific domains
+  const isAllowed =
+    origin &&
+    (origin.includes(host!) || // Same host
+      origin.endsWith('.oheng.com') || // Subdomains of oheng.com
+      origin.includes('024812.xyz') || // Old domain
+      origin.includes('localhost')) // Local development
+
+  if (isAllowed) {
     response.headers.set('Access-Control-Allow-Origin', origin)
     response.headers.set('Access-Control-Allow-Credentials', 'true')
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
