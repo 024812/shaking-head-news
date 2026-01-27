@@ -18,8 +18,8 @@ export const HOT_LIST_SOURCES = [
   { id: 'zhihu', name: '知乎热榜', icon: '❓' },
   { id: 'baidu', name: '百度热搜', icon: '🔍' },
   { id: 'toutiao', name: '头条热榜', icon: '📰' },
-  { id: 'juejin', name: '掘金热榜', icon: '💎' },
-  { id: 'netease', name: '网易新闻', icon: '📰' },
+  // { id: 'juejin', name: '掘金热榜', icon: '💎' },
+  // { id: 'netease', name: '网易新闻', icon: '📰' },
 ] as const
 
 export type HotListSourceId = (typeof HOT_LIST_SOURCES)[number]['id']

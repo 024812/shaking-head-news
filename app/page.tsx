@@ -30,6 +30,7 @@ function HomePageSkeleton() {
 
 export default async function HomePage() {
   const t = await getTranslations('home')
+  const tNews = await getTranslations('news')
   const session = await auth()
   const settings = session?.user ? await getUserSettings() : null
   const isPro = settings?.isPro ?? false
@@ -40,9 +41,12 @@ export default async function HomePage() {
   // For members: Daily, AI, Trending separated
   // Determine triggered sources from settings
   // Filter out invalid sources and 'everydaynews' (which is Daily Brief)
-  const enabledSourceIds = (settings?.newsSources || [])
-    .filter((id) => id !== 'everydaynews')
-    .filter((id) => HOT_LIST_SOURCES.some((s) => s.id === id))
+  // Only Pro users can see custom sources (Hot Lists)
+  const enabledSourceIds = isPro
+    ? (settings?.newsSources || [])
+        .filter((id) => id !== 'everydaynews')
+        .filter((id) => HOT_LIST_SOURCES.some((s) => s.id === id))
+    : []
 
   // Fetch data
   // For guests: Daily + AI merged
@@ -132,12 +136,12 @@ export default async function HomePage() {
           </div>
 
           <Tabs defaultValue="daily" className="w-full">
-            <TabsList className="scrollbar-hide mb-6 flex w-full justify-start overflow-x-auto sm:w-auto">
+            <TabsList className="scrollbar-hide mb-6 flex h-auto w-full justify-start overflow-x-auto whitespace-nowrap sm:w-auto">
               {/* Pro Custom Feed (Placeholder) */}
               {isPro && <TabsTrigger value="custom">My Feed</TabsTrigger>}
 
-              <TabsTrigger value="daily">{t('news.daily')}</TabsTrigger>
-              <TabsTrigger value="ai">{t('news.ai')}</TabsTrigger>
+              <TabsTrigger value="daily">{tNews('daily')}</TabsTrigger>
+              <TabsTrigger value="ai">{tNews('ai')}</TabsTrigger>
 
               {/* Dynamic Tabs */}
               {enabledSourceIds.map((id) => {
