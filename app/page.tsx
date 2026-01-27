@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { NewsDisplay } from '@/components/news/NewsDisplay'
 import { NewsListSkeleton } from '@/components/news/NewsListSkeleton'
 import { getTranslations } from 'next-intl/server'
-import { getAiNewsItems, getHomePageNews, getHotListNews } from '@/lib/actions/news'
+import { getAiNewsItems, getHotListNews, getNews } from '@/lib/actions/news'
 import { HOT_LIST_SOURCES } from '@/lib/api/hot-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NewsList } from '@/components/news/NewsList'
@@ -41,18 +41,16 @@ export default async function HomePage() {
   // For members: Daily, AI, Trending separated
   // Determine triggered sources from settings
   // Filter out invalid sources and 'everydaynews' (which is Daily Brief)
-  // Only Pro users can see custom sources (Hot Lists)
-  const enabledSourceIds = isPro
-    ? (settings?.newsSources || [])
-        .filter((id) => id !== 'everydaynews')
-        .filter((id) => HOT_LIST_SOURCES.some((s) => s.id === id))
-    : []
+  // Dynamic sources are available to all logged-in users who enable them
+  const enabledSourceIds = (settings?.newsSources || [])
+    .filter((id) => id !== 'everydaynews')
+    .filter((id) => HOT_LIST_SOURCES.some((s) => s.id === id))
 
   // Fetch data
   // For guests: Daily + AI merged
   // For members: Daily, AI, Trending, + Dynamic Sources
   const [dailyResponse, aiNews, ...dynamicSourcesData] = await Promise.all([
-    getHomePageNews('zh').catch(() => ({ items: [], total: 0 })), // Fetch explicitly for merging
+    getNews('zh').catch(() => ({ items: [], total: 0 })), // Fetch standard daily news explicitly
     getAiNewsItems().catch(() => []),
     ...enabledSourceIds.map((id) => {
       const sourceName = HOT_LIST_SOURCES.find((s) => s.id === id)?.name || id
