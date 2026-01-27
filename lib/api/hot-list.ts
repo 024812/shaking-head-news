@@ -52,14 +52,24 @@ export async function getHotList(sourceId: string): Promise<HotItem[]> {
       if (data.data && Array.isArray(data.data.items)) {
         return data.data.items.map((item: any) => ({
           title: item.title,
-          url: item.link || '', // Map 'link' to 'url'
-          hot: item.year, // Use year as 'hot' val or optional
+          url: item.link || '',
+          hot: item.year,
         }))
       }
       return []
     }
 
-    return data.data || []
+    // Generic handling: map 'link' to 'url' if url is missing
+    // Detailed verification showed Douyin, Weibo, Bilibili use 'link'
+    if (Array.isArray(data.data)) {
+      return data.data.map((item: any) => ({
+        title: item.title,
+        url: item.url || item.link || '', // Prioritize url, fallback to link
+        hot: item.hot || item.hot_value || '', // Map various hot value keys fields if needed, or keep generic
+      }))
+    }
+
+    return []
   } catch (error) {
     console.error(`Error fetching hot list for ${sourceId}:`, error)
     return []
