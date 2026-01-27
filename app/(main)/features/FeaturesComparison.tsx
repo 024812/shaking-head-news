@@ -196,13 +196,21 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
                 >
                   <td className="p-4 font-medium">{t(`featureList.${feature.key}`)}</td>
                   <td className="p-4 text-center">
-                    <FeatureValueDisplay value={feature.guest} />
+                    <FeatureValueDisplay
+                      value={feature.guest}
+                      featureKey={feature.key}
+                      tier="guest"
+                    />
                   </td>
                   <td className="bg-primary/5 p-4 text-center">
-                    <FeatureValueDisplay value={feature.member} />
+                    <FeatureValueDisplay
+                      value={feature.member}
+                      featureKey={feature.key}
+                      tier="member"
+                    />
                   </td>
                   <td className="p-4 text-center">
-                    <FeatureValueDisplay value={feature.pro} />
+                    <FeatureValueDisplay value={feature.pro} featureKey={feature.key} tier="pro" />
                   </td>
                 </tr>
               ))}
@@ -244,7 +252,15 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
 /**
  * 功能值显示组件
  */
-function FeatureValueDisplay({ value }: { value: FeatureValue }) {
+function FeatureValueDisplay({
+  value,
+  featureKey,
+  tier,
+}: {
+  value: FeatureValue
+  featureKey?: string
+  tier?: UserTier
+}) {
   if (value === 'included') {
     return (
       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-500/10">
@@ -267,6 +283,32 @@ function FeatureValueDisplay({ value }: { value: FeatureValue }) {
       </span>
     )
   }
+
+  // Highlight News Sources differences
+  if (featureKey === 'newsSources') {
+    if (tier === 'guest') {
+      return (
+        <span className="text-muted-foreground bg-muted/50 rounded-md px-3 py-1 text-sm">
+          {value}
+        </span>
+      )
+    }
+    if (tier === 'member') {
+      return (
+        <span className="bg-primary/10 text-primary rounded-md px-3 py-1 text-sm font-medium">
+          {value}
+        </span>
+      )
+    }
+    if (tier === 'pro') {
+      return (
+        <span className="rounded-md bg-gradient-to-r from-amber-500/20 to-orange-500/20 px-3 py-1 text-sm font-bold text-amber-600 dark:text-amber-400">
+          {value}
+        </span>
+      )
+    }
+  }
+
   return (
     <span className="text-muted-foreground bg-muted/50 rounded-md px-2 py-1 text-sm">{value}</span>
   )
