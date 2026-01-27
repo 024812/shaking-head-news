@@ -311,7 +311,9 @@
       "userBadge": "User Badge"
     },
     "featureValues": {
-      "defaultOnly": "Default sources (not editable)",
+      "defaultOnly": "Daily Brief + IT News",
+      "hotLists": "Hot Lists (Douyin/Weibo/History...)",
+      "allSources": "Hot Lists + Custom RSS",
       "customRss": "Custom RSS",
       "customRssOpml": "Custom + OPML",
       "continuousFixed": "Continuous mode (fixed)",
