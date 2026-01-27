@@ -52,7 +52,7 @@ export default async function HomePage() {
   const [dailyResponse, aiNews, customNews, ...dynamicSourcesData] = await Promise.all([
     getNews('zh').catch(() => ({ items: [], total: 0 })), // Fetch standard daily news explicitly
     getAiNewsItems().catch(() => []),
-    getUserCustomNews().catch(() => []), // Fetch user custom RSS
+    isPro ? getUserCustomNews().catch(() => []) : Promise.resolve([]), // Fetch user custom RSS only for Pro
     ...enabledSourceIds.map((id) => {
       const sourceName = HOT_LIST_SOURCES.find((s) => s.id === id)?.name || id
       return getHotListNews(id, sourceName).catch(() => [])
@@ -134,10 +134,10 @@ export default async function HomePage() {
             <p className="text-muted-foreground mt-2">{t('subtitle')}</p>
           </div>
 
-          <Tabs defaultValue="daily" className="w-full">
+          <Tabs defaultValue={isPro ? 'custom' : 'daily'} className="w-full">
             <TabsList className="scrollbar-hide mb-6 flex h-auto w-full justify-start overflow-x-auto whitespace-nowrap sm:w-auto">
-              {/* Custom Feed for all members */}
-              <TabsTrigger value="custom">My Feed</TabsTrigger>
+              {/* Pro Custom Feed */}
+              {isPro && <TabsTrigger value="custom">My Feed</TabsTrigger>}
 
               <TabsTrigger value="daily">{tNews('daily')}</TabsTrigger>
               <TabsTrigger value="ai">{tNews('ai')}</TabsTrigger>
@@ -153,25 +153,27 @@ export default async function HomePage() {
               })}
             </TabsList>
 
-            {/* Custom Content */}
-            <TabsContent value="custom" className="min-h-[500px] space-y-4">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold">My Custom Feed</h2>
-                <RefreshButton />
-              </div>
-              {customNews.length > 0 ? (
-                <NewsList news={customNews} showLoginCTA={false} />
-              ) : (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>No Custom Feeds</AlertTitle>
-                  <AlertDescription>
-                    You haven't added any custom RSS feeds yet, or they have no content. Go to
-                    Settings to add them.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </TabsContent>
+            {/* Pro Custom Content */}
+            {isPro && (
+              <TabsContent value="custom" className="min-h-[500px] space-y-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-bold">My Custom Feed</h2>
+                  <RefreshButton />
+                </div>
+                {customNews.length > 0 ? (
+                  <NewsList news={customNews} showLoginCTA={false} />
+                ) : (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>No Custom Feeds</AlertTitle>
+                    <AlertDescription>
+                      You haven't added any custom RSS feeds yet, or they have no content. Go to
+                      Settings to add them.
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </TabsContent>
+            )}
 
             <TabsContent value="daily" className="min-h-[500px] space-y-4">
               <Suspense fallback={<HomePageSkeleton />}>
