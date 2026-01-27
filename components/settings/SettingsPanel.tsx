@@ -353,37 +353,6 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
       {/* Guest 用户升级提示 */}
       {isGuest && <UpgradePrompt variant="inline" className="my-4" />}
 
-      {/* Pro 解锁按钮（临时测试用） */}
-      {!isGuest && (
-        <Card className={isPro ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/20' : ''}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {isPro ? '🎉 Pro 已激活' : '⭐ Pro 功能'}
-            </CardTitle>
-            <CardDescription>
-              {isPro
-                ? '您已解锁所有 Pro 功能，包括关闭广告、完整统计、健康提醒等'
-                : '解锁 Pro 功能：关闭广告、完整统计、健康提醒、OPML 导入导出等'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              onClick={togglePro}
-              disabled={isTogglingPro}
-              variant={isPro ? 'outline' : 'default'}
-              className={
-                isPro
-                  ? ''
-                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
-              }
-            >
-              {isTogglingPro && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isPro ? '取消 Pro（测试）' : '一键解锁 Pro（测试）'}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
       {/* 新闻内容设置 - 所有会员可见 */}
       {!isGuest && (
         <Card>
@@ -424,6 +393,39 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* Pro 解锁按钮（临时测试用） */}
+      {!isGuest && (
+        <Card className={isPro ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/20' : ''}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {isPro ? '🎉 Pro 已激活' : '⭐ Pro 功能'}
+            </CardTitle>
+            <CardDescription>
+              {isPro
+                ? '您已解锁所有 Pro 功能，包括关闭广告、完整统计、健康提醒等'
+                : '解锁 Pro 功能：关闭广告、完整统计、健康提醒、OPML 导入导出等'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              onClick={togglePro}
+              disabled={isTogglingPro}
+              variant={isPro ? 'outline' : 'default'}
+              className={
+                isPro
+                  ? ''
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+              }
+            >
+              {isTogglingPro && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPro ? '取消 Pro（测试）' : '一键解锁 Pro（测试）'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 新闻内容设置 - 所有会员可见 */}
 
       {/* 自定义 RSS 设置 - Pro 功能 */}
       {isPro && (

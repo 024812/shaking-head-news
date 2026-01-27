@@ -74,11 +74,18 @@ export async function rateLimit(
     // Increment counter
     const newCount = count + 1
 
-    // Set with expiration if this is the first request
+    // Set with expiration if this is the first request or if TTL is missing
     if (count === 0) {
       await setStorageItemWithOptions(key, newCount, { ex: window })
     } else {
-      await setStorageItemWithOptions(key, newCount, { keepTtl: true })
+      // Check for zombie keys (keys that lost their TTL)
+      const ttl = await getTTL(key)
+      if (ttl === -1) {
+        // If key has no expiry, force set it
+        await setStorageItemWithOptions(key, newCount, { ex: window })
+      } else {
+        await setStorageItemWithOptions(key, newCount, { keepTtl: true })
+      }
     }
 
     return {
@@ -111,7 +118,7 @@ export const RateLimitTiers = {
    * Standard rate limit for authenticated operations
    * 300 requests per minute
    */
-  STANDARD: { limit: 300, window: 60 },
+  STANDARD: { limit: 600, window: 60 },
 
   /**
    * Relaxed rate limit for read operations
