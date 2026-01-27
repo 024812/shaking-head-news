@@ -151,74 +151,54 @@ export async function refreshNews(language?: 'zh' | 'en', source?: string) {
 }
 
 /**
- * Get news for the home page
- * Prioritizes user's RSS sources if available
+ * Get user's custom news from RSS feeds
  */
-export async function getHomePageNews(language: 'zh' | 'en' = 'zh', source?: string) {
+export async function getUserCustomNews(): Promise<NewsItem[]> {
   try {
-    // If a specific source is requested, just get that
-    if (source) {
-      return getNews(language, source)
-    }
-
-    // Check for user RSS sources
     const session = await auth()
-    if (session?.user?.id) {
-      const rssSources = await getRSSSources()
+    if (!session?.user?.id) return []
 
-      if (rssSources.length > 0) {
-        // Fetch all enabled RSS feeds in parallel
-        const enabledSources = rssSources.filter((s) => s.enabled !== false)
+    const rssSources = await getRSSSources()
+    if (rssSources.length === 0) return []
 
-        if (enabledSources.length > 0) {
-          const results = await Promise.allSettled(enabledSources.map((s) => getRSSNews(s.url)))
+    // Fetch all enabled RSS feeds in parallel
+    const enabledSources = rssSources.filter((s) => s.enabled !== false)
+    if (enabledSources.length === 0) return []
 
-          const allItems: NewsItem[] = []
+    const results = await Promise.allSettled(enabledSources.map((s) => getRSSNews(s.url)))
+    const allItems: NewsItem[] = []
 
-          results.forEach((result, index) => {
-            if (result.status === 'fulfilled') {
-              // Add source name to items if not present
-              const itemsWithSource = result.value.map((item) => ({
-                ...item,
-                source: item.source || enabledSources[index].name,
-              }))
-              allItems.push(...itemsWithSource)
-            } else {
-              console.error(
-                `Failed to fetch RSS source ${enabledSources[index].url}:`,
-                result.reason
-              )
-            }
-          })
-
-          if (allItems.length > 0) {
-            // Sort by date descending
-            allItems.sort(
-              (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-            )
-
-            return {
-              items: allItems,
-              total: allItems.length,
-              updatedAt: new Date().toISOString(),
-            }
-          }
-        }
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        const itemsWithSource = result.value.map((item) => ({
+          ...item,
+          source: item.source || enabledSources[index].name,
+        }))
+        allItems.push(...itemsWithSource)
+      } else {
+        console.error(`Failed to fetch RSS source ${enabledSources[index].url}:`, result.reason)
       }
+    })
+
+    if (allItems.length > 0) {
+      allItems.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     }
 
-    // Fallback to default API news
-    return getNews(language, source)
+    return allItems
   } catch (error) {
-    console.error('Error in getHomePageNews:', error)
-    // Fallback to default API news on error
-    return getNews(language, source)
+    console.error('Error in getUserCustomNews:', error)
+    return []
   }
 }
 
 /**
- * Parse RSS feed XML to NewsItem array
+ * Get news for the home page
+ * (Deprecated: Logic moved to page.tsx and getUserCustomNews)
  */
+export async function getHomePageNews(language: 'zh' | 'en' = 'zh', source?: string) {
+  return getNews(language, source)
+}
+
 /**
  * Parse RSS feed XML to NewsItem array using fast-xml-parser
  */
