@@ -16,6 +16,7 @@ import { auth } from '@/lib/auth'
 import { getRSSSources } from '@/lib/actions/rss'
 import { fetchAiNews } from '@/lib/api/daily-news'
 import { fetchTrending, type TrendingItem } from '@/lib/api/trending'
+import { getHotList } from '@/lib/api/hot-list'
 
 // Configuration
 const NEWS_API_BASE_URL = process.env.NEWS_API_BASE_URL || 'https://news.ravelloh.top'
@@ -446,6 +447,28 @@ export async function getTrendingNewsItems(source: string = 'douyin'): Promise<N
     }))
   } catch (error) {
     console.error('Error adapting Trending news:', error)
+    return []
+  }
+}
+
+/**
+ * Get Hot List News as standard NewsItem[]
+ */
+export async function getHotListNews(sourceId: string, sourceName: string): Promise<NewsItem[]> {
+  try {
+    const items = await getHotList(sourceId)
+    if (!items) return []
+
+    return items.map((item, index) => ({
+      id: `hot-${sourceId}-${index}`,
+      title: item.title,
+      description: item.hot ? `热度: ${item.hot}` : undefined,
+      url: item.url,
+      source: sourceName,
+      publishedAt: new Date().toISOString(),
+    }))
+  } catch (error) {
+    console.error(`Error adapting Hot List news for ${sourceId}:`, error)
     return []
   }
 }

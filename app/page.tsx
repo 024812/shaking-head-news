@@ -2,13 +2,16 @@ import { Suspense } from 'react'
 import { NewsDisplay } from '@/components/news/NewsDisplay'
 import { NewsListSkeleton } from '@/components/news/NewsListSkeleton'
 import { getTranslations } from 'next-intl/server'
-import { getAiNewsItems, getTrendingNewsItems, getHomePageNews } from '@/lib/actions/news'
+import { getAiNewsItems, getHomePageNews, getHotListNews } from '@/lib/actions/news'
+import { HOT_LIST_SOURCES } from '@/lib/api/hot-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NewsList } from '@/components/news/NewsList'
 import { AdBanner } from '@/components/ads/AdBanner'
 import { auth } from '@/lib/auth'
 import { getUserSettings } from '@/lib/actions/settings'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-react'
 
 export const revalidate = 3600 // ISR: 每小时重新验证一次
 
@@ -34,11 +37,33 @@ export default async function HomePage() {
   // Fetch data
   // For guests: Daily + AI merged
   // For members: Daily, AI, Trending separated
-  const [dailyResponse, aiNews, trendingNews] = await Promise.all([
+  // Determine triggered sources from settings
+  // Filter out invalid sources and 'everydaynews' (which is Daily Brief)
+  const enabledSourceIds = (settings?.newsSources || [])
+    .filter((id) => id !== 'everydaynews')
+    .filter((id) => HOT_LIST_SOURCES.some((s) => s.id === id))
+
+  // Fetch data
+  // For guests: Daily + AI merged
+  // For members: Daily, AI, Trending, + Dynamic Sources
+  const [dailyResponse, aiNews, ...dynamicSourcesData] = await Promise.all([
     getHomePageNews('zh').catch(() => ({ items: [], total: 0 })), // Fetch explicitly for merging
     getAiNewsItems().catch(() => []),
-    getTrendingNewsItems('douyin').catch(() => []),
+    ...enabledSourceIds.map((id) => {
+      const sourceName = HOT_LIST_SOURCES.find((s) => s.id === id)?.name || id
+      return getHotListNews(id, sourceName).catch(() => [])
+    }),
   ])
+
+  // Map dynamic data to source IDs for easy lookup
+  const dynamicNewsMap = enabledSourceIds.reduce(
+    (acc, id, index) => {
+      // Cast to explicit array type to avoid unknown error
+      acc[id] = (dynamicSourcesData[index] as import('@/types/news').NewsItem[]) || []
+      return acc
+    },
+    {} as Record<string, import('@/types/news').NewsItem[]>
+  )
 
   // Guest View: Merge Daily and AI, no tabs, no trending
   if (!isMember) {
@@ -106,11 +131,39 @@ export default async function HomePage() {
           </div>
 
           <Tabs defaultValue="daily" className="w-full">
-            <TabsList className="mb-6 w-full justify-start sm:w-auto">
+            <TabsList className="mb-6 w-full justify-start overflow-x-auto sm:w-auto">
+              {/* Pro Custom Feed (Placeholder) */}
+              {isPro && <TabsTrigger value="custom">My Feed</TabsTrigger>}
+
               <TabsTrigger value="daily">Daily Brief</TabsTrigger>
-              <TabsTrigger value="ai">AI News</TabsTrigger>
-              <TabsTrigger value="trending">Trending</TabsTrigger>
+              <TabsTrigger value="ai">IT News</TabsTrigger>
+
+              {/* Dynamic Tabs */}
+              {enabledSourceIds.map((id) => {
+                const source = HOT_LIST_SOURCES.find((s) => s.id === id)
+                return (
+                  <TabsTrigger key={id} value={id}>
+                    {source?.icon} {source?.name}
+                  </TabsTrigger>
+                )
+              })}
             </TabsList>
+
+            {/* Pro Custom Content */}
+            {isPro && (
+              <TabsContent value="custom" className="min-h-[500px] space-y-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-bold">My Custom Feed</h2>
+                </div>
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>No Custom Feeds</AlertTitle>
+                  <AlertDescription>
+                    You haven't added any custom RSS feeds yet. Go to Settings to add them.
+                  </AlertDescription>
+                </Alert>
+              </TabsContent>
+            )}
 
             <TabsContent value="daily" className="min-h-[500px] space-y-4">
               <Suspense fallback={<HomePageSkeleton />}>
@@ -120,17 +173,24 @@ export default async function HomePage() {
 
             <TabsContent value="ai" className="min-h-[500px] space-y-4">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold">Artificial Intelligence</h2>
+                <h2 className="text-xl font-bold">IT News (AI)</h2>
               </div>
               <NewsList news={aiNews} showLoginCTA={!session?.user} />
             </TabsContent>
 
-            <TabsContent value="trending" className="min-h-[500px] space-y-4">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold">Trending Now (Douyin)</h2>
-              </div>
-              <NewsList news={trendingNews} showLoginCTA={!session?.user} />
-            </TabsContent>
+            {/* Dynamic Contents */}
+            {enabledSourceIds.map((id) => {
+              const source = HOT_LIST_SOURCES.find((s) => s.id === id)
+              const news = dynamicNewsMap[id] || []
+              return (
+                <TabsContent key={id} value={id} className="min-h-[500px] space-y-4">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-xl font-bold">{source?.name} Hot List</h2>
+                  </div>
+                  <NewsList news={news} showLoginCTA={!session?.user} />
+                </TabsContent>
+              )
+            })}
           </Tabs>
         </main>
 
