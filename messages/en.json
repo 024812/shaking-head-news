@@ -55,6 +55,8 @@
     "title": "Today's News",
     "refresh": "Refresh",
     "refreshing": "Refreshing...",
+    "daily": "Daily Brief",
+    "ai": "IT News",
     "noNews": "No news available",
     "source": "News Source",
     "readMore": "Read More",
