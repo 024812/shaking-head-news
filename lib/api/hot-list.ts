@@ -18,6 +18,9 @@ export const HOT_LIST_SOURCES = [
   { id: 'zhihu', name: '知乎热榜', icon: '❓' },
   { id: 'baidu', name: '百度热搜', icon: '🔍' },
   { id: 'toutiao', name: '头条热榜', icon: '📰' },
+  { id: 'today-in-history', name: '历史上的今天', icon: '📅' },
+  { id: 'quark', name: '夸克热点', icon: '🌪️' },
+  { id: 'rednote', name: '小红书', icon: '📕' },
   // { id: 'juejin', name: '掘金热榜', icon: '💎' },
   // { id: 'netease', name: '网易新闻', icon: '📰' },
 ] as const
@@ -27,8 +30,8 @@ export type HotListSourceId = (typeof HOT_LIST_SOURCES)[number]['id']
 const API_PATH_MAP: Record<string, string> = {
   baidu: 'baidu/hot',
   bilibili: 'bili',
-  juejin: 'juejin', // Still might be wrong, verify later?
-  netease: 'netease', // Still might be wrong
+  juejin: 'juejin',
+  netease: 'netease',
 }
 
 export async function getHotList(sourceId: string): Promise<HotItem[]> {
@@ -42,7 +45,20 @@ export async function getHotList(sourceId: string): Promise<HotItem[]> {
       throw new Error(`Failed to fetch ${sourceId} hot list`)
     }
 
-    const data: HotListResponse = await res.json()
+    const data = await res.json()
+
+    // Handle "today-in-history" special structure
+    if (sourceId === 'today-in-history') {
+      if (data.data && Array.isArray(data.data.items)) {
+        return data.data.items.map((item: any) => ({
+          title: item.title,
+          url: item.link || '', // Map 'link' to 'url'
+          hot: item.year, // Use year as 'hot' val or optional
+        }))
+      }
+      return []
+    }
+
     return data.data || []
   } catch (error) {
     console.error(`Error fetching hot list for ${sourceId}:`, error)

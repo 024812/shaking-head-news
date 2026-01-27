@@ -361,7 +361,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
             <CardDescription>选择您感兴趣的新闻来源</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {HOT_LIST_SOURCES.map((source) => (
                 <div key={source.id} className="flex items-center space-x-2">
                   <Checkbox
