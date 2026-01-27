@@ -144,6 +144,7 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
           isPro
           features={features.slice(0, 6)}
           t={t}
+          onAction={() => signIn()}
         />
       </div>
 
@@ -322,7 +323,7 @@ function PricingCard({
       {isPro && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
           <span className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1 text-xs font-semibold text-white shadow-lg">
-            即将推出
+            {t('oneClickActivate')}
           </span>
         </div>
       )}
@@ -379,8 +380,9 @@ function PricingCard({
           {t('currentPlan')}
         </Button>
       ) : isPro ? (
-        <Button variant="outline" className="w-full" disabled>
-          {t('comingSoon')}
+        <Button className="w-full" onClick={onAction}>
+          <Sparkles className="mr-2 h-4 w-4" />
+          {t('loginToActivate')}
         </Button>
       ) : isHighlighted ? (
         <Button className="w-full" onClick={onAction}>
