@@ -24,9 +24,17 @@ export const HOT_LIST_SOURCES = [
 
 export type HotListSourceId = (typeof HOT_LIST_SOURCES)[number]['id']
 
+const API_PATH_MAP: Record<string, string> = {
+  baidu: 'baidu/hot',
+  bilibili: 'bili',
+  juejin: 'juejin', // Still might be wrong, verify later?
+  netease: 'netease', // Still might be wrong
+}
+
 export async function getHotList(sourceId: string): Promise<HotItem[]> {
   try {
-    const res = await fetch(`https://60s.viki.moe/v2/${sourceId}`, {
+    const apiPath = API_PATH_MAP[sourceId] || sourceId
+    const res = await fetch(`https://60s.viki.moe/v2/${apiPath}`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     })
 

@@ -12,6 +12,7 @@ import { getUserSettings } from '@/lib/actions/settings'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
+import { RefreshButton } from '@/components/common/RefreshButton'
 
 export const revalidate = 3600 // ISR: 每小时重新验证一次
 
@@ -131,12 +132,12 @@ export default async function HomePage() {
           </div>
 
           <Tabs defaultValue="daily" className="w-full">
-            <TabsList className="mb-6 w-full justify-start overflow-x-auto sm:w-auto">
+            <TabsList className="scrollbar-hide mb-6 flex w-full justify-start overflow-x-auto sm:w-auto">
               {/* Pro Custom Feed (Placeholder) */}
               {isPro && <TabsTrigger value="custom">My Feed</TabsTrigger>}
 
-              <TabsTrigger value="daily">Daily Brief</TabsTrigger>
-              <TabsTrigger value="ai">IT News</TabsTrigger>
+              <TabsTrigger value="daily">{t('news.daily')}</TabsTrigger>
+              <TabsTrigger value="ai">{t('news.ai')}</TabsTrigger>
 
               {/* Dynamic Tabs */}
               {enabledSourceIds.map((id) => {
@@ -185,7 +186,8 @@ export default async function HomePage() {
               return (
                 <TabsContent key={id} value={id} className="min-h-[500px] space-y-4">
                   <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-xl font-bold">{source?.name} Hot List</h2>
+                    <h2 className="text-xl font-bold">{source?.name}</h2>
+                    <RefreshButton />
                   </div>
                   <NewsList news={news} showLoginCTA={!session?.user} />
                 </TabsContent>
