@@ -7,6 +7,8 @@ import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { getTranslations } from 'next-intl/server'
 
+import { auth } from '@/lib/auth'
+
 interface NewsDisplayProps {
   language?: 'zh' | 'en'
   source?: string
@@ -14,10 +16,11 @@ interface NewsDisplayProps {
 
 async function NewsContent({ language = 'zh', source }: NewsDisplayProps) {
   const t = await getTranslations('news')
+  const session = await auth()
 
   try {
     const newsResponse = await getHomePageNews(language, source)
-    return <NewsList news={newsResponse.items} />
+    return <NewsList news={newsResponse.items} showLoginCTA={!session?.user} />
   } catch (error) {
     console.error('Error loading news:', error)
     return (

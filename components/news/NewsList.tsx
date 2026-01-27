@@ -3,11 +3,15 @@ import { NewsItem } from './NewsItem'
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+
 interface NewsListProps {
   news: NewsItemType[]
+  showLoginCTA?: boolean
 }
 
-export function NewsList({ news }: NewsListProps) {
+export function NewsList({ news, showLoginCTA = false }: NewsListProps) {
   if (!news || news.length === 0) {
     return (
       <Alert>
@@ -26,6 +30,15 @@ export function NewsList({ news }: NewsListProps) {
       {news.map((item) => (
         <NewsItem key={item.id} item={item} />
       ))}
+
+      {showLoginCTA && (
+        <div className="py-6 text-center">
+          <p className="text-muted-foreground mb-3 text-sm">登录获取更多新闻内容</p>
+          <Button asChild size="sm">
+            <Link href="/login">立即登录</Link>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
