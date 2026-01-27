@@ -73,7 +73,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const { setFontSize, setLayoutMode } = useUIStore()
   const { setMode: setRotationMode, setInterval: setRotationInterval } = useRotationStore()
   const { setTheme } = useTheme()
-  const { isGuest, isMember, isPro, features, togglePro, isTogglingPro } = useUserTier({
+  const { isGuest, isPro, features, togglePro, isTogglingPro } = useUserTier({
     initialIsPro: initialSettings.isPro ?? false,
   })
 
@@ -272,16 +272,16 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
         </CardContent>
       </Card>
 
-      {/* 新闻源设置 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('newsSource') || '新闻源'}</CardTitle>
-          <CardDescription>
-            {t('newsSourceDescription') || '管理您的新闻来源和 RSS 订阅'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {features.customRssEnabled ? (
+      {/* 新闻源设置 - Pro 功能 */}
+      {isPro && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('newsSource') || '新闻源'}</CardTitle>
+            <CardDescription>
+              {t('newsSourceDescription') || '管理您的新闻来源和 RSS 订阅'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>RSS 订阅管理</Label>
@@ -291,25 +291,9 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 <a href="/rss">管理订阅</a>
               </Button>
             </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between opacity-60">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    RSS 订阅管理
-                    <Lock className="text-muted-foreground h-3 w-3" />
-                  </Label>
-                  <p className="text-muted-foreground text-sm">添加或移除自定义 RSS 新闻源</p>
-                </div>
-                <Button variant="outline" disabled>
-                  管理订阅
-                </Button>
-              </div>
-              <p className="text-muted-foreground text-xs">{tTier('loginToUnlock')}</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 旋转设置 */}
       <Card>
@@ -388,13 +372,13 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
       </Card>
 
       {/* 广告设置 - Pro 功能 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>广告设置</CardTitle>
-          <CardDescription>管理广告显示偏好</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {features.adsDisableable ? (
+      {isPro && (
+        <Card>
+          <CardHeader>
+            <CardTitle>广告设置</CardTitle>
+            <CardDescription>管理广告显示偏好</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="adsEnabled">显示广告</Label>
@@ -417,22 +401,9 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                 }}
               />
             </div>
-          ) : (
-            <div className="flex items-center justify-between opacity-60">
-              <div className="space-y-0.5">
-                <Label className="flex items-center gap-2">
-                  关闭广告
-                  <Lock className="text-muted-foreground h-3 w-3" />
-                </Label>
-                <p className="text-muted-foreground text-sm">
-                  {isMember ? '升级到 Pro 可关闭广告' : '登录后升级到 Pro 可关闭广告'}
-                </p>
-              </div>
-              <Switch disabled checked={true} />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 健康提醒设置 - Pro 功能 */}
       <Card>
