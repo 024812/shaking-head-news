@@ -37,8 +37,8 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
     {
       key: 'newsSources',
       guest: t('featureValues.defaultOnly'),
-      member: t('featureValues.customRss'),
-      pro: t('featureValues.customRssOpml'),
+      member: t('featureValues.hotLists'),
+      pro: t('featureValues.allSources'),
     },
     {
       key: 'rotationMode',

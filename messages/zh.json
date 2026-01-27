@@ -311,7 +311,9 @@
       "userBadge": "用户徽章"
     },
     "featureValues": {
-      "defaultOnly": "默认源（不可更改）",
+      "defaultOnly": "每日简报 + IT资讯",
+      "hotLists": "全网热榜 (抖音/微博/历史...)",
+      "allSources": "全网热榜 + 自定义 RSS",
       "customRss": "自定义 RSS",
       "customRssOpml": "自定义 + OPML",
       "continuousFixed": "连续模式（固定）",
