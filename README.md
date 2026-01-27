@@ -69,6 +69,10 @@ npm run dev
 - [性能优化](docs/PERFORMANCE_GUIDE.md)
 - [更新日志](CHANGELOG.md)
 
+## ❤️ 致谢 (Credits)
+
+- **News API**: Special thanks to [vikiboss/60s](https://github.com/vikiboss/60s) for providing the excellent 60s News API service.
+
 ---
 
 <p align="center">Made with ❤️ by ohengcom</p>
