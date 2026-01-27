@@ -14,6 +14,8 @@ import { NewsAPIError } from '@/lib/errors/news-error'
 import { XMLParser } from 'fast-xml-parser'
 import { auth } from '@/lib/auth'
 import { getRSSSources } from '@/lib/actions/rss'
+import { fetchAiNews } from '@/lib/api/daily-news'
+import { fetchTrending, type TrendingItem } from '@/lib/api/trending'
 
 // Configuration
 const NEWS_API_BASE_URL = process.env.NEWS_API_BASE_URL || 'https://news.ravelloh.top'
@@ -400,5 +402,50 @@ export async function refreshRSSFeed(rssUrl: string) {
       rssUrl,
     })
     throw new NewsAPIError('Failed to refresh RSS feed cache')
+  }
+}
+
+/**
+ * Get AI News as standard NewsItem[]
+ */
+export async function getAiNewsItems(): Promise<NewsItem[]> {
+  try {
+    const aiNews = await fetchAiNews()
+    if (!aiNews) return []
+
+    return aiNews.map((item, index) => ({
+      id: `ai-${item.date}-${index}`,
+      title: item.title,
+      description: item.description,
+      url: item.link,
+      source: `AI News (${item.source})`,
+      publishedAt: item.date || new Date().toISOString(),
+      imageUrl: item.pic,
+    }))
+  } catch (error) {
+    console.error('Error adapting AI news:', error)
+    return []
+  }
+}
+
+/**
+ * Get Trending News as standard NewsItem[]
+ */
+export async function getTrendingNewsItems(source: string = 'douyin'): Promise<NewsItem[]> {
+  try {
+    const trending = await fetchTrending(source)
+    if (!trending) return []
+
+    return trending.map((item: TrendingItem, index: number) => ({
+      id: `trending-${source}-${index}`,
+      title: item.title,
+      description: item.hot ? `Heat: ${item.hot}` : undefined,
+      url: item.url,
+      source: `Trending (${source})`,
+      publishedAt: new Date().toISOString(),
+    }))
+  } catch (error) {
+    console.error('Error adapting Trending news:', error)
+    return []
   }
 }
