@@ -124,7 +124,6 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
       <div className="grid gap-6 md:grid-cols-3">
         {/* Guest 卡片 */}
         <PricingCard
-          tier="guest"
           icon={<User className="h-6 w-6" />}
           title={t('guestTitle')}
           price={t('guestPrice')}
@@ -136,7 +135,6 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
 
         {/* Member 卡片 - 推荐 */}
         <PricingCard
-          tier="member"
           icon={<Crown className="h-6 w-6" />}
           title={t('memberTitle')}
           price={t('memberPrice')}
@@ -150,7 +148,6 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
 
         {/* Pro 卡片 */}
         <PricingCard
-          tier="pro"
           icon={<Sparkles className="h-6 w-6" />}
           title={t('proTitle')}
           price={t('proPrice')}
