@@ -25,8 +25,10 @@ import { useTheme } from 'next-themes'
 import { useUserTier } from '@/hooks/use-user-tier'
 import { UpgradePrompt } from '@/components/tier/UpgradePrompt'
 import { DEFAULT_SETTINGS } from '@/lib/config/defaults'
-import { Checkbox } from '@/components/ui/checkbox'
+
 import { HOT_LIST_SOURCES } from '@/lib/api/hot-list'
+import { Reorder, AnimatePresence, motion } from 'framer-motion'
+import { Plus, X, GripVertical, Check } from 'lucide-react'
 
 interface SettingsPanelProps {
   initialSettings: UserSettings
@@ -361,34 +363,117 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
             <CardDescription>选择您感兴趣的新闻来源</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              {HOT_LIST_SOURCES.map((source) => (
-                <div key={source.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`source-${source.id}`}
-                    checked={settings.newsSources?.includes(source.id)}
-                    onCheckedChange={(checked: boolean | 'indeterminate') => {
-                      // Only handle boolean true/false for our use case
-                      if (checked === 'indeterminate') return
-
-                      const currentSources = settings.newsSources || []
-                      let newSources
-                      if (checked) {
-                        newSources = [...currentSources, source.id]
-                      } else {
-                        newSources = currentSources.filter((id) => id !== source.id)
-                      }
-                      updateSetting('newsSources', newSources)
-                    }}
-                  />
-                  <Label
-                    htmlFor={`source-${source.id}`}
-                    className="cursor-pointer text-sm font-normal"
-                  >
-                    <span className="mr-1">{source.icon}</span> {source.name}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Unenabled Sources (Left Column) */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+                    待添加 (
+                    {HOT_LIST_SOURCES.filter((s) => !settings.newsSources?.includes(s.id)).length})
                   </Label>
                 </div>
-              ))}
+                <div className="bg-muted/30 min-h-[300px] rounded-lg border p-2">
+                  <div className="space-y-2">
+                    {HOT_LIST_SOURCES.filter(
+                      (source) => !settings.newsSources?.includes(source.id)
+                    ).map((source) => (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        key={source.id}
+                        className="bg-card hover:border-primary/50 group flex cursor-pointer items-center justify-between rounded-md border p-2 text-sm transition-colors"
+                        onClick={() => {
+                          const currentSources = settings.newsSources || []
+                          updateSetting('newsSources', [...currentSources, source.id])
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{source.icon}</span>
+                          <span>{source.name}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </motion.div>
+                    ))}
+                    {HOT_LIST_SOURCES.filter((s) => !settings.newsSources?.includes(s.id))
+                      .length === 0 && (
+                      <div className="text-muted-foreground flex h-full flex-col items-center justify-center py-8 text-xs">
+                        <Check className="mb-2 h-8 w-8 opacity-20" />
+                        已全部添加
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Enabled Sources (Right Column - Sortable) */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-primary text-xs font-medium tracking-wider uppercase">
+                    已启用 ({settings.newsSources?.length || 0}) - 可拖拽排序
+                  </Label>
+                </div>
+                <div className="bg-card min-h-[300px] rounded-lg border p-2">
+                  <Reorder.Group
+                    axis="y"
+                    values={settings.newsSources || []}
+                    onReorder={(newOrder) => updateSetting('newsSources', newOrder)}
+                    className="space-y-2"
+                  >
+                    <AnimatePresence initial={false}>
+                      {(settings.newsSources || []).map((sourceId) => {
+                        const source = HOT_LIST_SOURCES.find((s) => s.id === sourceId)
+                        if (!source) return null
+                        return (
+                          <Reorder.Item
+                            key={source.id}
+                            value={source.id}
+                            className="bg-background flex cursor-grab items-center justify-between rounded-md border p-2 text-sm shadow-sm active:cursor-grabbing"
+                            whileDrag={{
+                              scale: 1.02,
+                              zIndex: 10,
+                              boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <GripVertical className="text-muted-foreground/50 h-4 w-4" />
+                              <span className="text-lg">{source.icon}</span>
+                              <span className="font-medium">{source.name}</span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-muted-foreground hover:text-destructive h-6 w-6"
+                              onClick={(e) => {
+                                e.stopPropagation() // Prevent triggering drag or other events
+                                const currentSources = settings.newsSources || []
+                                updateSetting(
+                                  'newsSources',
+                                  currentSources.filter((id) => id !== source.id)
+                                )
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </Reorder.Item>
+                        )
+                      })}
+                    </AnimatePresence>
+                    {(settings.newsSources?.length || 0) === 0 && (
+                      <div className="text-muted-foreground flex h-full flex-col items-center justify-center py-8 text-xs">
+                        请从左侧添加新闻源
+                      </div>
+                    )}
+                  </Reorder.Group>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
