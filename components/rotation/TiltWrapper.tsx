@@ -85,12 +85,24 @@ export function TiltWrapper({
     return () => clearInterval(timer)
   }, [effectiveMode, effectiveInterval, isPaused, prefersReducedMotion, isSettingsPage, setAngle])
 
-  // Set initial angle for fixed mode
+  // Handle manual mode (mouse follow)
   useEffect(() => {
     if (effectiveMode === 'fixed' && !prefersReducedMotion && !isSettingsPage) {
-      // Fixed mode: angle between -2 and 2 degrees
-      const fixedAngle = Math.random() * 4 - 2
-      setAngle(fixedAngle)
+      const handleMouseMove = (e: any) => {
+        // Calculate factor from -1 to 1 based on screen width
+        // Left edge = -1, Center = 0, Right edge = 1
+        const xFactor = (e.clientX / window.innerWidth) * 2 - 1
+
+        // Map to -15 to 15 degrees
+        // Mouse Left -> Tilt Left (negative angle)
+        // Mouse Right -> Tilt Right (positive angle)
+        const targetAngle = xFactor * 15
+
+        setAngle(targetAngle)
+      }
+
+      window.addEventListener('mousemove', handleMouseMove)
+      return () => window.removeEventListener('mousemove', handleMouseMove)
     }
   }, [effectiveMode, prefersReducedMotion, isSettingsPage, setAngle])
 

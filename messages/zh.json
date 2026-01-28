@@ -81,7 +81,7 @@
     "rotation": "旋转设置",
     "rotationMode": "旋转模式",
     "rotationModeDescription": "选择页面旋转的行为模式",
-    "fixed": "固定模式",
+    "fixed": "手动模式",
     "continuous": "连续模式",
     "interval": "旋转间隔",
     "intervalDescription": "设置页面旋转的时间间隔（秒）",
@@ -352,9 +352,9 @@
         "01": "自定义 RSS",
         "02": "健康提醒和统计图表",
         "03": "去广告"
-      },
-      "oneClickActivateButton": "一键激活",
-      "loginToActivateLink": "登陆后可激活"
-    }
+      }
+    },
+    "oneClickActivateButton": "一键激活",
+    "loginToActivateLink": "登陆后可激活"
   }
 }

@@ -80,7 +80,6 @@ export function LanguageSelector({ currentLanguage }: LanguageSelectorProps) {
           <SelectItem value="en">{t('english')}</SelectItem>
         </SelectContent>
       </Select>
-      <p className="text-muted-foreground text-sm">{t('languageDescription')}</p>
     </div>
   )
 }
