@@ -190,7 +190,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
           <CardTitle>{t('theme')}</CardTitle>
           <CardDescription>{t('themeDescription')}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="grid gap-6 md:grid-cols-2">
           <LanguageSelector currentLanguage={settings.language} />
 
           <div className="space-y-2">
