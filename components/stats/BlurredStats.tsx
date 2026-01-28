@@ -12,7 +12,7 @@
 
 import { useTranslations } from 'next-intl'
 import { signIn } from 'next-auth/react'
-import { Lock, TrendingUp, Calendar, Target } from 'lucide-react'
+import { Lock, TrendingUp, Calendar, Target, Loader2 } from 'lucide-react'
 import { useUserTier } from '@/hooks/use-user-tier'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -94,6 +94,7 @@ function GuestStatsOverlay() {
 function MemberStatsPreview() {
   const t = useTranslations('stats')
   const tTier = useTranslations('tier')
+  const { togglePro, isTogglingPro } = useUserTier()
 
   return (
     <div className="space-y-6">
@@ -156,7 +157,8 @@ function MemberStatsPreview() {
               <p className="font-medium">完整统计数据</p>
               <p className="text-muted-foreground text-sm">升级到 Pro 查看详细图表和历史数据</p>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={togglePro} disabled={isTogglingPro}>
+              {isTogglingPro && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tTier('upgradeButton')}
             </Button>
           </div>
