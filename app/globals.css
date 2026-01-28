@@ -33,32 +33,35 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   /* Soft UI Evolution Shadow System - Light Mode */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03), 
-               0 1px 3px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 2px 4px -1px rgb(0 0 0 / 0.04),
-               0 4px 6px -1px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 4px 6px -2px rgb(0 0 0 / 0.03),
-               0 10px 15px -3px rgb(0 0 0 / 0.08);
-  --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.08),
-                  0 4px 8px -2px rgb(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 2px 4px -1px rgb(0 0 0 / 0.04), 0 4px 6px -1px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 4px 6px -2px rgb(0 0 0 / 0.03), 0 10px 15px -3px rgb(0 0 0 / 0.08);
+  --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.04);
 
   /* Soft UI Evolution Shadow System - Dark Mode */
   --shadow-dark-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
   --shadow-dark-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
   --shadow-dark-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-  --shadow-dark-hover: 0 8px 16px -4px rgb(0 0 0 / 0.5),
-                       0 4px 8px -2px rgb(0 0 0 / 0.3);
+  --shadow-dark-hover: 0 8px 16px -4px rgb(0 0 0 / 0.5), 0 4px 8px -2px rgb(0 0 0 / 0.3);
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
   }
 }
 
@@ -69,41 +72,41 @@
     --background: 210 40% 98%;
     /* 前景色 - 深色文字 #0F172A */
     --foreground: 222.2 84% 4.9%;
-    
+
     /* 卡片和弹出层 - 纯白 #FFFFFF */
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    
+
     /* 主色调 - 健康绿 #10B981 (Emerald 500) */
     --primary: 160 84% 39%;
     --primary-foreground: 0 0% 100%;
-    
+
     /* 次要色 - 信任蓝 #3B82F6 (Blue 500) */
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
-    
+
     /* 静音色 - #F1F5F9 (Slate 100) */
     --muted: 210 40% 96%;
     /* 静音前景 - #64748B (Slate 500) */
     --muted-foreground: 215 16% 47%;
-    
+
     /* 强调色 - #F1F5F9 (Slate 100) */
     --accent: 210 40% 96%;
     /* 强调前景 - #1E293B */
     --accent-foreground: 222.2 47% 11%;
-    
+
     /* 破坏性操作 */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    
+
     /* 边框和输入框 - #E2E8F0 (Slate 200) */
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     /* 焦点环 - 与 primary 一致 */
     --ring: 160 84% 39%;
-    
+
     --radius: 0.5rem;
   }
 
@@ -113,46 +116,45 @@
     --background: 222 84% 5%;
     /* 前景色 - 柔和白 #F8FAFC */
     --foreground: 210 40% 98%;
-    
+
     /* 卡片和弹出层 - #1E293B (Slate 800) */
     --card: 217 33% 17%;
     --card-foreground: 210 40% 98%;
     --popover: 217 33% 17%;
     --popover-foreground: 210 40% 98%;
-    
+
     /* 主色调 - 健康绿 (稍亮) #34D399 (Emerald 400) */
     --primary: 160 84% 45%;
     --primary-foreground: 222 84% 5%;
-    
+
     /* 次要色 - 信任蓝 (稍亮) #60A5FA (Blue 400) */
     --secondary: 217 91% 65%;
     --secondary-foreground: 222 84% 5%;
-    
+
     /* 静音色 - #1E293B (Slate 800) */
     --muted: 217 33% 17%;
     /* 静音前景 - #94A3B8 (Slate 400) */
     --muted-foreground: 215 20% 65%;
-    
+
     /* 强调色 - #1E293B */
     --accent: 217 33% 17%;
     --accent-foreground: 210 40% 98%;
-    
+
     /* 破坏性操作 */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    
+
     /* 边框和输入框 - #334155 (Slate 700) */
     --border: 217 33% 25%;
     --input: 217 33% 25%;
     /* 焦点环 - 与 primary 一致 */
     --ring: 160 84% 45%;
-    
+
     /* 深色模式阴影变体 - 覆盖默认阴影 */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-    --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.5),
-                    0 4px 8px -2px rgb(0 0 0 / 0.3);
+    --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.5), 0 4px 8px -2px rgb(0 0 0 / 0.3);
   }
 }
 
@@ -160,7 +162,8 @@
   * {
     border-color: hsl(var(--border));
   }
-  html, body {
+  html,
+  body {
     height: 100%;
     overflow: hidden;
   }
@@ -286,7 +289,6 @@
   padding-bottom: 0.75rem !important;
 }
 
-
 /* Reduced Motion Support - Requirement 6.4 */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -297,4 +299,14 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

@@ -95,14 +95,16 @@ export function TiltWrapper({
 
   // If user prefers reduced motion, render without animation
   if (prefersReducedMotion) {
-    return <div className="h-screen overflow-x-hidden overflow-y-auto">{children}</div>
+    return (
+      <div className="scrollbar-hide h-screen overflow-x-hidden overflow-y-auto">{children}</div>
+    )
   }
 
   return (
     <motion.div
       animate={{ rotate: angle }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
-      className="h-screen overflow-x-hidden overflow-y-auto"
+      className="scrollbar-hide h-screen overflow-x-hidden overflow-y-auto"
       data-testid="tilt-wrapper"
     >
       {children}

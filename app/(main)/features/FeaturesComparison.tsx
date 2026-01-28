@@ -103,6 +103,21 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
     },
   ]
 
+  // 权益列表
+  const guestBenefits = [
+    t('cardBenefits.guest.01'),
+    t('cardBenefits.guest.02'),
+    t('cardBenefits.guest.03'),
+  ]
+
+  const memberBenefits = [
+    t('cardBenefits.member.01'),
+    t('cardBenefits.member.02'),
+    t('cardBenefits.member.03'),
+  ]
+
+  const proBenefits = [t('cardBenefits.pro.01'), t('cardBenefits.pro.02'), t('cardBenefits.pro.03')]
+
   return (
     <div className="space-y-12">
       {/* 定价卡片 */}
@@ -115,7 +130,7 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
           price={t('guestPrice')}
           description={t('guestDescription')}
           isCurrent={currentTier === 'guest'}
-          features={features.slice(0, 6)}
+          benefits={guestBenefits}
           t={t}
         />
 
@@ -128,7 +143,7 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
           description={t('memberDescription')}
           isCurrent={currentTier === 'member'}
           isHighlighted
-          features={features.slice(0, 6)}
+          benefits={memberBenefits}
           t={t}
           onAction={() => signIn()}
         />
@@ -142,7 +157,7 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
           description={t('proDescription')}
           isCurrent={currentTier === 'pro'}
           isPro
-          features={features.slice(0, 6)}
+          benefits={proBenefits}
           t={t}
           onAction={() => signIn()}
         />
@@ -318,7 +333,6 @@ function FeatureValueDisplay({
  * 定价卡片组件
  */
 function PricingCard({
-  tier,
   icon,
   title,
   price,
@@ -326,11 +340,10 @@ function PricingCard({
   isCurrent,
   isHighlighted,
   isPro,
-  features,
+  benefits,
   t,
   onAction,
 }: {
-  tier: UserTier
   icon: React.ReactNode
   title: string
   price: string
@@ -338,7 +351,7 @@ function PricingCard({
   isCurrent: boolean
   isHighlighted?: boolean
   isPro?: boolean
-  features: Feature[]
+  benefits: string[]
   t: ReturnType<typeof useTranslations<'features'>>
   onAction?: () => void
 }) {
@@ -396,23 +409,12 @@ function PricingCard({
 
       {/* 功能列表 */}
       <ul className="mb-6 space-y-3">
-        {features.map((feature) => {
-          const value = feature[tier]
-          const isIncluded =
-            value === 'included' || (typeof value === 'string' && value !== 'not-included')
-          return (
-            <li key={feature.key} className="flex items-center gap-3 text-sm">
-              {isIncluded ? (
-                <Check className="h-4 w-4 shrink-0 text-green-500" />
-              ) : (
-                <X className="text-muted-foreground/40 h-4 w-4 shrink-0" />
-              )}
-              <span className={cn(!isIncluded && 'text-muted-foreground')}>
-                {t(`featureList.${feature.key}`)}
-              </span>
-            </li>
-          )
-        })}
+        {benefits.map((benefit, index) => (
+          <li key={index} className="flex items-center gap-3 text-sm">
+            <Check className="h-4 w-4 shrink-0 text-green-500" />
+            <span>{benefit}</span>
+          </li>
+        ))}
       </ul>
 
       {/* 按钮 */}
