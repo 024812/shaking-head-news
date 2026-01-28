@@ -352,7 +352,9 @@
         "01": "自定义 RSS",
         "02": "健康提醒和统计图表",
         "03": "去广告"
-      }
+      },
+      "oneClickActivateButton": "一键激活",
+      "loginToActivateLink": "登陆后可激活"
     }
   }
 }
