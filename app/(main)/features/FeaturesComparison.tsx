@@ -6,11 +6,12 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { signIn } from 'next-auth/react'
-import { Check, X, Eye, Sparkles, Crown, User, Zap } from 'lucide-react'
+import { signIn, useSession } from 'next-auth/react'
+import { Check, X, Eye, Sparkles, Crown, User, Zap, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UserTier } from '@/lib/config/features'
 import { cn } from '@/lib/utils'
+import { useUserTier } from '@/hooks/use-user-tier'
 
 interface FeaturesComparisonProps {
   currentTier: UserTier
@@ -30,6 +31,8 @@ interface Feature {
  */
 export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
   const t = useTranslations('features')
+  const { data: session } = useSession()
+  const { togglePro, isTogglingPro } = useUserTier({ initialIsPro: currentTier === 'pro' })
 
   // 功能列表
   const features: Feature[] = [
@@ -156,7 +159,9 @@ export function FeaturesComparison({ currentTier }: FeaturesComparisonProps) {
           isPro
           benefits={proBenefits}
           t={t}
-          onAction={() => signIn()}
+          isAuthenticated={!!session}
+          onAction={session ? togglePro : undefined}
+          isLoading={isTogglingPro}
         />
       </div>
 
@@ -340,6 +345,8 @@ function PricingCard({
   benefits,
   t,
   onAction,
+  isAuthenticated,
+  isLoading,
 }: {
   icon: React.ReactNode
   title: string
@@ -351,6 +358,8 @@ function PricingCard({
   benefits: string[]
   t: ReturnType<typeof useTranslations<'features'>>
   onAction?: () => void
+  isAuthenticated?: boolean
+  isLoading?: boolean
 }) {
   return (
     <div
@@ -421,10 +430,24 @@ function PricingCard({
           {t('currentPlan')}
         </Button>
       ) : isPro ? (
-        <Button className="w-full" onClick={onAction}>
-          <Sparkles className="mr-2 h-4 w-4" />
-          {t('loginToActivate')}
-        </Button>
+        isAuthenticated ? (
+          <Button
+            className="w-full border-none bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transition-all duration-300 hover:from-amber-600 hover:to-orange-600 hover:shadow-xl"
+            onClick={onAction}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
+            {t('oneClickActivateButton')}
+          </Button>
+        ) : (
+          <div className="text-center">
+            <span className="text-muted-foreground text-sm">{t('loginToActivateLink')}</span>
+          </div>
+        )
       ) : isHighlighted ? (
         <Button className="w-full" onClick={onAction}>
           <Crown className="mr-2 h-4 w-4" />

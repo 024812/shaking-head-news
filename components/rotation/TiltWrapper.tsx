@@ -5,6 +5,7 @@ import { useRotationStore } from '@/lib/stores/rotation-store'
 import { useEffect, useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { recordRotation } from '@/lib/actions/stats'
+import { cn } from '@/lib/utils'
 
 interface TiltWrapperProps {
   children: React.ReactNode
@@ -96,7 +97,14 @@ export function TiltWrapper({
   // If user prefers reduced motion, render without animation
   if (prefersReducedMotion) {
     return (
-      <div className="scrollbar-hide h-screen overflow-x-hidden overflow-y-auto">{children}</div>
+      <div
+        className={cn(
+          'h-screen overflow-x-hidden overflow-y-auto',
+          !isSettingsPage && 'scrollbar-hide'
+        )}
+      >
+        {children}
+      </div>
     )
   }
 
@@ -104,7 +112,10 @@ export function TiltWrapper({
     <motion.div
       animate={{ rotate: angle }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
-      className="scrollbar-hide h-screen overflow-x-hidden overflow-y-auto"
+      className={cn(
+        'h-screen overflow-x-hidden overflow-y-auto',
+        !isSettingsPage && 'scrollbar-hide'
+      )}
       data-testid="tilt-wrapper"
     >
       {children}
