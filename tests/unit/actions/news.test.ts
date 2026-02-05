@@ -5,12 +5,14 @@ import {
   getRSSNews,
   refreshRSSFeed,
   getHomePageNews,
+  getUserCustomNews,
 } from '@/lib/actions/news'
 import { mockNewsItems } from '@/tests/utils/test-utils'
 
 // Mock dependencies
 vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(),
+  unstable_cache: vi.fn((fn) => fn),
 }))
 
 vi.mock('@/lib/utils/error-handler', () => ({
@@ -27,6 +29,7 @@ vi.mock('@/lib/auth', () => ({
 
 vi.mock('@/lib/actions/rss', () => ({
   getRSSSources: vi.fn(),
+  getRSSNews: vi.fn(),
 }))
 
 import { auth } from '@/lib/auth'
@@ -36,7 +39,7 @@ import { revalidateTag } from 'next/cache'
 
 // Mock global fetch
 const mockFetch = vi.fn()
-global.fetch = mockFetch as any
+global.fetch = mockFetch as unknown as typeof fetch
 
 describe('News Actions', () => {
   beforeEach(() => {
@@ -374,12 +377,9 @@ describe('News Actions', () => {
       const rssXML = `<?xml version="1.0"?>
       <rss version="2.0">
         <channel>
-          <title>RSS 1</title>
           <item>
-            <title>RSS Item 1</title>
-            <link>https://rss1.com/1</link>
-            <description>Desc 1</description>
-            <pubDate>Wed, 19 Nov 2025 12:00:00 GMT</pubDate>
+            <title>RSS Item</title>
+            <pubDate>Wed, 19 Nov 2025 10:00:00 GMT</pubDate>
           </item>
         </channel>
       </rss>`
@@ -389,12 +389,11 @@ describe('News Actions', () => {
         text: async () => rssXML,
       })
 
-      const result = await getHomePageNews('zh')
+      const result = await getUserCustomNews()
 
-      expect(result.items).toHaveLength(1)
-      expect(result.items[0].title).toBe('RSS Item 1')
-      // Source is the RSS feed URL (set by parseRSSFeed)
-      expect(result.items[0].source).toBe('https://rss1.com/feed')
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('RSS Item')
+      expect(result[0].source).toBe('https://rss1.com/feed')
     })
 
     it('should aggregate multiple RSS sources and sort by date', async () => {
@@ -448,11 +447,11 @@ describe('News Actions', () => {
         .mockResolvedValueOnce({ ok: true, text: async () => rssXML1 })
         .mockResolvedValueOnce({ ok: true, text: async () => rssXML2 })
 
-      const result = await getHomePageNews('zh')
+      const result = await getUserCustomNews()
 
-      expect(result.items).toHaveLength(2)
-      expect(result.items[0].title).toBe('New Item')
-      expect(result.items[1].title).toBe('Old Item')
+      expect(result).toHaveLength(2)
+      expect(result[0].title).toBe('New Item')
+      expect(result[1].title).toBe('Old Item')
     })
   })
 })

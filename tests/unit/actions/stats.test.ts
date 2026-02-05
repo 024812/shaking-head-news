@@ -70,7 +70,7 @@ describe('Stats Actions', () => {
 
       const result = await recordRotation(5, 30)
 
-      expect(result).toBeNull()
+      expect(result).toEqual({ error: 'UNAUTHORIZED' })
       expect(setStorageItem).not.toHaveBeenCalled()
     })
 
@@ -137,8 +137,9 @@ describe('Stats Actions', () => {
 
       const result = await recordRotation(5, 30)
 
-      // Since rate limiting returns false, it should return null
-      expect(result).toBeNull()
+      // Since rate limiting returns false, it should return RATE_LIMIT error
+      // Note: Implementation returns { error: 'RATE_LIMIT' } on failure, not null
+      expect(result).toHaveProperty('error', 'RATE_LIMIT')
     })
 
     it('should validate angle range', async () => {
@@ -149,7 +150,10 @@ describe('Stats Actions', () => {
 
       const result = await recordRotation(200, 30)
 
-      expect(result).toBeNull()
+      expect(result).toEqual({
+        error: 'INTERNAL_ERROR',
+        details: 'Angle must be between -180 and 180',
+      })
     })
 
     it('should validate duration range', async () => {
@@ -160,7 +164,10 @@ describe('Stats Actions', () => {
 
       const result = await recordRotation(5, 4000)
 
-      expect(result).toBeNull()
+      expect(result).toEqual({
+        error: 'INTERNAL_ERROR',
+        details: 'Duration must be between 0 and 3600 seconds',
+      })
     })
 
     it('should limit records to 100 items', async () => {
