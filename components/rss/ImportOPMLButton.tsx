@@ -4,8 +4,7 @@
  */
 
 'use client'
-
-import { useState, useRef } from 'react'
+import { useState, useRef, type ElementRef, type ChangeEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { importOPML } from '@/lib/actions/rss'
@@ -15,7 +14,7 @@ import { useRouter } from 'next/navigation'
 
 export function ImportOPMLButton() {
   const [loading, setLoading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<ElementRef<'input'>>(null)
   const { toast } = useToast()
   const t = useTranslations('rss')
   const router = useRouter()
@@ -24,7 +23,7 @@ export function ImportOPMLButton() {
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<ElementRef<'input'>>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
