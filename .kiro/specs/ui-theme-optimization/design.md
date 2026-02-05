@@ -49,33 +49,33 @@
 ```css
 :root {
   /* 背景色 */
-  --background: 210 40% 98%;           /* #F8FAFC - 柔和白 */
-  --foreground: 222.2 84% 4.9%;        /* #0F172A - 深色文字 */
-  
+  --background: 210 40% 98%; /* #F8FAFC - 柔和白 */
+  --foreground: 222.2 84% 4.9%; /* #0F172A - 深色文字 */
+
   /* 卡片和弹出层 */
-  --card: 0 0% 100%;                   /* #FFFFFF */
-  --card-foreground: 222.2 84% 4.9%;   /* #0F172A */
-  
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 222.2 84% 4.9%; /* #0F172A */
+
   /* 主色调 - 健康绿 */
-  --primary: 160 84% 39%;              /* #10B981 - Emerald 500 */
-  --primary-foreground: 0 0% 100%;     /* #FFFFFF */
-  
+  --primary: 160 84% 39%; /* #10B981 - Emerald 500 */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
   /* 次要色 - 信任蓝 */
-  --secondary: 217 91% 60%;            /* #3B82F6 - Blue 500 */
-  --secondary-foreground: 0 0% 100%;   /* #FFFFFF */
-  
+  --secondary: 217 91% 60%; /* #3B82F6 - Blue 500 */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+
   /* 强调色 */
-  --accent: 210 40% 96%;               /* #F1F5F9 - Slate 100 */
-  --accent-foreground: 222.2 47% 11%;  /* #1E293B */
-  
+  --accent: 210 40% 96%; /* #F1F5F9 - Slate 100 */
+  --accent-foreground: 222.2 47% 11%; /* #1E293B */
+
   /* 静音色 */
-  --muted: 210 40% 96%;                /* #F1F5F9 */
-  --muted-foreground: 215 16% 47%;     /* #64748B - Slate 500 */
-  
+  --muted: 210 40% 96%; /* #F1F5F9 */
+  --muted-foreground: 215 16% 47%; /* #64748B - Slate 500 */
+
   /* 边框和输入框 */
-  --border: 214 32% 91%;               /* #E2E8F0 - Slate 200 */
+  --border: 214 32% 91%; /* #E2E8F0 - Slate 200 */
   --input: 214 32% 91%;
-  --ring: 160 84% 39%;                 /* 与 primary 一致 */
+  --ring: 160 84% 39%; /* 与 primary 一致 */
 }
 ```
 
@@ -84,31 +84,31 @@
 ```css
 .dark {
   /* 背景色 */
-  --background: 222 84% 5%;            /* #0F172A - Slate 900 */
-  --foreground: 210 40% 98%;           /* #F8FAFC */
-  
+  --background: 222 84% 5%; /* #0F172A - Slate 900 */
+  --foreground: 210 40% 98%; /* #F8FAFC */
+
   /* 卡片和弹出层 */
-  --card: 217 33% 17%;                 /* #1E293B - Slate 800 */
-  --card-foreground: 210 40% 98%;      /* #F8FAFC */
-  
+  --card: 217 33% 17%; /* #1E293B - Slate 800 */
+  --card-foreground: 210 40% 98%; /* #F8FAFC */
+
   /* 主色调 - 健康绿 (稍亮) */
-  --primary: 160 84% 45%;              /* #34D399 - Emerald 400 */
-  --primary-foreground: 222 84% 5%;    /* #0F172A */
-  
+  --primary: 160 84% 45%; /* #34D399 - Emerald 400 */
+  --primary-foreground: 222 84% 5%; /* #0F172A */
+
   /* 次要色 - 信任蓝 (稍亮) */
-  --secondary: 217 91% 65%;            /* #60A5FA - Blue 400 */
-  --secondary-foreground: 222 84% 5%;  /* #0F172A */
-  
+  --secondary: 217 91% 65%; /* #60A5FA - Blue 400 */
+  --secondary-foreground: 222 84% 5%; /* #0F172A */
+
   /* 强调色 */
-  --accent: 217 33% 17%;               /* #1E293B */
-  --accent-foreground: 210 40% 98%;    /* #F8FAFC */
-  
+  --accent: 217 33% 17%; /* #1E293B */
+  --accent-foreground: 210 40% 98%; /* #F8FAFC */
+
   /* 静音色 */
-  --muted: 217 33% 17%;                /* #1E293B */
-  --muted-foreground: 215 20% 65%;     /* #94A3B8 - Slate 400 */
-  
+  --muted: 217 33% 17%; /* #1E293B */
+  --muted-foreground: 215 20% 65%; /* #94A3B8 - Slate 400 */
+
   /* 边框和输入框 */
-  --border: 217 33% 25%;               /* #334155 - Slate 700 */
+  --border: 217 33% 25%; /* #334155 - Slate 700 */
   --input: 217 33% 25%;
   --ring: 160 84% 45%;
 }
@@ -119,19 +119,15 @@
 ```css
 @theme {
   /* 柔和阴影 - Soft UI Evolution 风格 */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03), 
-               0 1px 3px 0 rgb(0 0 0 / 0.05);
-  
-  --shadow-md: 0 2px 4px -1px rgb(0 0 0 / 0.04),
-               0 4px 6px -1px rgb(0 0 0 / 0.06);
-  
-  --shadow-lg: 0 4px 6px -2px rgb(0 0 0 / 0.03),
-               0 10px 15px -3px rgb(0 0 0 / 0.08);
-  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.05);
+
+  --shadow-md: 0 2px 4px -1px rgb(0 0 0 / 0.04), 0 4px 6px -1px rgb(0 0 0 / 0.06);
+
+  --shadow-lg: 0 4px 6px -2px rgb(0 0 0 / 0.03), 0 10px 15px -3px rgb(0 0 0 / 0.08);
+
   /* 悬停增强阴影 */
-  --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.08),
-                  0 4px 8px -2px rgb(0 0 0 / 0.04);
-  
+  --shadow-hover: 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.04);
+
   /* 深色模式阴影 */
   --shadow-dark-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
   --shadow-dark-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
@@ -150,17 +146,17 @@ interface NewsCardProps {
 // 样式类定义
 const cardClasses = cn(
   // 基础样式
-  "rounded-xl border bg-card p-4",
+  'rounded-xl border bg-card p-4',
   // 阴影
-  "shadow-sm",
+  'shadow-sm',
   // 过渡动画
-  "transition-all duration-200 ease-out",
+  'transition-all duration-200 ease-out',
   // 悬停效果
-  "hover:shadow-hover hover:scale-[1.01]",
+  'hover:shadow-hover hover:scale-[1.01]',
   // 交互指示
-  "cursor-pointer",
+  'cursor-pointer',
   // 深色模式
-  "dark:border-border dark:bg-card"
+  'dark:border-border dark:bg-card'
 )
 ```
 
@@ -170,20 +166,20 @@ const cardClasses = cn(
 // components/layout/header.tsx
 const headerClasses = cn(
   // 定位
-  "sticky top-0 z-50 w-full",
+  'sticky top-0 z-50 w-full',
   // 背景和毛玻璃效果
-  "bg-background/80 backdrop-blur-md",
+  'bg-background/80 backdrop-blur-md',
   // 边框
-  "border-b border-border",
+  'border-b border-border',
   // 过渡
-  "transition-colors duration-200"
+  'transition-colors duration-200'
 )
 
 const navLinkClasses = cn(
-  "text-sm font-medium",
-  "text-muted-foreground",
-  "transition-colors duration-200",
-  "hover:text-primary"
+  'text-sm font-medium',
+  'text-muted-foreground',
+  'transition-colors duration-200',
+  'hover:text-primary'
 )
 ```
 
@@ -192,29 +188,29 @@ const navLinkClasses = cn(
 ```tsx
 // 主要按钮 - 健康绿
 const primaryButton = cn(
-  "bg-primary text-primary-foreground",
-  "hover:bg-primary/90",
-  "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-  "transition-colors duration-200",
-  "rounded-lg"
+  'bg-primary text-primary-foreground',
+  'hover:bg-primary/90',
+  'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+  'transition-colors duration-200',
+  'rounded-lg'
 )
 
 // 次要按钮
 const secondaryButton = cn(
-  "bg-secondary text-secondary-foreground",
-  "hover:bg-secondary/90",
-  "focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2",
-  "transition-colors duration-200",
-  "rounded-lg"
+  'bg-secondary text-secondary-foreground',
+  'hover:bg-secondary/90',
+  'focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
+  'transition-colors duration-200',
+  'rounded-lg'
 )
 
 // 轮廓按钮
 const outlineButton = cn(
-  "border border-input bg-background",
-  "hover:bg-accent hover:text-accent-foreground",
-  "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-  "transition-colors duration-200",
-  "rounded-lg"
+  'border border-input bg-background',
+  'hover:bg-accent hover:text-accent-foreground',
+  'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+  'transition-colors duration-200',
+  'rounded-lg'
 )
 ```
 
@@ -261,13 +257,13 @@ interface ShadowTokens {
 
 interface AnimationConfig {
   duration: {
-    fast: string    // 150ms
-    normal: string  // 200ms
-    slow: string    // 300ms
+    fast: string // 150ms
+    normal: string // 200ms
+    slow: string // 300ms
   }
   easing: {
-    enter: string   // ease-out
-    exit: string    // ease-in
+    enter: string // ease-out
+    exit: string // ease-in
     default: string // ease-in-out
   }
 }
@@ -284,17 +280,17 @@ interface TypographyConfig {
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: WCAG Contrast Ratio Compliance
 
-*For any* text color and background color combination defined in the Theme_System (both light and dark modes), the contrast ratio SHALL be at least 4.5:1 for normal text and 3:1 for large text, ensuring WCAG AA compliance.
+_For any_ text color and background color combination defined in the Theme_System (both light and dark modes), the contrast ratio SHALL be at least 4.5:1 for normal text and 3:1 for large text, ensuring WCAG AA compliance.
 
 **Validates: Requirements 1.6, 4.2, 8.1**
 
 ### Property 2: Theme Consistency
 
-*For any* color token defined in the light mode theme, there SHALL exist a corresponding token in the dark mode theme with appropriate contrast adjustments.
+_For any_ color token defined in the light mode theme, there SHALL exist a corresponding token in the dark mode theme with appropriate contrast adjustments.
 
 **Validates: Requirements 1.4, 1.5, 8.2, 8.3**
 
@@ -312,8 +308,8 @@ const fontFamily = {
     '-apple-system',
     'BlinkMacSystemFont',
     'Segoe UI',
-    'sans-serif'
-  ]
+    'sans-serif',
+  ],
 }
 ```
 
@@ -356,7 +352,7 @@ export default defineConfig({
   test: {
     // 属性测试配置
     testTimeout: 30000, // 属性测试可能需要更长时间
-  }
+  },
 })
 ```
 

@@ -345,9 +345,10 @@ export async function exportOPML() {
   }
 }
 
-
 // 导入 OPML (Pro only)
-export async function importOPML(opmlContent: string): Promise<{ imported: number; skipped: number }> {
+export async function importOPML(
+  opmlContent: string
+): Promise<{ imported: number; skipped: number }> {
   try {
     const session = await auth()
 
@@ -372,14 +373,14 @@ export async function importOPML(opmlContent: string): Promise<{ imported: numbe
 
     // 解析 OPML
     const sources = parseOPML(opmlContent)
-    
+
     if (sources.length === 0) {
       throw new ValidationError('No valid RSS sources found in OPML file')
     }
 
     // 获取现有源
     const existingSources = await getRSSSources()
-    const existingUrls = new Set(existingSources.map(s => s.url.toLowerCase()))
+    const existingUrls = new Set(existingSources.map((s) => s.url.toLowerCase()))
 
     // 限制总数
     const maxSources = 50

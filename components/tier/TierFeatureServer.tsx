@@ -26,11 +26,7 @@ interface TierFeatureServerProps {
  * </TierFeatureServer>
  * ```
  */
-export async function TierFeatureServer({
-  feature,
-  children,
-  fallback,
-}: TierFeatureServerProps) {
+export async function TierFeatureServer({ feature, children, fallback }: TierFeatureServerProps) {
   const { features } = await getUserTier()
 
   if (features[feature]) {

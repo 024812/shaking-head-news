@@ -9,7 +9,14 @@ import { Check, X, Eye, Sparkles } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { UserTier } from '@/lib/config/features'
 
@@ -85,7 +92,7 @@ export function PricingCard({ tier, isCurrentTier, onAction, className }: Pricin
     >
       {cardConfig.highlight && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+          <span className="bg-primary text-primary-foreground rounded-full px-3 py-1 text-xs font-medium">
             推荐
           </span>
         </div>
@@ -102,9 +109,7 @@ export function PricingCard({ tier, isCurrentTier, onAction, className }: Pricin
         <CardDescription>{cardConfig.description}</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex-1">
-        {/* 功能列表由父组件通过 children 传入 */}
-      </CardContent>
+      <CardContent className="flex-1">{/* 功能列表由父组件通过 children 传入 */}</CardContent>
 
       <CardFooter>
         <Button
@@ -128,13 +133,13 @@ export function FeatureStatusIcon({ status }: { status: FeatureStatus | string }
     return <Check className="h-4 w-4 text-green-500" />
   }
   if (status === 'not-included') {
-    return <X className="h-4 w-4 text-muted-foreground" />
+    return <X className="text-muted-foreground h-4 w-4" />
   }
   if (status === 'preview') {
     return <Eye className="h-4 w-4 text-yellow-500" />
   }
   // 自定义文本
-  return <span className="text-xs text-muted-foreground">{status}</span>
+  return <span className="text-muted-foreground text-xs">{status}</span>
 }
 
 export default PricingCard

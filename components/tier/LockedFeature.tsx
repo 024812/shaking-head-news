@@ -56,26 +56,29 @@ export function LockedFeature({
   // 紧凑模式（用于设置项）
   if (compact) {
     return (
-      <div className="flex items-center gap-2 text-muted-foreground">
+      <div className="text-muted-foreground flex items-center gap-2">
         <Lock className="h-4 w-4" />
-        <span className="text-sm">
-          {isGuest ? t('loginToUnlock') : t('upgradeToUnlock')}
-        </span>
+        <span className="text-sm">{isGuest ? t('loginToUnlock') : t('upgradeToUnlock')}</span>
       </div>
     )
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-6 text-center", className)}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-        <Lock className="h-6 w-6 text-muted-foreground" />
+    <div
+      className={cn(
+        'border-muted-foreground/30 bg-muted/30 flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-6 text-center',
+        className
+      )}
+    >
+      <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-full">
+        <Lock className="text-muted-foreground h-6 w-6" />
       </div>
 
       <div className="space-y-1">
-        <p className="font-medium text-foreground">
+        <p className="text-foreground font-medium">
           {t(`features.${featureName}`, { defaultValue: featureName })}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {description ||
             (isGuest
               ? t('loginToUnlockDescription')

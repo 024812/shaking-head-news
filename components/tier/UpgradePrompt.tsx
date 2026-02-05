@@ -30,12 +30,7 @@ interface UpgradePromptProps {
  * - modal: 弹窗（点击锁定功能时）
  * - inline: 内联提示（设置项旁边）
  */
-export function UpgradePrompt({
-  variant,
-  onAction,
-  onDismiss,
-  className,
-}: UpgradePromptProps) {
+export function UpgradePrompt({ variant, onAction, onDismiss, className }: UpgradePromptProps) {
   const t = useTranslations('tier')
   const { isGuest } = useUserTier()
   const [dismissed, setDismissed] = useState(false)
@@ -83,7 +78,7 @@ export function UpgradePrompt({
           </Button>
           <button
             onClick={handleDismiss}
-            className="rounded p-1 hover:bg-muted"
+            className="hover:bg-muted rounded p-1"
             aria-label={t('dismiss')}
           >
             <X className="h-4 w-4" />
@@ -98,13 +93,13 @@ export function UpgradePrompt({
     return (
       <div
         className={cn(
-          'flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm',
+          'bg-muted/50 flex items-center gap-2 rounded-md px-3 py-2 text-sm',
           className
         )}
       >
         {isGuest ? (
           <>
-            <LogIn className="h-4 w-4 text-muted-foreground" />
+            <LogIn className="text-muted-foreground h-4 w-4" />
             <span className="text-muted-foreground">{t('loginInline')}</span>
           </>
         ) : (
@@ -124,7 +119,7 @@ export function UpgradePrompt({
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-4 rounded-lg border bg-card p-6 text-center shadow-lg',
+        'bg-card flex flex-col items-center gap-4 rounded-lg border p-6 text-center shadow-lg',
         className
       )}
     >
@@ -140,7 +135,7 @@ export function UpgradePrompt({
         <h3 className="text-lg font-semibold">
           {isGuest ? t('loginModalTitle') : t('upgradeModalTitle')}
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {isGuest ? t('loginModalDescription') : t('upgradeModalDescription')}
         </p>
       </div>
@@ -149,9 +144,7 @@ export function UpgradePrompt({
         <Button variant="outline" onClick={handleDismiss}>
           {t('maybeLater')}
         </Button>
-        <Button onClick={handleAction}>
-          {isGuest ? t('loginButton') : t('upgradeButton')}
-        </Button>
+        <Button onClick={handleAction}>{isGuest ? t('loginButton') : t('upgradeButton')}</Button>
       </div>
     </div>
   )
