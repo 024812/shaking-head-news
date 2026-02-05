@@ -16,7 +16,7 @@ export async function recordRotation(angle: number, duration: number) {
     const session = await auth()
 
     if (!session?.user?.id) {
-      console.error('[recordRotation] No session found')
+      // Guest user (no session) - seamlessly skip recording without error
       return { error: 'UNAUTHORIZED' }
     }
 
