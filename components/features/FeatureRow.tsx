@@ -29,20 +29,17 @@ interface FeatureRowProps {
 export function FeatureRow({ name, guest, member, pro, isLast }: FeatureRowProps) {
   return (
     <div
-      className={cn(
-        'grid grid-cols-4 gap-4 py-3 text-sm',
-        !isLast && 'border-b border-border/50'
-      )}
+      className={cn('grid grid-cols-4 gap-4 py-3 text-sm', !isLast && 'border-border/50 border-b')}
     >
       <div className="font-medium">{name}</div>
       <div className="text-center">
-        <FeatureValue value={guest} />
+        <FeatureValueDisplay value={guest} />
       </div>
       <div className="text-center">
-        <FeatureValue value={member} />
+        <FeatureValueDisplay value={member} />
       </div>
       <div className="text-center">
-        <FeatureValue value={pro} />
+        <FeatureValueDisplay value={pro} />
       </div>
     </div>
   )
@@ -51,7 +48,7 @@ export function FeatureRow({ name, guest, member, pro, isLast }: FeatureRowProps
 /**
  * 功能值显示
  */
-function FeatureValue({ value }: { value: FeatureValue }) {
+function FeatureValueDisplay({ value }: { value: FeatureValue }) {
   if (value === 'included') {
     return (
       <span className="inline-flex items-center justify-center">
@@ -63,7 +60,7 @@ function FeatureValue({ value }: { value: FeatureValue }) {
   if (value === 'not-included') {
     return (
       <span className="inline-flex items-center justify-center">
-        <X className="h-4 w-4 text-muted-foreground/50" />
+        <X className="text-muted-foreground/50 h-4 w-4" />
       </span>
     )
   }
@@ -78,7 +75,7 @@ function FeatureValue({ value }: { value: FeatureValue }) {
   }
 
   // 自定义文本值
-  return <span className="text-xs text-muted-foreground">{value}</span>
+  return <span className="text-muted-foreground text-xs">{value}</span>
 }
 
 /**
@@ -86,7 +83,7 @@ function FeatureValue({ value }: { value: FeatureValue }) {
  */
 export function FeatureTableHeader() {
   return (
-    <div className="grid grid-cols-4 gap-4 border-b border-border py-3 text-sm font-semibold">
+    <div className="border-border grid grid-cols-4 gap-4 border-b py-3 text-sm font-semibold">
       <div>功能</div>
       <div className="text-center">访客</div>
       <div className="text-center">会员</div>
