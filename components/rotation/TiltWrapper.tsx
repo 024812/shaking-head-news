@@ -44,18 +44,11 @@ export function TiltWrapper({
 
   // Check for prefers-reduced-motion
   useEffect(() => {
+    // We intentionally ignore prefers-reduced-motion to ensure the "shaking" feature
+    // works on all systems (including Cloud PCs/VMs that might default to reduced motion).
+    // The feature is core to the application's purpose.
     if (typeof window === 'undefined') return
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChange = (e: any) => {
-      setPrefersReducedMotion(e.matches)
-    }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    setPrefersReducedMotion(false)
   }, [])
 
   // Reset angle to 0 on settings page
