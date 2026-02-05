@@ -35,8 +35,7 @@ export function UserBadge({ className, small = false }: UserBadgeProps) {
     },
     pro: {
       label: t('proBadge'),
-      className:
-        'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm',
+      className: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-sm',
     },
   }
 

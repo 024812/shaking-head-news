@@ -54,15 +54,11 @@ export function HealthReminders({ className }: HealthRemindersProps) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <div className="mb-4 rounded-full bg-muted p-4">
-            <Clock className="h-8 w-8 text-muted-foreground" />
+          <div className="bg-muted mb-4 rounded-full p-4">
+            <Clock className="text-muted-foreground h-8 w-8" />
           </div>
-          <p className="text-sm text-muted-foreground">
-            健康提醒功能即将推出
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            设置定时提醒，帮助您养成健康习惯
-          </p>
+          <p className="text-muted-foreground text-sm">健康提醒功能即将推出</p>
+          <p className="text-muted-foreground mt-1 text-xs">设置定时提醒，帮助您养成健康习惯</p>
         </div>
       </CardContent>
     </Card>

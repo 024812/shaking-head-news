@@ -40,7 +40,7 @@
     - 添加 cursor-pointer
     - 添加过渡动画
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 2.2, 2.3_
-  - [ ]* 4.2 编写 NewsItem 组件单元测试
+  - [ ]\* 4.2 编写 NewsItem 组件单元测试
     - 验证样式类正确应用
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
@@ -50,7 +50,7 @@
     - 更新导航链接悬停样式
     - 确保 sticky 定位和 z-index
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
-  - [ ]* 5.2 编写 Header 组件单元测试
+  - [ ]\* 5.2 编写 Header 组件单元测试
     - 验证样式类正确应用
     - _Requirements: 4.1, 4.4_
 
@@ -61,7 +61,7 @@
     - 确保 focus-visible 样式
     - 统一圆角和过渡
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6_
-  - [ ]* 6.2 编写 Button 组件单元测试
+  - [ ]\* 6.2 编写 Button 组件单元测试
     - 验证各变体样式正确
     - _Requirements: 5.4, 5.5_
 
@@ -82,10 +82,10 @@
     - _Requirements: 1.1_
 
 - [x] 9. 添加属性测试
-  - [x]* 9.1 编写对比度属性测试
+  - [x]\* 9.1 编写对比度属性测试
     - **Property 1: WCAG Contrast Ratio Compliance**
     - **Validates: Requirements 1.6, 4.2, 8.1**
-  - [x]* 9.2 编写主题一致性属性测试
+  - [x]\* 9.2 编写主题一致性属性测试
     - **Property 2: Theme Consistency**
     - **Validates: Requirements 1.4, 1.5, 8.2, 8.3**
 

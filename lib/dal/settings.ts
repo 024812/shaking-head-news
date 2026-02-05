@@ -60,7 +60,10 @@ export async function saveUserSettings(settings: Partial<UserSettings>): Promise
   const validatedSettings = { ...settings }
 
   if (typeof validatedSettings.rotationInterval === 'number') {
-    validatedSettings.rotationInterval = clampSettingValue('rotationInterval', validatedSettings.rotationInterval)
+    validatedSettings.rotationInterval = clampSettingValue(
+      'rotationInterval',
+      validatedSettings.rotationInterval
+    )
   }
 
   if (typeof validatedSettings.tiltAngle === 'number') {
@@ -110,7 +113,9 @@ export async function resetUserSettings(): Promise<void> {
 /**
  * 获取单个设置值
  */
-export async function getSettingValue<K extends keyof UserSettings>(key: K): Promise<UserSettings[K]> {
+export async function getSettingValue<K extends keyof UserSettings>(
+  key: K
+): Promise<UserSettings[K]> {
   const settings = await getUserSettings()
   return settings[key]
 }

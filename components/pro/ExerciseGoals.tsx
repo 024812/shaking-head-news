@@ -54,15 +54,11 @@ export function ExerciseGoals({ className }: ExerciseGoalsProps) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <div className="mb-4 rounded-full bg-muted p-4">
-            <Trophy className="h-8 w-8 text-muted-foreground" />
+          <div className="bg-muted mb-4 rounded-full p-4">
+            <Trophy className="text-muted-foreground h-8 w-8" />
           </div>
-          <p className="text-sm text-muted-foreground">
-            运动目标功能即将推出
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            设置每日目标，追踪您的颈椎运动进度
-          </p>
+          <p className="text-muted-foreground text-sm">运动目标功能即将推出</p>
+          <p className="text-muted-foreground mt-1 text-xs">设置每日目标，追踪您的颈椎运动进度</p>
         </div>
       </CardContent>
     </Card>

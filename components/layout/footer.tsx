@@ -2,7 +2,7 @@ import { Github, Heart } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-background/80 backdrop-blur-sm border-t border-border transition-colors duration-200">
+    <footer className="bg-background/80 border-border border-t backdrop-blur-sm transition-colors duration-200">
       <div className="container mx-auto py-6">
         <div className="text-muted-foreground flex flex-col items-center justify-between gap-4 text-xs sm:flex-row">
           {/* 版权信息 */}

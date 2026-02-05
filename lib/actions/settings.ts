@@ -161,7 +161,6 @@ export async function resetSettings(): Promise<{
   }
 }
 
-
 /**
  * 切换 Pro 状态（临时测试用）
  * 将 Pro 状态存储在云端

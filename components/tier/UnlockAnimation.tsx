@@ -56,7 +56,7 @@ export function UnlockAnimation({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm transition-opacity duration-300',
+        'bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300',
         isAnimating ? 'opacity-100' : 'opacity-0',
         className
       )}
@@ -71,17 +71,17 @@ export function UnlockAnimation({
         <div className="relative">
           <div
             className={cn(
-              'flex h-20 w-20 items-center justify-center rounded-full bg-primary transition-all duration-500',
+              'bg-primary flex h-20 w-20 items-center justify-center rounded-full transition-all duration-500',
               isAnimating && 'animate-bounce'
             )}
           >
-            <Check className="h-10 w-10 text-primary-foreground" />
+            <Check className="text-primary-foreground h-10 w-10" />
           </div>
 
           {/* 闪光效果 */}
           <Sparkles
             className={cn(
-              'absolute -right-2 -top-2 h-6 w-6 text-yellow-500 transition-all duration-300',
+              'absolute -top-2 -right-2 h-6 w-6 text-yellow-500 transition-all duration-300',
               isAnimating ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
             )}
           />
@@ -101,10 +101,8 @@ export function UnlockAnimation({
 
         {/* 文本 */}
         <div className="text-center">
-          <p className="text-xl font-semibold text-foreground">{message}</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            更多功能已为您解锁
-          </p>
+          <p className="text-foreground text-xl font-semibold">{message}</p>
+          <p className="text-muted-foreground mt-1 text-sm">更多功能已为您解锁</p>
         </div>
       </div>
     </div>

@@ -6,7 +6,12 @@
  */
 
 import { getCurrentUser, hasProSubscription } from '@/lib/dal/auth'
-import { UserTier, FeatureConfig, getFeaturesForTier, isFeatureEnabled } from '@/lib/config/features'
+import {
+  UserTier,
+  FeatureConfig,
+  getFeaturesForTier,
+  isFeatureEnabled,
+} from '@/lib/config/features'
 
 export interface ServerUserTier {
   /** 用户层级 */

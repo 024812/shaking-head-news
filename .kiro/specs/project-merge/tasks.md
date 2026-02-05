@@ -3,6 +3,7 @@
 ## Overview
 
 将 shaking-news 和 shaking-head-news 合并为一个统一代码库。采用三层用户模式：
+
 - **访客 (Guest)**：即开即用，无需登录，功能受限
 - **会员 (Member)**：免费登录，解锁自定义功能
 - **Pro**：付费订阅（未来），解锁高级功能（统计、提醒等）
@@ -20,7 +21,7 @@
     - 定义 `DEFAULT_SETTINGS` 常量
     - 定义 `UserSettings` 类型
     - _Requirements: 2.3, 6.1_
-  - [ ]* 1.3 编写功能配置的属性测试
+  - [ ]\* 1.3 编写功能配置的属性测试
     - **Property 1: Feature Availability Based on User Tier**
     - **Validates: Requirements 1.2, 1.3, 1.4, 1.5**
 
@@ -34,7 +35,7 @@
     - 实现 `saveUserSettings()` 函数
     - 实现云存储回退到 localStorage 逻辑
     - _Requirements: 6.1, 6.2, 6.3, 6.4_
-  - [ ]* 2.3 编写设置 DAL 的属性测试
+  - [ ]\* 2.3 编写设置 DAL 的属性测试
     - **Property 2: Default Settings for Guest Users**
     - **Property 5: Settings Cloud Sync Round-Trip**
     - **Validates: Requirements 2.3, 6.1, 6.2, 6.3**
@@ -51,7 +52,7 @@
   - [x] 4.2 创建服务端层级检查 `lib/tier-server.ts`
     - 实现 `getUserTier()` 函数用于 Server Components
     - _Requirements: 1.2_
-  - [ ]* 4.3 编写层级检查的单元测试
+  - [ ]\* 4.3 编写层级检查的单元测试
     - 测试未登录返回 guest
     - 测试已登录无订阅返回 member
     - 测试已登录有订阅返回 pro
@@ -82,7 +83,7 @@
     - Guest 和 Member 强制显示广告
     - Pro 用户可根据设置显示/隐藏
     - _Requirements: 7.1, 7.2, 7.3_
-  - [ ]* 6.2 编写广告可见性的属性测试
+  - [ ]\* 6.2 编写广告可见性的属性测试
     - **Property 3: Ad Visibility Rules**
     - **Validates: Requirements 7.1, 7.2, 7.3**
 
@@ -103,7 +104,7 @@
     - 仅 Pro 用户可关闭广告
     - Member 显示 "升级到 Pro 关闭广告" 提示
     - _Requirements: 7.3, 7.4_
-  - [ ]* 8.4 编写设置修改权限的属性测试
+  - [ ]\* 8.4 编写设置修改权限的属性测试
     - **Property 4: Settings Modification Permissions**
     - **Validates: Requirements 2.4, 3.2**
 
@@ -126,10 +127,10 @@
   - [x] 10.2 实现 OPML 导入/导出功能 (Pro only)
     - 创建 `lib/opml.ts` 解析器和序列化器
     - _Requirements: 4.3_
-  - [ ]* 10.3 编写 OPML 往返测试
+  - [ ]\* 10.3 编写 OPML 往返测试
     - **Property 6: OPML Import/Export Round-Trip**
     - **Validates: Requirements 4.3**
-  - [ ]* 10.4 编写 RSS 源管理的属性测试
+  - [ ]\* 10.4 编写 RSS 源管理的属性测试
     - **Property 7: RSS Source Management Invariants**
     - **Validates: Requirements 3.3**
 
@@ -196,13 +197,13 @@
   - 如有问题，询问用户
 
 - [ ] 18. 编写 E2E 测试
-  - [ ]* 18.1 编写 Guest 用户旅程测试
+  - [ ]\* 18.1 编写 Guest 用户旅程测试
     - 访问首页、查看锁定功能、点击登录提示
     - _Requirements: 10.1_
-  - [ ]* 18.2 编写 Member 用户旅程测试
+  - [ ]\* 18.2 编写 Member 用户旅程测试
     - 登录、修改设置、查看统计预览
     - _Requirements: 10.2_
-  - [ ]* 18.3 编写功能对比页面测试
+  - [ ]\* 18.3 编写功能对比页面测试
     - 导航、内容验证、响应式设计
     - _Requirements: 11.8_
 
