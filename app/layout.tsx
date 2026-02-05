@@ -16,15 +16,15 @@ import { SessionProvider } from '@/components/auth/SessionProvider'
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
-  preload: true,
+  display: 'optional', // Don't block if font fails to load
+  preload: false, // Don't preload to avoid blocking in regions with network restrictions
   variable: '--font-inter',
 })
 
 const notoSansSC = Noto_Sans_SC({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  display: 'swap',
+  display: 'optional', // Don't block if font fails to load
   preload: false, // Don't preload to avoid blocking render
   variable: '--font-noto-sans-sc',
 })
