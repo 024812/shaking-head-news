@@ -44,6 +44,8 @@ describe('Settings Actions', () => {
     process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token'
     // Reset rateLimitByUser mock to return success by default
     vi.mocked(rateLimitByUser).mockResolvedValue({ success: true })
+    // Suppress console.error for expected errors
+    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterEach(() => {

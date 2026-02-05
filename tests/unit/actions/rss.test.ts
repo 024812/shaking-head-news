@@ -57,7 +57,7 @@ import { rateLimitByUser, rateLimitByAction } from '@/lib/rate-limit'
 
 // Mock global fetch
 const mockFetch = vi.fn()
-global.fetch = mockFetch as any
+global.fetch = mockFetch as unknown as typeof fetch
 
 // Mock crypto.randomUUID using vi.stubGlobal
 vi.stubGlobal('crypto', {

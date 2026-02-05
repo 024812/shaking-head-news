@@ -50,7 +50,7 @@ export async function getHotList(sourceId: string): Promise<HotItem[]> {
     // Handle "today-in-history" special structure
     if (sourceId === 'today-in-history') {
       if (data.data && Array.isArray(data.data.items)) {
-        return data.data.items.map((item: any) => ({
+        return data.data.items.map((item: { title: string; link?: string; year?: string }) => ({
           title: item.title,
           url: item.link || '',
           hot: item.year,
@@ -62,11 +62,19 @@ export async function getHotList(sourceId: string): Promise<HotItem[]> {
     // Generic handling: map 'link' to 'url' if url is missing
     // Detailed verification showed Douyin, Weibo, Bilibili use 'link'
     if (Array.isArray(data.data)) {
-      return data.data.map((item: any) => ({
-        title: item.title,
-        url: item.url || item.link || '', // Prioritize url, fallback to link
-        hot: item.hot || item.hot_value || '', // Map various hot value keys fields if needed, or keep generic
-      }))
+      return data.data.map(
+        (item: {
+          title: string
+          url?: string
+          link?: string
+          hot?: string
+          hot_value?: string
+        }) => ({
+          title: item.title,
+          url: item.url || item.link || '', // Prioritize url, fallback to link
+          hot: item.hot || item.hot_value || '', // Map various hot value keys fields if needed, or keep generic
+        })
+      )
     }
 
     return []

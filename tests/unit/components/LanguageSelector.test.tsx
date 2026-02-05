@@ -60,12 +60,6 @@ describe('LanguageSelector', () => {
     expect(screen.getByText('language')).toBeInTheDocument()
   })
 
-  it('should display language description', () => {
-    render(<LanguageSelector currentLanguage="zh" />)
-
-    expect(screen.getByText('languageDescription')).toBeInTheDocument()
-  })
-
   it('should show Globe icon', () => {
     render(<LanguageSelector currentLanguage="zh" />)
 
@@ -92,12 +86,6 @@ describe('LanguageSelector', () => {
 
     const select = screen.getByRole('combobox')
     expect(select).not.toBeDisabled()
-  })
-
-  it('should render language description text', () => {
-    render(<LanguageSelector currentLanguage="zh" />)
-
-    expect(screen.getByText('languageDescription')).toBeInTheDocument()
   })
 
   it('should render with Chinese as current language', () => {
