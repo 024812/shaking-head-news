@@ -310,3 +310,34 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Page rotation animation - pure CSS fallback */
+@keyframes page-shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(8deg);
+  }
+  30% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  70% {
+    transform: rotate(-8deg);
+  }
+  90% {
+    transform: rotate(6deg);
+  }
+}
+
+.tilt-animate {
+  animation: page-shake 20s ease-in-out infinite;
+}
+
+.tilt-paused {
+  animation-play-state: paused;
+}
+
