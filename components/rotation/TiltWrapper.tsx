@@ -1,5 +1,6 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { useRotationStore } from '@/lib/stores/rotation-store'
 import { useEffect, useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
@@ -19,7 +20,7 @@ export function TiltWrapper({
 }: TiltWrapperProps) {
   const { angle, setAngle, isPaused, mode, interval } = useRotationStore()
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
   const lastRotationTime = useRef<number>(Date.now())
   const previousAngle = useRef<number>(0)
   const pathname = usePathname()
@@ -31,9 +32,10 @@ export function TiltWrapper({
   // Disable rotation on settings and RSS pages
   const isSettingsPage = pathname === '/settings' || pathname === '/rss'
 
-  // Mark as mounted to avoid hydration mismatch
+  // Manually rehydrate zustand store after mount (SSR fix from context7)
   useEffect(() => {
-    setMounted(true)
+    useRotationStore.persist.rehydrate()
+    setIsHydrated(true)
   }, [])
 
   // Check for prefers-reduced-motion
@@ -61,8 +63,8 @@ export function TiltWrapper({
 
   // Handle rotation logic
   useEffect(() => {
-    // Don't start rotation until mounted to avoid hydration issues
-    if (!mounted) return
+    // Wait for hydration before starting rotation
+    if (!isHydrated) return
 
     if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion || isSettingsPage) {
       return
@@ -98,12 +100,12 @@ export function TiltWrapper({
     prefersReducedMotion,
     isSettingsPage,
     setAngle,
-    mounted,
+    isHydrated,
   ])
 
   // Handle manual mode (mouse follow)
   useEffect(() => {
-    if (!mounted) return
+    if (!isHydrated) return
 
     if (effectiveMode === 'fixed' && !prefersReducedMotion && !isSettingsPage) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,25 +125,33 @@ export function TiltWrapper({
       window.addEventListener('mousemove', handleMouseMove)
       return () => window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [effectiveMode, prefersReducedMotion, isSettingsPage, setAngle, mounted])
+  }, [effectiveMode, prefersReducedMotion, isSettingsPage, setAngle, isHydrated])
 
-  // Calculate the current rotation angle for CSS
-  // Only apply rotation after mounting to avoid hydration mismatch
-  const currentAngle = mounted && !prefersReducedMotion && !isSettingsPage ? angle : 0
+  // If user prefers reduced motion, render without animation
+  if (prefersReducedMotion) {
+    return (
+      <div
+        className={cn(
+          'h-screen overflow-x-hidden overflow-y-auto',
+          !isSettingsPage && 'scrollbar-hide'
+        )}
+      >
+        {children}
+      </div>
+    )
+  }
 
   return (
-    <div
+    <motion.div
+      animate={{ rotate: angle }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
       className={cn(
         'h-screen overflow-x-hidden overflow-y-auto',
         !isSettingsPage && 'scrollbar-hide'
       )}
-      style={{
-        transform: `rotate(${currentAngle}deg)`,
-        transition: 'transform 0.6s ease-in-out',
-      }}
       data-testid="tilt-wrapper"
     >
       {children}
-    </div>
+    </motion.div>
   )
 }

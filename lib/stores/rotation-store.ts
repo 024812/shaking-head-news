@@ -32,6 +32,9 @@ export const useRotationStore = create<RotationState>()(
     }),
     {
       name: 'rotation-storage',
+      // Skip automatic hydration for SSR compatibility
+      // Manual rehydration is triggered in TiltWrapper after mount
+      skipHydration: true,
     }
   )
 )
