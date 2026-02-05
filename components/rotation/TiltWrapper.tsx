@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useRotationStore } from '@/lib/stores/rotation-store'
 import { useEffect, useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
@@ -16,18 +15,16 @@ interface TiltWrapperProps {
 export function TiltWrapper({
   children,
   mode: propMode,
-  interval: propInterval,
+  interval: _propInterval,
 }: TiltWrapperProps) {
-  const { angle, setAngle, isPaused, mode, interval } = useRotationStore()
+  const { isPaused, mode, setAngle } = useRotationStore()
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
   const lastRotationTime = useRef<number>(Date.now())
-  const previousAngle = useRef<number>(0)
   const pathname = usePathname()
 
   // Use props if provided, otherwise use store values
   const effectiveMode = propMode ?? mode
-  const effectiveInterval = propInterval ?? interval
 
   // Disable rotation on settings and RSS pages
   const isSettingsPage = pathname === '/settings' || pathname === '/rss'
@@ -61,97 +58,45 @@ export function TiltWrapper({
     }
   }, [isSettingsPage, setAngle])
 
-  // Handle rotation logic
+  // Record rotation stats periodically (for CSS animation, we track time spent)
   useEffect(() => {
-    // Wait for hydration before starting rotation
     if (!isHydrated) return
+    if (isPaused || prefersReducedMotion || isSettingsPage) return
 
-    if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion || isSettingsPage) {
-      return
-    }
-
-    // Continuous mode: change angle at intervals
+    // Record rotation every 20 seconds (one animation cycle)
     const timer = setInterval(() => {
-      // Generate random angle with absolute value between 5 and 20 degrees
-      const angleMagnitude = Math.random() * 15 + 5 // 5 to 20
-      const sign = Math.random() < 0.5 ? 1 : -1
-      const newAngle = angleMagnitude * sign
-      setAngle(newAngle)
-
-      // Record rotation (需求 8.1)
       const now = Date.now()
       const duration = Math.round((now - lastRotationTime.current) / 1000)
       lastRotationTime.current = now
 
-      // Only record if there's a significant angle change (lowered threshold to 0.5 degrees)
-      if (Math.abs(newAngle - previousAngle.current) > 0.5) {
-        recordRotation(newAngle, duration).catch(() => {
-          // Silent failure
-        })
-        previousAngle.current = newAngle
-      }
-    }, effectiveInterval * 1000)
+      // Record with average angle since CSS animation varies
+      recordRotation(10, duration).catch(() => {
+        // Silent failure
+      })
+    }, 20000)
 
     return () => clearInterval(timer)
-  }, [
-    effectiveMode,
-    effectiveInterval,
-    isPaused,
-    prefersReducedMotion,
-    isSettingsPage,
-    setAngle,
-    isHydrated,
-  ])
+  }, [isHydrated, isPaused, prefersReducedMotion, isSettingsPage])
 
-  // Handle manual mode (mouse follow)
-  useEffect(() => {
-    if (!isHydrated) return
-
-    if (effectiveMode === 'fixed' && !prefersReducedMotion && !isSettingsPage) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const handleMouseMove = (e: any) => {
-        // Calculate factor from -1 to 1 based on screen width
-        // Left edge = -1, Center = 0, Right edge = 1
-        const xFactor = (e.clientX / window.innerWidth) * 2 - 1
-
-        // Map to -15 to 15 degrees
-        // Mouse Left -> Tilt Left (negative angle)
-        // Mouse Right -> Tilt Right (positive angle)
-        const targetAngle = xFactor * 15
-
-        setAngle(targetAngle)
-      }
-
-      window.addEventListener('mousemove', handleMouseMove)
-      return () => window.removeEventListener('mousemove', handleMouseMove)
-    }
-  }, [effectiveMode, prefersReducedMotion, isSettingsPage, setAngle, isHydrated])
-
-  // If user prefers reduced motion, render without animation
-  if (prefersReducedMotion) {
-    return (
-      <div
-        className={cn(
-          'h-screen overflow-x-hidden overflow-y-auto',
-          !isSettingsPage && 'scrollbar-hide'
-        )}
-      >
-        {children}
-      </div>
-    )
-  }
+  // Determine if animation should be active
+  const shouldAnimate =
+    isHydrated &&
+    !isPaused &&
+    !prefersReducedMotion &&
+    !isSettingsPage &&
+    effectiveMode === 'continuous'
 
   return (
-    <motion.div
-      animate={{ rotate: angle }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+    <div
       className={cn(
         'h-screen overflow-x-hidden overflow-y-auto',
-        !isSettingsPage && 'scrollbar-hide'
+        !isSettingsPage && 'scrollbar-hide',
+        // Apply CSS animation when conditions are met
+        shouldAnimate && 'tilt-animate'
       )}
       data-testid="tilt-wrapper"
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
