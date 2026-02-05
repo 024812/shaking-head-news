@@ -75,7 +75,12 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
   const t = useTranslations('settings')
   const tTier = useTranslations('tier')
   const { setFontSize, setLayoutMode } = useUIStore()
-  const { setMode: setRotationMode, setInterval: setRotationInterval } = useRotationStore()
+  const {
+    setMode: setRotationMode,
+    setInterval: setRotationInterval,
+    togglePause,
+    isPaused,
+  } = useRotationStore()
   const { setTheme } = useTheme()
   const { isGuest, isPro, features, togglePro, isTogglingPro } = useUserTier({
     initialIsPro: initialSettings.isPro ?? false,
@@ -345,8 +350,14 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
             </div>
             <Switch
               id="animationEnabled"
-              checked={settings.animationEnabled}
-              onCheckedChange={(checked) => updateSetting('animationEnabled', checked)}
+              checked={!isPaused}
+              onCheckedChange={(checked) => {
+                updateSetting('animationEnabled', checked)
+                // Sync with rotation store
+                if (checked === isPaused) {
+                  togglePause()
+                }
+              }}
             />
           </div>
         </CardContent>

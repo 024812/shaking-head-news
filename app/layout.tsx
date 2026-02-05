@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Inter, Noto_Sans_SC } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -68,16 +69,17 @@ export default async function RootLayout({
         {/* DNS Prefetch and Preconnect for external domains */}
         <link rel="dns-prefetch" href="https://news.ravelloh.top" />
         <link rel="preconnect" href="https://news.ravelloh.top" crossOrigin="anonymous" />
-        {/* Google AdSense - Native script tag to avoid data-nscript warning */}
+      </head>
+      <body className={`${inter.variable} ${notoSansSC.variable} font-sans`}>
+        {/* Google AdSense - optimized for performance */}
         {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
-          <script
-            async
+          <Script
+            id="google-adsense"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            strategy="lazyOnload"
             crossOrigin="anonymous"
           />
         )}
-      </head>
-      <body className={`${inter.variable} ${notoSansSC.variable} font-sans`}>
         <WebVitals />
         <SessionProvider>
           <NextIntlClientProvider messages={messages} locale={locale}>
