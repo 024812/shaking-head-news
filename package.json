@@ -87,7 +87,7 @@
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^4.0.16",
-    "autoprefixer": "^10.4.23",
+    "autoprefixer": "^10.4.24",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
