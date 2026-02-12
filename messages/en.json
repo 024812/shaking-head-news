@@ -19,7 +19,8 @@
     "features": "Features",
     "rss": "RSS Management",
     "login": "Sign In",
-    "logout": "Sign Out"
+    "logout": "Sign Out",
+    "about": "About"
   },
   "home": {
     "title": "Welcome to Shaking Head News",
@@ -337,5 +338,12 @@
       "memberBadge": "Member badge",
       "proBadge": "Pro badge"
     }
+  },
+  "page": {
+    "myFeed": "My Feed",
+    "myCustomFeed": "My Custom Feed",
+    "noCustomFeeds": "No Custom Feeds",
+    "noCustomFeedsDescription": "You haven't added any custom RSS feeds yet, or they have no content. Go to Settings to add them.",
+    "itNewsAi": "IT News (AI)"
   }
 }

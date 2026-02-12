@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useUserTier } from './use-user-tier'
 
 export interface KeyboardShortcut {
@@ -34,25 +34,27 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: UseKeyboardS
   // 检查是否启用快捷键
   const isEnabled = enabled && isPro && features.keyboardShortcutsEnabled
 
-  // eslint-disable-next-line no-undef
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (!isEnabled) return
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isEnabled) return
 
-    for (const shortcut of shortcuts) {
-      const keyMatch = event.key.toLowerCase() === shortcut.key.toLowerCase()
-      const ctrlMatch = shortcut.ctrl
-        ? event.ctrlKey || event.metaKey
-        : !event.ctrlKey && !event.metaKey
-      const shiftMatch = shortcut.shift ? event.shiftKey : !event.shiftKey
-      const altMatch = shortcut.alt ? event.altKey : !event.altKey
+      for (const shortcut of shortcuts) {
+        const keyMatch = event.key.toLowerCase() === shortcut.key.toLowerCase()
+        const ctrlMatch = shortcut.ctrl
+          ? event.ctrlKey || event.metaKey
+          : !event.ctrlKey && !event.metaKey
+        const shiftMatch = shortcut.shift ? event.shiftKey : !event.shiftKey
+        const altMatch = shortcut.alt ? event.altKey : !event.altKey
 
-      if (keyMatch && ctrlMatch && shiftMatch && altMatch) {
-        event.preventDefault()
-        shortcut.action()
-        break
+        if (keyMatch && ctrlMatch && shiftMatch && altMatch) {
+          event.preventDefault()
+          shortcut.action()
+          break
+        }
       }
-    }
-  }
+    },
+    [isEnabled, shortcuts]
+  )
 
   useEffect(() => {
     if (!isEnabled) return

@@ -1,7 +1,7 @@
 'use server'
 
 import { auth } from '@/lib/auth'
-import { getStorageItem, setStorageItem, StorageKeys } from '@/lib/storage'
+import { getStorageItem, setStorageItem, getMultipleStorageItems, StorageKeys } from '@/lib/storage'
 import { UserStatsSchema, RotationRecord, UserStats } from '@/types/stats'
 import { AuthError, logError, validateOrThrow } from '@/lib/utils/error-handler'
 import { rateLimitByUser, RateLimitTiers } from '@/lib/rate-limit'
@@ -134,23 +134,29 @@ export async function getStats(startDate: string, endDate: string) {
       throw new Error('Start date must be before end date')
     }
 
-    // 遍历日期范围
+    // 批量获取所有日期的数据（用 MGET 替代逐日循环，避免 N+1）
+    const dateKeys: string[] = []
+    const dateStrings: string[] = []
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0]
-      const key = StorageKeys.userStats(session.user.id, dateStr)
-      const dayStat = await getStorageItem<UserStats>(key)
+      dateStrings.push(dateStr)
+      dateKeys.push(StorageKeys.userStats(session.user.id, dateStr))
+    }
 
-      if (dayStat) {
+    const rawResults = await getMultipleStorageItems(dateKeys)
+
+    rawResults.forEach((raw, index) => {
+      if (raw) {
         try {
-          stats.push(validateOrThrow(UserStatsSchema, dayStat))
+          stats.push(validateOrThrow(UserStatsSchema, raw))
         } catch (error) {
           logError(error, {
             action: 'getStats',
-            date: dateStr,
+            date: dateStrings[index],
           })
         }
       }
-    }
+    })
 
     return stats
   } catch (error) {

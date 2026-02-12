@@ -130,7 +130,7 @@ export function createMockResponse<T>(data: T, ok = true, status = 200) {
     headers: new Headers(),
     redirected: false,
     statusText: ok ? 'OK' : 'Error',
-    type: 'basic' as ResponseType,
+    type: 'basic' as const,
     url: '',
     clone: function () {
       return this

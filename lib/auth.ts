@@ -34,8 +34,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Fetch Microsoft profile photo on sign in
       if (account && account.provider === 'microsoft-entra-id' && account.access_token) {
         try {
-          // Fetch a small thumbnail to keep token size low (cookie limit is ~4KB)
-          const response = await fetch('https://graph.microsoft.com/v1.0/me/photos/64x64/$value', {
+          // Fetch smallest thumbnail to stay under ~4KB JWT cookie limit (NextAuth default is 48x48)
+          const response = await fetch('https://graph.microsoft.com/v1.0/me/photos/48x48/$value', {
             headers: { Authorization: `Bearer ${account.access_token}` },
           })
 

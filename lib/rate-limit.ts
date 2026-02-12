@@ -5,7 +5,13 @@
  * to prevent abuse and protect Server Actions from excessive requests.
  */
 
-import { getStorageItem, setStorageItemWithOptions, deleteStorageItem, getTTL } from './storage'
+import {
+  storage,
+  getStorageItem,
+  setStorageItemWithOptions,
+  deleteStorageItem,
+  getTTL,
+} from './storage'
 
 export interface RateLimitResult {
   success: boolean
@@ -57,11 +63,35 @@ export async function rateLimit(
   const key = `${prefix}:${identifier}`
 
   try {
-    // Get current count
+    // Use atomic INCR when Redis is available (eliminates race condition)
+    if (storage) {
+      const count = await storage.incr(key)
+
+      // Set expiry only on first request (count === 1)
+      if (count === 1) {
+        await storage.expire(key, window)
+      }
+
+      if (count > limit) {
+        const ttl = await storage.ttl(key)
+        return {
+          success: false,
+          remaining: 0,
+          reset: Date.now() + (ttl > 0 ? ttl * 1000 : window * 1000),
+        }
+      }
+
+      return {
+        success: true,
+        remaining: limit - count,
+        reset: Date.now() + window * 1000,
+      }
+    }
+
+    // Fallback: in-memory storage (non-atomic, acceptable for dev/test)
     const current = await getStorageItem<number>(key)
     const count = current || 0
 
-    // Check if limit exceeded
     if (count >= limit) {
       const ttl = await getTTL(key)
       return {
@@ -71,21 +101,11 @@ export async function rateLimit(
       }
     }
 
-    // Increment counter
     const newCount = count + 1
-
-    // Set with expiration if this is the first request or if TTL is missing
     if (count === 0) {
       await setStorageItemWithOptions(key, newCount, { ex: window })
     } else {
-      // Check for zombie keys (keys that lost their TTL)
-      const ttl = await getTTL(key)
-      if (ttl === -1) {
-        // If key has no expiry, force set it
-        await setStorageItemWithOptions(key, newCount, { ex: window })
-      } else {
-        await setStorageItemWithOptions(key, newCount, { keepTtl: true })
-      }
+      await setStorageItemWithOptions(key, newCount, { keepTtl: true })
     }
 
     return {
@@ -110,13 +130,13 @@ export async function rateLimit(
 export const RateLimitTiers = {
   /**
    * Strict rate limit for sensitive operations (e.g., login, password reset)
-   * 5 requests per 15 minutes
+   * 50 requests per 15 minutes
    */
   STRICT: { limit: 50, window: 900 },
 
   /**
    * Standard rate limit for authenticated operations
-   * 300 requests per minute
+   * 600 requests per minute
    */
   STANDARD: { limit: 600, window: 60 },
 

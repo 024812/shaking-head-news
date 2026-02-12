@@ -1,4 +1,4 @@
-import { getHomePageNews } from '@/lib/actions/news'
+import { getNews } from '@/lib/actions/news'
 import { NewsList } from './NewsList'
 import { Suspense } from 'react'
 import { NewsListSkeleton } from './NewsListSkeleton'
@@ -19,7 +19,7 @@ async function NewsContent({ language = 'zh', source }: NewsDisplayProps) {
   const session = await auth()
 
   try {
-    const newsResponse = await getHomePageNews(language, source)
+    const newsResponse = await getNews(language, source)
     return <NewsList news={newsResponse.items} showLoginCTA={!session?.user} />
   } catch (error) {
     console.error('Error loading news:', error)

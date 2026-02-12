@@ -192,8 +192,8 @@ export function logError(error: unknown, context?: Record<string, any>) {
 
   console.error('Application error:', errorInfo)
 
-  // TODO: Send to monitoring service (Sentry, etc.)
-  // if (process.env.NODE_ENV === 'production') {
+  // Extension point: integrate external error monitoring (e.g. Sentry)
+  // if (process.env.SENTRY_DSN) {
   //   Sentry.captureException(error, { extra: context })
   // }
 }

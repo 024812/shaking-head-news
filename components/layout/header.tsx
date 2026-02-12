@@ -80,7 +80,7 @@ export async function Header() {
                 href="/about"
                 className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors duration-200"
               >
-                关于
+                {t('about')}
               </Link>
             </nav>
           </div>

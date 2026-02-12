@@ -566,7 +566,7 @@ export function SettingsPanel({ initialSettings }: SettingsPanelProps) {
                   setLocalAdsEnabled(checked)
                   localStorage.setItem('adsEnabled', String(checked))
                   // Dispatch event for immediate UI update
-                  // eslint-disable-next-line no-undef
+
                   window.dispatchEvent(new Event('ads-preference-changed'))
 
                   toast({

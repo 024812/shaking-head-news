@@ -1,6 +1,10 @@
 @import 'tailwindcss';
+@plugin "tailwindcss-animate";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --font-sans: var(--font-inter), var(--font-noto-sans-sc), system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
