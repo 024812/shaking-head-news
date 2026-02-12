@@ -19,7 +19,7 @@ export function Footer() {
               oheng
             </a>
             <span className="mx-2">·</span>
-            <span>© 2025 摇头看新闻. 保留所有权利.</span>
+            <span>© 2026 摇头看新闻. 保留所有权利.</span>
           </div>
 
           {/* ICP 备案 + GitHub 链接 */}
