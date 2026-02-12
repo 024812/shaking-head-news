@@ -28,9 +28,8 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
   // 检查通知权限
   useEffect(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
-      // eslint-disable-next-line no-undef
       setPermission(Notification.permission)
-      // eslint-disable-next-line no-undef
+
       setNotificationsEnabled(Notification.permission === 'granted')
     }
   }, [])
@@ -87,7 +86,6 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
     }
 
     try {
-      // eslint-disable-next-line no-undef
       const permission = await Notification.requestPermission()
       setPermission(permission)
       setNotificationsEnabled(permission === 'granted')
@@ -115,7 +113,6 @@ export function HealthReminder({ dailyGoal, currentCount }: HealthReminderProps)
     if (typeof window === 'undefined') return
 
     try {
-      // eslint-disable-next-line no-undef
       const notification = new Notification(t('healthReminderTitle'), {
         body: t('healthReminderBody'),
         icon: '/favicon.png',

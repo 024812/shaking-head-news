@@ -1,5 +1,3 @@
-import { unstable_cache } from 'next/cache'
-
 export interface DailyNewsItem {
   news: string[]
   tip: string
@@ -29,43 +27,30 @@ interface VikiResponse<T> {
 
 const BASE_URL = 'https://60s.viki.moe/v2'
 
-export const fetchDailyNews = unstable_cache(
-  async (): Promise<DailyNewsItem | null> => {
-    try {
-      const res = await fetch(`${BASE_URL}/60s?encoding=json`, {
-        next: { revalidate: 1800 }, // Cache for 30 minutes
-      })
-      if (!res.ok) throw new Error('Failed to fetch daily news')
-      const json: VikiResponse<DailyNewsItem> = await res.json()
-      return json.data
-    } catch (error) {
-      console.error('Error fetching daily news:', error)
-      return null
-    }
-  },
-  ['daily-news-60s'],
-  { revalidate: 1800 }
-)
+export async function fetchDailyNews(): Promise<DailyNewsItem | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/60s?encoding=json`, {
+      next: { revalidate: 1800 }, // Cache for 30 minutes via native fetch cache
+    })
+    if (!res.ok) throw new Error('Failed to fetch daily news')
+    const json: VikiResponse<DailyNewsItem> = await res.json()
+    return json.data
+  } catch (error) {
+    console.error('Error fetching daily news:', error)
+    return null
+  }
+}
 
-export const fetchAiNews = unstable_cache(
-  async (): Promise<AiNewsItem[] | null> => {
-    try {
-      const res = await fetch(`${BASE_URL}/ai-news`, {
-        next: { revalidate: 1800 },
-      })
-      if (!res.ok) throw new Error('Failed to fetch AI news')
-      // The API returns { data: { news: [...] } } or just { data: [...] } ?
-      // Based on curl output: {"data":{"date":"...","news": [...]}}
-      // Let's type it loosely first to be safe, then strict.
-      // Wait, let's re-verify the AI structure from previous curl.
-      // Output was: {"data":{"date":"2026-01-27","news":[{"title":"...","link":"...","source":"..."}]}}
-      const json: VikiResponse<{ date: string; news: AiNewsItem[] }> = await res.json()
-      return json.data.news
-    } catch (error) {
-      console.error('Error fetching AI news:', error)
-      return null
-    }
-  },
-  ['daily-news-ai'],
-  { revalidate: 1800 }
-)
+export async function fetchAiNews(): Promise<AiNewsItem[] | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/ai-news`, {
+      next: { revalidate: 1800 }, // Cache for 30 minutes via native fetch cache
+    })
+    if (!res.ok) throw new Error('Failed to fetch AI news')
+    const json: VikiResponse<{ date: string; news: AiNewsItem[] }> = await res.json()
+    return json.data.news
+  } catch (error) {
+    console.error('Error fetching AI news:', error)
+    return null
+  }
+}

@@ -43,7 +43,6 @@ export function RSSSourceList({ initialSources }: RSSSourceListProps) {
   }
 
   const handleDelete = async (id: string) => {
-    // eslint-disable-next-line no-undef
     if (!confirm(t('confirmDelete'))) return
 
     try {

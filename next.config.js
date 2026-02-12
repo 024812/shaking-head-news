@@ -55,7 +55,6 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   // Enable React Compiler (Stable in Next.js 16)
   reactCompiler: true,

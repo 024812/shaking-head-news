@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
 import { NewsDisplay } from '@/components/news/NewsDisplay'
-import { NewsListSkeleton } from '@/components/news/NewsListSkeleton'
 import { getTranslations } from 'next-intl/server'
 import { getAiNewsItems, getHotListNews, getNews, getUserCustomNews } from '@/lib/actions/news'
 import { HOT_LIST_SOURCES } from '@/lib/api/hot-list'
@@ -9,28 +7,17 @@ import { NewsList } from '@/components/news/NewsList'
 import { AdBanner } from '@/components/ads/AdBanner'
 import { auth } from '@/lib/auth'
 import { getUserSettings } from '@/lib/actions/settings'
-import { Skeleton } from '@/components/ui/skeleton'
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { RefreshButton } from '@/components/common/RefreshButton'
 
 export const revalidate = 3600 // ISR: 每小时重新验证一次
 
-function HomePageSkeleton() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-7 w-24" />
-        <Skeleton className="h-9 w-16" />
-      </div>
-      <NewsListSkeleton />
-    </div>
-  )
-}
-
 export default async function HomePage() {
   const t = await getTranslations('home')
   const tNews = await getTranslations('news')
+  const tPage = await getTranslations('page')
   const session = await auth()
   const settings = session?.user ? await getUserSettings() : null
   const isPro = settings?.isPro ?? false
@@ -137,7 +124,7 @@ export default async function HomePage() {
           <Tabs defaultValue={isPro ? 'custom' : 'daily'} className="w-full">
             <TabsList className="scrollbar-hide mb-6 flex h-auto w-full justify-start overflow-x-auto whitespace-nowrap sm:w-auto">
               {/* Pro Custom Feed */}
-              {isPro && <TabsTrigger value="custom">My Feed</TabsTrigger>}
+              {isPro && <TabsTrigger value="custom">{tPage('myFeed')}</TabsTrigger>}
 
               <TabsTrigger value="daily">{tNews('daily')}</TabsTrigger>
               <TabsTrigger value="ai">{tNews('ai')}</TabsTrigger>
@@ -157,7 +144,7 @@ export default async function HomePage() {
             {isPro && (
               <TabsContent value="custom" className="min-h-[500px] space-y-4">
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-xl font-bold">My Custom Feed</h2>
+                  <h2 className="text-xl font-bold">{tPage('myCustomFeed')}</h2>
                   <RefreshButton />
                 </div>
                 {customNews.length > 0 ? (
@@ -165,25 +152,20 @@ export default async function HomePage() {
                 ) : (
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>No Custom Feeds</AlertTitle>
-                    <AlertDescription>
-                      You haven't added any custom RSS feeds yet, or they have no content. Go to
-                      Settings to add them.
-                    </AlertDescription>
+                    <AlertTitle>{tPage('noCustomFeeds')}</AlertTitle>
+                    <AlertDescription>{tPage('noCustomFeedsDescription')}</AlertDescription>
                   </Alert>
                 )}
               </TabsContent>
             )}
 
             <TabsContent value="daily" className="min-h-[500px] space-y-4">
-              <Suspense fallback={<HomePageSkeleton />}>
-                <NewsDisplay />
-              </Suspense>
+              <NewsDisplay />
             </TabsContent>
 
             <TabsContent value="ai" className="min-h-[500px] space-y-4">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold">IT News (AI)</h2>
+                <h2 className="text-xl font-bold">{tPage('itNewsAi')}</h2>
               </div>
               <NewsList news={aiNews} showLoginCTA={!session?.user} />
             </TabsContent>

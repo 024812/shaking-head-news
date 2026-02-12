@@ -308,6 +308,8 @@ export function sanitizeFilename(filename: string): string {
 /**
  * Check if string contains SQL injection patterns
  *
+ * @deprecated This function is not used — the project uses Redis (not SQL).
+ * Retained for reference; remove if not needed.
  * @param input - Input to check
  * @returns True if suspicious patterns detected
  */

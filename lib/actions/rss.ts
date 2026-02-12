@@ -302,6 +302,16 @@ export async function reorderRSSSources(sourceIds: string[]) {
   }
 }
 
+// XML 属性值转义，防止 XSS/注入
+function escapeXmlAttr(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
 // 导出 OPML
 export async function exportOPML() {
   try {
@@ -326,10 +336,10 @@ export async function exportOPML() {
     ${sources
       .map(
         (s) => `
-    <outline text="${s.name}" 
+    <outline text="${escapeXmlAttr(s.name)}" 
              type="rss" 
-             xmlUrl="${s.url}" 
-             htmlUrl="${s.url}" />
+             xmlUrl="${escapeXmlAttr(s.url)}" 
+             htmlUrl="${escapeXmlAttr(s.url)}" />
     `
       )
       .join('')}

@@ -4,7 +4,6 @@ import {
   refreshNews,
   getRSSNews,
   refreshRSSFeed,
-  getHomePageNews,
   getUserCustomNews,
 } from '@/lib/actions/news'
 import { mockNewsItems } from '@/tests/utils/test-utils'
@@ -313,8 +312,8 @@ describe('News Actions', () => {
     })
   })
 
-  describe('getHomePageNews', () => {
-    // Note: getHomePageNews calls getNews which uses React's cache() function
+  describe('getNews (home page)', () => {
+    // Note: getNews uses React's cache() function
     // These tests that rely on getNews are skipped
     it.skip('should return default news when user is not authenticated', async () => {
       vi.mocked(auth).mockResolvedValue(null)
@@ -330,7 +329,7 @@ describe('News Actions', () => {
         json: async () => mockResponse,
       })
 
-      const result = await getHomePageNews('zh')
+      const result = await getNews('zh')
 
       expect(result.items).toHaveLength(mockNewsItems.length)
       expect(mockFetch).toHaveBeenCalledWith(
@@ -353,7 +352,7 @@ describe('News Actions', () => {
         json: async () => mockResponse,
       })
 
-      const result = await getHomePageNews('zh')
+      const result = await getNews('zh')
 
       expect(result.items).toHaveLength(mockNewsItems.length)
     })

@@ -19,7 +19,8 @@
     "features": "功能",
     "rss": "RSS 管理",
     "login": "登录",
-    "logout": "登出"
+    "logout": "登出",
+    "about": "关于"
   },
   "home": {
     "title": "欢迎来到摇头看新闻",
@@ -356,5 +357,12 @@
     },
     "oneClickActivateButton": "一键激活",
     "loginToActivateLink": "登陆后可激活"
+  },
+  "page": {
+    "myFeed": "我的订阅",
+    "myCustomFeed": "我的自定义订阅",
+    "noCustomFeeds": "暂无自定义订阅",
+    "noCustomFeedsDescription": "您还没有添加任何自定义 RSS 源，或者它们没有内容。前往设置添加。",
+    "itNewsAi": "IT 资讯 (AI)"
   }
 }

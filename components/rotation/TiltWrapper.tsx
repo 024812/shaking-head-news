@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useRotationStore } from '@/lib/stores/rotation-store'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import { recordRotation } from '@/lib/actions/stats'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,13 @@ interface TiltWrapperProps {
   mode?: 'fixed' | 'continuous'
   interval?: number
 }
+
+interface PendingRotation {
+  angle: number
+  duration: number
+}
+
+const BATCH_INTERVAL_MS = 5 * 60 * 1000 // Flush every 5 minutes
 
 export function TiltWrapper({
   children,
@@ -23,6 +30,7 @@ export function TiltWrapper({
   const [isHydrated, setIsHydrated] = useState(false)
   const lastRotationTime = useRef<number>(Date.now())
   const previousAngle = useRef<number>(0)
+  const pendingRotations = useRef<PendingRotation[]>([])
   const pathname = usePathname()
 
   // Use props if provided, otherwise use store values
@@ -31,6 +39,45 @@ export function TiltWrapper({
 
   // Disable rotation on settings and RSS pages
   const isSettingsPage = pathname === '/settings' || pathname === '/rss'
+
+  // Flush pending rotations to server (batch upload)
+  const flushRotations = useCallback(() => {
+    const batch = pendingRotations.current
+    if (batch.length === 0) return
+    pendingRotations.current = []
+
+    // Send the latest rotation as a summary (total count preserved in duration sum)
+    const lastEntry = batch[batch.length - 1]
+    const totalDuration = batch.reduce((sum, r) => sum + r.duration, 0)
+    recordRotation(lastEntry.angle, totalDuration).catch(() => {
+      // Silent failure — stats are non-critical
+    })
+  }, [])
+
+  // Flush rotations on page unload
+  useEffect(() => {
+    const handleUnload = () => {
+      if (pendingRotations.current.length > 0) {
+        const batch = pendingRotations.current
+        const lastEntry = batch[batch.length - 1]
+        const totalDuration = batch.reduce((sum, r) => sum + r.duration, 0)
+        // Use sendBeacon for reliable page-unload reporting
+        const data = JSON.stringify({ angle: lastEntry.angle, duration: totalDuration })
+        navigator.sendBeacon?.('/api/stats/rotation', data)
+      }
+    }
+    window.addEventListener('beforeunload', handleUnload)
+    return () => window.removeEventListener('beforeunload', handleUnload)
+  }, [])
+
+  // Periodically flush rotation batch
+  useEffect(() => {
+    const timer = setInterval(flushRotations, BATCH_INTERVAL_MS)
+    return () => {
+      clearInterval(timer)
+      flushRotations() // Flush on cleanup
+    }
+  }, [flushRotations])
 
   // Manually rehydrate zustand store after mount
   useEffect(() => {
@@ -60,9 +107,6 @@ export function TiltWrapper({
 
   // Handle rotation logic
   useEffect(() => {
-    // Only block if actually paused or strict mode requirements
-    // Removed isHydrated check here to allow immediate start if possible,
-    // though safe to wait for mount.
     if (!isHydrated) return
 
     if (isPaused || effectiveMode === 'fixed' || prefersReducedMotion || isSettingsPage) {
@@ -77,22 +121,17 @@ export function TiltWrapper({
       const newAngle = angleMagnitude * sign
       setAngle(newAngle)
 
-      // Record rotation
+      // Buffer rotation for batch reporting
       const now = Date.now()
       const duration = Math.round((now - lastRotationTime.current) / 1000)
       lastRotationTime.current = now
 
-      // Only record if there's a significant angle change
+      // Only buffer if there's a significant angle change
       if (Math.abs(newAngle - previousAngle.current) > 0.5) {
-        recordRotation(newAngle, duration).catch(() => {
-          // Silent failure
-        })
+        pendingRotations.current.push({ angle: newAngle, duration })
         previousAngle.current = newAngle
       }
     }, effectiveInterval * 1000)
-
-    // Trigger immediate rotation on start if angle is 0 (optional, helps separate "startup" from interval)
-    // but better to let interval handle it to avoid jumps.
 
     return () => clearInterval(timer)
   }, [

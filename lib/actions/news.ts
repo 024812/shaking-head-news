@@ -9,7 +9,7 @@ import {
   type NewsResponse,
 } from '@/types/news'
 import { z } from 'zod'
-import { logError, validateOrThrow } from '@/lib/utils/error-handler'
+import { logError, validateOrThrow, retryWithBackoff } from '@/lib/utils/error-handler'
 import { NewsAPIError } from '@/lib/errors/news-error'
 import { XMLParser } from 'fast-xml-parser'
 import { auth } from '@/lib/auth'
@@ -22,31 +22,6 @@ import { getHotList } from '@/lib/api/hot-list'
 const NEWS_API_BASE_URL = process.env.NEWS_API_BASE_URL || 'https://news.ravelloh.top'
 const DEFAULT_REVALIDATE = 3600 // 1 hour - optimized for ISR
 const RSS_REVALIDATE = 1800 // 30 minutes - faster updates for RSS
-const MAX_RETRIES = 3
-const RETRY_DELAY = 1000 // 1 second
-
-/**
- * Retry helper function with exponential backoff
- */
-async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  retries: number = MAX_RETRIES,
-  delay: number = RETRY_DELAY
-): Promise<T> {
-  try {
-    return await fn()
-  } catch (error) {
-    if (retries <= 0) {
-      throw error
-    }
-
-    // Wait with exponential backoff
-    await new Promise<void>((resolve) => setTimeout(resolve, delay))
-
-    // Retry with increased delay
-    return retryWithBackoff(fn, retries - 1, delay * 2)
-  }
-}
 
 /**
  * Get news from the API with ISR caching
@@ -189,14 +164,6 @@ export async function getUserCustomNews(): Promise<NewsItem[]> {
     console.error('Error in getUserCustomNews:', error)
     return []
   }
-}
-
-/**
- * Get news for the home page
- * (Deprecated: Logic moved to page.tsx and getUserCustomNews)
- */
-export async function getHomePageNews(language: 'zh' | 'en' = 'zh', source?: string) {
-  return getNews(language, source)
 }
 
 /**

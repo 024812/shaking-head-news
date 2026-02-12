@@ -8,6 +8,7 @@
 
 import { cache } from 'react'
 import { auth } from '@/lib/auth'
+import { getStorageItem, StorageKeys } from '@/lib/storage'
 
 export interface CurrentUser {
   id: string
@@ -71,7 +72,6 @@ export async function hasProSubscription(): Promise<boolean> {
   if (!user) return false
 
   // 从用户设置中读取 isPro 状态
-  const { getStorageItem, StorageKeys } = await import('@/lib/storage')
   const settings = await getStorageItem<{ isPro?: boolean }>(StorageKeys.userSettings(user.id))
 
   return settings?.isPro === true
